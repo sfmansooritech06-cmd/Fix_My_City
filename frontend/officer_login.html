@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Officer Login | FixMyCity</title>
+
+    <link rel="stylesheet" href="./css/style.css">
+
+</head>
+
+
+<body class="auth-page">
+
+
+<!-- =====================================================
+     AUTH NAVBAR
+===================================================== -->
+
+<header class="auth-navbar">
+
+    <a href="index.html" class="auth-logo">
+        FixMyCity
+    </a>
+
+    <a href="login.html" class="back-home">
+        ← Back to Role Selection
+    </a>
+
+</header>
+
+
+
+<!-- =====================================================
+     OFFICER LOGIN
+===================================================== -->
+
+<main class="auth-container">
+
+    <div class="login-card">
+
+
+        <!-- HEADING -->
+
+        <div class="auth-heading">
+
+            <div class="auth-icon">
+                ◈
+            </div>
+
+            <h1>
+                Officer Login
+            </h1>
+
+            <p>
+                Sign in to manage civic complaints
+            </p>
+
+        </div>
+
+
+
+        <!-- LOGIN FORM -->
+
+        <form class="login-form">
+
+
+            <!-- EMPLOYEE ID -->
+
+            <div class="form-group">
+
+                <label for="employee_id">
+                    Employee ID
+                </label>
+
+                <input
+                    type="text"
+                    id="employee_id"
+                    name="employee_id"
+                    placeholder="Enter your employee ID"
+                    maxlength="10"
+                    pattern="[A-Za-z0-9]{1,10}"
+                    title="Employee ID must contain only letters and numbers and cannot exceed 10 characters"
+                    required
+                >
+
+                <small class="form-hint">
+                    Example: FMCOF00001
+                </small>
+
+            </div>
+
+
+
+            <!-- PASSWORD -->
+
+            <div class="form-group">
+
+                <div class="password-label">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <a href="#">
+                        Forgot password?
+                    </a>
+
+                </div>
+
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- LOGIN BUTTON -->
+
+            <button
+                type="submit"
+                class="login-submit"
+            >
+                Sign In
+                <span>→</span>
+            </button>
+
+        </form>
+
+
+
+        <!-- REGISTER -->
+
+        <div class="signup-text">
+
+            <span>
+                Don't have an officer account?
+            </span>
+
+            <a href="officer_register.html">
+                Register
+            </a>
+
+        </div>
+
+
+
+        <!-- CITIZEN LOGIN -->
+
+
+        <div class="auth-back-link">
+
+            <a href="login.html">
+                ← Citizen Login
+            </a>
+
+        </div>
+
+</main>
+
+</body>
+
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Officer Registration | FixMyCity</title>
+
+    <link rel="stylesheet" href="./css/style.css">
+
+</head>
+
+
+<body class="auth-page">
+
+
+<!-- =====================================================
+     AUTH NAVBAR
+===================================================== -->
+
+<header class="auth-navbar">
+
+    <a href="index.html" class="auth-logo">
+        FixMyCity
+    </a>
+
+    <a href="officer_login.html" class="back-home">
+        ← Back to Officer Login
+    </a>
+
+</header>
+
+
+
+<!-- =====================================================
+     OFFICER REGISTRATION
+===================================================== -->
+
+<main class="auth-container">
+
+    <div class="login-card">
+
+
+        <!-- HEADING -->
+
+        <div class="auth-heading">
+
+            <div class="auth-icon">
+                ◈
+            </div>
+
+            <h1>
+                Officer Registration
+            </h1>
+
+            <p>
+                Create your official FixMyCity officer account
+            </p>
+
+        </div>
+
+
+
+        <!-- REGISTRATION FORM -->
+
+        <form class="login-form">
+
+
+            <!-- FULL NAME -->
+
+            <div class="form-group">
+
+                <label for="full_name">
+                    Full Name
+                </label>
+
+                <input
+                    type="text"
+                    id="full_name"
+                    name="full_name"
+                    placeholder="Enter your full name"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- EMPLOYEE ID -->
+
+            <div class="form-group">
+
+                <label for="employee_id">
+                    Employee ID
+                </label>
+
+                <input
+                    type="text"
+                    id="employee_id"
+                    name="employee_id"
+                    placeholder="Example: FMCOF00001"
+                    maxlength="10"
+                    pattern="[A-Za-z0-9]{1,10}"
+                    title="Employee ID must contain only letters and numbers and cannot exceed 10 characters"
+                    required
+                >
+
+                <small class="form-hint">
+                    Maximum 10 characters. Letters and numbers only.
+                </small>
+
+            </div>
+
+
+
+            <!-- OFFICIAL EMAIL -->
+
+            <div class="form-group">
+
+                <label for="email">
+                    Official Email
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your official email"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- PHONE -->
+
+            <div class="form-group">
+
+                <label for="phone">
+                    Phone Number
+                </label>
+
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="Enter your phone number"
+                    maxlength="10"
+                    pattern="[0-9]{10}"
+                    title="Enter a valid 10-digit phone number"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- DEPARTMENT -->
+
+            <div class="form-group">
+
+                <label for="department">
+                    Department
+                </label>
+
+                <select
+                    id="department"
+                    name="department"
+                    required
+                >
+
+                    <option value="" disabled selected>
+                        Select your department
+                    </option>
+
+                    <option value="road">
+                        Road & Infrastructure
+                    </option>
+
+                    <option value="sanitation">
+                        Sanitation
+                    </option>
+
+                    <option value="streetlight">
+                        Streetlight / Electricity
+                    </option>
+
+                    <option value="water">
+                        Water Supply
+                    </option>
+
+                    <option value="public_property">
+                        Public Property
+                    </option>
+
+                    <option value="other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Create a password"
+                    minlength="8"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- CONFIRM PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="confirm_password">
+                    Confirm Password
+                </label>
+
+                <input
+                    type="password"
+                    id="confirm_password"
+                    name="confirm_password"
+                    placeholder="Confirm your password"
+                    minlength="8"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- REGISTER BUTTON -->
+
+            <button
+                type="submit"
+                class="login-submit"
+            >
+                Create Officer Account
+                <span>→</span>
+            </button>
+
+        </form>
+
+
+
+        <!-- LOGIN -->
+
+       <div class="signup-text">
+
+                <span>
+                    Already have an officer account?
+                </span>
+
+                <a href="officer_login.html">
+                    Sign In
+                </a>
+
+            </div>
+
+            <div class="auth-back-link">
+
+                <a href="officer_login.html">
+                    ← Back to Officer Login
+                </a>
+
+            </div>
+
+
+        <!-- APPROVAL NOTICE -->
+
+        <div class="auth-notice">
+
+            <span>ⓘ</span>
+
+            <p>
+                Officer accounts require admin verification
+                before you can access the dashboard.
+            </p>
+
+        </div>
+
+
+    </div>
+
+</main>
+
+
+</body>
+
+</html>

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Report an Issue | FixMyCity</title>
+
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body class="dashboard-page">
+
+    <!-- ================= NAVBAR ================= -->
+
+    <header class="dashboard-navbar">
+
+        <div class="dashboard-logo">
+            <a href="index.html">FixMyCity</a>
+        </div>
+
+        <nav class="dashboard-nav">
+
+            <a href="citizen_dashboard.html">
+                Dashboard
+            </a>
+
+            <a href="report_issue.html" class="active">
+                Report Issue
+            </a>
+
+            <a href="my_complaints.html">
+                My Complaints
+            </a>
+
+        </nav>
+
+        <div class="dashboard-user">
+
+            <div class="user-avatar">
+                SF
+            </div>
+
+            <div class="user-info">
+                <strong>Sadaf Fatima</strong>
+                <span>Citizen</span>
+            </div>
+
+            <button class="logout-btn">
+                Logout
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="report-container">
+
+        <!-- Page Heading -->
+
+        <section class="report-heading">
+
+            <div>
+
+                <p class="welcome-label">
+                    CIVIC ISSUE REPORTING
+                </p>
+
+                <h1>
+                    Report an Issue
+                </h1>
+
+                <p>
+                    Help improve your city by reporting a civic problem.
+                </p>
+
+            </div>
+
+            <a href="citizen_dashboard.html" class="back-dashboard">
+                ← Dashboard
+            </a>
+
+        </section>
+
+
+        <!-- ================= REPORT FORM ================= -->
+
+        <form class="report-form">
+
+
+            <!-- ================= ISSUE INFORMATION ================= -->
+
+            <section class="report-card">
+
+                <div class="report-card-heading">
+
+                    <div class="step-number">
+                        01
+                    </div>
+
+                    <div>
+                        <h2>Issue Information</h2>
+
+                        <p>
+                            Tell us about the civic problem you want to report.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <!-- Category -->
+
+                <div class="form-group">
+
+                    <label for="category">
+                        Issue Category
+                        <span>*</span>
+                    </label>
+
+                    <select id="category" name="category" required>
+
+                        <option value="" disabled selected>
+                            Select issue category
+                        </option>
+
+                        <option value="road">
+                            Road & Infrastructure
+                        </option>
+
+                        <option value="sanitation">
+                            Sanitation / Garbage
+                        </option>
+
+                        <option value="streetlight">
+                            Streetlight / Electricity
+                        </option>
+
+                        <option value="water">
+                            Water Supply / Leakage
+                        </option>
+
+                        <option value="public_property">
+                            Public Property
+                        </option>
+
+                        <option value="other">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- Title -->
+
+                <div class="form-group">
+
+                    <label for="issue_title">
+                        Issue Title
+                        <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="issue_title"
+                        name="issue_title"
+                        placeholder="Example: Large pothole near main road"
+                        maxlength="100"
+                        required
+                    >
+
+                    <small>
+                        Keep the title short and specific.
+                    </small>
+
+                </div>
+
+
+                <!-- Description -->
+
+                <div class="form-group">
+
+                    <label for="description">
+                        Issue Description
+                        <span>*</span>
+                    </label>
+
+                    <textarea
+                        id="description"
+                        name="description"
+                        rows="6"
+                        maxlength="1000"
+                        placeholder="Describe the issue in detail..."
+                        required
+                    ></textarea>
+
+                    <small>
+                        Maximum 1000 characters.
+                    </small>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= PHOTO ================= -->
+
+            <section class="report-card">
+
+                <div class="report-card-heading">
+
+                    <div class="step-number">
+                        02
+                    </div>
+
+                    <div>
+
+                        <h2>Issue Photo</h2>
+
+                        <p>
+                            Upload a clear photo of the reported issue.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="photo-upload">
+
+                    <input
+                        type="file"
+                        id="issue_photo"
+                        name="issue_photo"
+                        accept="image/png, image/jpeg, image/jpg"
+                        hidden
+                    >
+
+                    <label
+                        for="issue_photo"
+                        class="upload-box"
+                    >
+
+                        <div class="upload-icon">
+                            ↑
+                        </div>
+
+                        <h3>
+                            Upload Issue Photo
+                        </h3>
+
+                        <p>
+                            Click to browse or select an image
+                        </p>
+
+                        <span>
+                            JPG, JPEG or PNG • Max 5 MB
+                        </span>
+
+                    </label>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= LOCATION ================= -->
+
+            <section class="report-card">
+
+                <div class="report-card-heading">
+
+                    <div class="step-number">
+                        03
+                    </div>
+
+                    <div>
+
+                        <h2>Issue Location</h2>
+
+                        <p>
+                            Provide the exact location of the issue.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Address -->
+
+                <div class="form-group">
+
+                    <label for="location">
+                        Location / Address
+                        <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="location"
+                        name="location"
+                        placeholder="Enter area, street or landmark"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Map -->
+
+                <div class="location-map">
+
+                    <div class="map-grid"></div>
+
+                    <div class="map-road road-one"></div>
+                    <div class="map-road road-two"></div>
+                    <div class="map-road road-three"></div>
+
+                    <div class="map-marker">
+
+                        <div class="marker-pulse"></div>
+
+                        <div class="marker-pin">
+                            ●
+                        </div>
+
+                    </div>
+
+                    <div class="map-label">
+                        Selected Location
+                    </div>
+
+                    <div class="map-controls">
+
+                        <button type="button">
+                            +
+                        </button>
+
+                        <button type="button">
+                            −
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="location-actions">
+
+                    <button
+                        type="button"
+                        class="location-btn"
+                    >
+                        ◎ Use Current Location
+                    </button>
+
+                    <span>
+                        Pin the location as accurately as possible.
+                    </span>
+
+                </div>
+
+
+                <!-- Coordinates -->
+
+                <div class="coordinates-row">
+
+                    <div class="coordinate-box">
+
+                        <span>Latitude</span>
+
+                        <strong>
+                            --.--------
+                        </strong>
+
+                    </div>
+
+                    <div class="coordinate-box">
+
+                        <span>Longitude</span>
+
+                        <strong>
+                            --.--------
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= REVIEW ================= -->
+
+            <section class="report-card review-card">
+
+                <div class="report-card-heading">
+
+                    <div class="step-number">
+                        04
+                    </div>
+
+                    <div>
+
+                        <h2>Review & Submit</h2>
+
+                        <p>
+                            Please verify your information before submitting.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="report-notice">
+
+                    <div class="notice-icon">
+                        ⓘ
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Before you submit
+                        </strong>
+
+                        <p>
+                            Make sure the issue has not already been reported
+                            nearby. Existing complaints can be upvoted instead
+                            of creating duplicate reports.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <label class="agreement">
+
+                    <input
+                        type="checkbox"
+                        id="confirm"
+                        required
+                    >
+
+                    <span>
+                        I confirm that the information provided is accurate
+                        and the issue has been reported in good faith.
+                    </span>
+
+                </label>
+
+
+                <div class="form-actions">
+
+                    <a
+                        href="citizen_dashboard.html"
+                        class="cancel-btn"
+                    >
+                        Cancel
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="submit-report-btn"
+                    >
+                        Submit Complaint
+                        <span>→</span>
+                    </button>
+
+                </div>
+
+            </section>
+
+
+        </form>
+
+    </main>
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer class="dashboard-footer">
+
+        <span>
+            © 2026 FixMyCity
+        </span>
+
+        <span>
+            Civic Issue Reporting Platform
+        </span>
+
+    </footer>
+
+</body>
+</html>

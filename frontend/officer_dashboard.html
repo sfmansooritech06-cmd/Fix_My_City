@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Officer Dashboard | FixMyCity</title>
+
+    <link rel="stylesheet" href="./css/style.css">
+
+</head>
+
+
+<body class="dashboard-page">
+
+
+<!-- ================= NAVBAR ================= -->
+
+<header class="dashboard-navbar">
+
+    <div class="dashboard-logo">
+        <a href="index.html">FixMyCity</a>
+    </div>
+
+
+    <nav class="dashboard-nav">
+
+        <a href="officer_dashboard.html" class="active">
+            Dashboard
+        </a>
+
+        <a href="officer_complaints.html">
+            Complaints
+        </a>
+
+    </nav>
+
+
+    <div class="dashboard-user">
+
+        <div class="user-avatar officer-avatar">
+            OF
+        </div>
+
+        <div class="user-info">
+
+            <strong>Rahul Sharma</strong>
+
+            <span>Road & Infrastructure</span>
+
+        </div>
+
+        <button class="logout-btn">
+            Logout
+        </button>
+
+    </div>
+
+</header>
+
+
+
+<!-- ================= MAIN CONTENT ================= -->
+
+<main class="dashboard-container">
+
+
+    <!-- ================= WELCOME ================= -->
+
+    <section class="dashboard-welcome">
+
+        <div>
+
+            <p class="welcome-label">
+                OFFICER DASHBOARD
+            </p>
+
+            <h1>
+                Welcome back, Rahul 👋
+            </h1>
+
+            <p>
+                Manage and resolve civic complaints assigned to your department.
+            </p>
+
+        </div>
+
+
+        <a href="officer_complaints.html"
+           class="primary-dashboard-btn">
+
+            View Complaints →
+
+        </a>
+
+    </section>
+
+
+
+    <!-- ================= STATS ================= -->
+
+    <section class="dashboard-stats">
+
+
+        <!-- ASSIGNED -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon blue">
+                ◉
+            </div>
+
+            <div>
+
+                <span>Assigned Complaints</span>
+
+                <h2>18</h2>
+
+            </div>
+
+        </div>
+
+
+        <!-- PENDING -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon orange">
+                !
+            </div>
+
+            <div>
+
+                <span>Pending Verification</span>
+
+                <h2>5</h2>
+
+            </div>
+
+        </div>
+
+
+        <!-- IN PROGRESS -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon purple">
+                ◷
+            </div>
+
+            <div>
+
+                <span>In Progress</span>
+
+                <h2>7</h2>
+
+            </div>
+
+        </div>
+
+
+        <!-- RESOLVED -->
+
+        <div class="stat-card">
+
+            <div class="stat-icon green">
+                ✓
+            </div>
+
+            <div>
+
+                <span>Resolved</span>
+
+                <h2>6</h2>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================= DASHBOARD GRID ================= -->
+
+    <section class="dashboard-grid">
+
+
+        <!-- ================= RECENT COMPLAINTS ================= -->
+
+        <div class="dashboard-card complaints-card">
+
+
+            <div class="card-header">
+
+                <div>
+
+                    <p class="card-label">
+                        DEPARTMENT ACTIVITY
+                    </p>
+
+                    <h2>
+                        Recent Complaints
+                    </h2>
+
+                </div>
+
+
+                <a href="officer_complaints.html">
+                    View All →
+                </a>
+
+            </div>
+
+
+
+            <!-- COMPLAINT 1 -->
+
+            <div class="complaint-item">
+
+
+                <div class="complaint-image road-image">
+
+                    <span>
+                        ROAD
+                    </span>
+
+                </div>
+
+
+                <div class="complaint-info">
+
+
+                    <div class="complaint-title-row">
+
+                        <h3>
+                            Large Pothole on Main Road
+                        </h3>
+
+                        <span class="status-badge progress">
+                            In Progress
+                        </span>
+
+                    </div>
+
+
+                    <p>
+                        Near Vijay Nagar Square, Indore
+                    </p>
+
+
+                    <div class="complaint-meta">
+
+                        <span>
+                            #FMC-000124
+                        </span>
+
+                        <span>
+                            📅 02 Sep 2026
+                        </span>
+
+                        <span>
+                            ↑ 18 Upvotes
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- COMPLAINT 2 -->
+
+            <div class="complaint-item">
+
+
+                <div class="complaint-image road-image">
+
+                    <span>
+                        ROAD
+                    </span>
+
+                </div>
+
+
+                <div class="complaint-info">
+
+
+                    <div class="complaint-title-row">
+
+                        <h3>
+                            Damaged Road Near Square
+                        </h3>
+
+                        <span class="status-badge reported">
+                            Reported
+                        </span>
+
+                    </div>
+
+
+                    <p>
+                        Palasia Square, Indore
+                    </p>
+
+
+                    <div class="complaint-meta">
+
+                        <span>
+                            #FMC-000128
+                        </span>
+
+                        <span>
+                            📅 04 Sep 2026
+                        </span>
+
+                        <span>
+                            ↑ 14 Upvotes
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- COMPLAINT 3 -->
+
+            <div class="complaint-item">
+
+
+                <div class="complaint-image road-image">
+
+                    <span>
+                        ROAD
+                    </span>
+
+                </div>
+
+
+                <div class="complaint-info">
+
+
+                    <div class="complaint-title-row">
+
+                        <h3>
+                            Road Crack Near Bus Stop
+                        </h3>
+
+                        <span class="status-badge resolved">
+                            Resolved
+                        </span>
+
+                    </div>
+
+
+                    <p>
+                        Bhanwarkuan Main Road, Indore
+                    </p>
+
+
+                    <div class="complaint-meta">
+
+                        <span>
+                            #FMC-000121
+                        </span>
+
+                        <span>
+                            📅 30 Aug 2026
+                        </span>
+
+                        <span>
+                            ↑ 11 Upvotes
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ================= PRIORITY PANEL ================= -->
+
+        <div class="dashboard-card quick-actions-card">
+
+
+            <div class="card-header">
+
+                <div>
+
+                    <p class="card-label">
+                        PRIORITY
+                    </p>
+
+                    <h2>
+                        High Priority Issues
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- PRIORITY 1 -->
+
+            <a href="officer_complaint_details.html"
+               class="quick-action">
+
+
+                <div class="priority-number high">
+                    01
+                </div>
+
+
+                <div>
+
+                    <h3>
+                        Large Pothole
+                    </h3>
+
+                    <p>
+                        18 community upvotes
+                    </p>
+
+                </div>
+
+
+                <span>
+                    →
+                </span>
+
+            </a>
+
+
+
+            <!-- PRIORITY 2 -->
+
+            <a href="officer_complaint_details.html"
+               class="quick-action">
+
+
+                <div class="priority-number medium">
+                    02
+                </div>
+
+
+                <div>
+
+                    <h3>
+                        Damaged Road
+                    </h3>
+
+                    <p>
+                        14 community upvotes
+                    </p>
+
+                </div>
+
+
+                <span>
+                    →
+                </span>
+
+            </a>
+
+
+
+            <!-- PRIORITY 3 -->
+
+            <a href="officer_complaint_details.html"
+               class="quick-action">
+
+
+                <div class="priority-number medium">
+                    03
+                </div>
+
+
+                <div>
+
+                    <h3>
+                        Road Crack
+                    </h3>
+
+                    <p>
+                        11 community upvotes
+                    </p>
+
+                </div>
+
+
+                <span>
+                    →
+                </span>
+
+            </a>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================= DEPARTMENT OVERVIEW ================= -->
+
+    <section class="dashboard-card nearby-section">
+
+
+        <div class="card-header">
+
+            <div>
+
+                <p class="card-label">
+                    DEPARTMENT
+                </p>
+
+                <h2>
+                    Road & Infrastructure
+                </h2>
+
+                <p class="section-description">
+                    Overview of complaints handled by your department.
+                </p>
+
+            </div>
+
+
+            <a href="officer_complaints.html"
+               class="secondary-btn">
+
+                Manage Complaints
+
+            </a>
+
+        </div>
+
+
+
+        <div class="officer-overview-grid">
+
+
+            <div class="officer-overview-card">
+
+                <span>
+                    Total Assigned
+                </span>
+
+                <strong>
+                    18
+                </strong>
+
+                <small>
+                    complaints
+                </small>
+
+            </div>
+
+
+            <div class="officer-overview-card">
+
+                <span>
+                    Pending
+                </span>
+
+                <strong>
+                    5
+                </strong>
+
+                <small>
+                    verification required
+                </small>
+
+            </div>
+
+
+            <div class="officer-overview-card">
+
+                <span>
+                    In Progress
+                </span>
+
+                <strong>
+                    7
+                </strong>
+
+                <small>
+                    currently being handled
+                </small>
+
+            </div>
+
+
+            <div class="officer-overview-card">
+
+                <span>
+                    Resolved
+                </span>
+
+                <strong>
+                    6
+                </strong>
+
+                <small>
+                    successfully completed
+                </small>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================= WORKFLOW ================= -->
+
+    <section class="dashboard-card status-section">
+
+
+        <div class="card-header">
+
+            <div>
+
+                <p class="card-label">
+                    WORKFLOW
+                </p>
+
+                <h2>
+                    Complaint Processing
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="officer-workflow">
+
+
+            <div class="workflow-step active">
+
+                <div class="workflow-icon">
+                    1
+                </div>
+
+                <div>
+
+                    <h3>
+                        Reported
+                    </h3>
+
+                    <p>
+                        Citizen submits complaint
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="workflow-arrow">
+                →
+            </div>
+
+
+            <div class="workflow-step">
+
+                <div class="workflow-icon">
+                    2
+                </div>
+
+                <div>
+
+                    <h3>
+                        Verify
+                    </h3>
+
+                    <p>
+                        Officer checks complaint
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="workflow-arrow">
+                →
+            </div>
+
+
+            <div class="workflow-step">
+
+                <div class="workflow-icon">
+                    3
+                </div>
+
+                <div>
+
+                    <h3>
+                        In Progress
+                    </h3>
+
+                    <p>
+                        Issue is being handled
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="workflow-arrow">
+                →
+            </div>
+
+
+            <div class="workflow-step">
+
+                <div class="workflow-icon">
+                    4
+                </div>
+
+                <div>
+
+                    <h3>
+                        Resolved
+                    </h3>
+
+                    <p>
+                        Work completed
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+</main>
+
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="dashboard-footer">
+
+    <span>
+        © 2026 FixMyCity
+    </span>
+
+    <span>
+        Officer Management Portal
+    </span>
+
+</footer>
+
+
+</body>
+
+</html>

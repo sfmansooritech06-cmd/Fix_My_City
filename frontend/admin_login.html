@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Login | FixMyCity</title>
+
+    <link rel="stylesheet" href="./css/style.css">
+
+</head>
+
+
+<body class="auth-page">
+
+
+<!-- =====================================================
+     AUTH NAVBAR
+===================================================== -->
+
+<header class="auth-navbar">
+
+    <a href="index.html" class="auth-logo">
+        FixMyCity
+    </a>
+
+    <a href="login.html" class="back-home">
+        ← Role Selection
+    </a>
+
+</header>
+
+
+
+<!-- =====================================================
+     ADMIN LOGIN
+===================================================== -->
+
+<main class="auth-container">
+
+    <div class="login-card">
+
+
+        <!-- HEADING -->
+
+        <div class="auth-heading">
+
+            <div class="auth-icon">
+                ⚙
+            </div>
+
+            <h1>
+                Admin Login
+            </h1>
+
+            <p>
+                Sign in to manage the FixMyCity platform
+            </p>
+
+        </div>
+
+
+
+        <!-- LOGIN FORM -->
+
+        <form class="login-form">
+
+
+            <!-- ADMIN ID -->
+
+            <div class="form-group">
+
+                <label for="admin_id">
+                    Admin ID
+                </label>
+
+                <input
+                    type="text"
+                    id="admin_id"
+                    name="admin_id"
+                    placeholder="Enter your admin ID"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- PASSWORD -->
+
+            <div class="form-group">
+
+                <div class="password-label">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <a href="#">
+                        Forgot password?
+                    </a>
+
+                </div>
+
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- LOGIN BUTTON -->
+
+            <button
+                type="submit"
+                class="login-submit"
+            >
+                Sign In
+                <span>→</span>
+            </button>
+
+        </form>
+
+
+
+        <!-- CITIZEN / OFFICER NAVIGATION -->
+
+        <div class="auth-back-link">
+
+            <a href="login.html">
+                ← Back to Role Selection
+            </a>
+
+        </div>
+
+
+    </div>
+
+</main>
+
+
+</body>
+
+</html>

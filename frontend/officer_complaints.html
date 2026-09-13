@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Officer Complaints | FixMyCity</title>
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+    <div class="nav-container">
+
+        <a href="officer_dashboard.html" class="logo">
+            <span class="logo-mark">+</span>
+            FixMyCity
+        </a>
+
+        <div class="nav-links">
+            <a href="officer_dashboard.html">Dashboard</a>
+            <a href="officer_complaints.html" class="active">Complaints</a>
+        </div>
+
+        <div class="nav-user">
+
+            <div class="user-avatar">RS</div>
+
+            <div class="user-info">
+                <strong>Rahul Sharma</strong>
+                <span>Road & Infrastructure</span>
+            </div>
+
+            <a href="officer_login.html" class="logout-btn">
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+</nav>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="complaints-page">
+
+    <!-- PAGE HEADER -->
+
+    <section class="page-header">
+
+        <div>
+
+            <span class="section-label">
+                OFFICER CONTROL CENTER
+            </span>
+
+            <h1>
+                Department <span>Complaints</span>
+            </h1>
+
+            <p>
+                Review, verify and manage complaints assigned to your department.
+            </p>
+
+        </div>
+
+        <a href="officer_dashboard.html" class="back-link">
+            ← Back to Dashboard
+        </a>
+
+    </section>
+
+
+    <!-- ================= STATS ================= -->
+
+    <section class="complaint-stats">
+
+        <div class="complaint-stat-card">
+
+            <span>All Complaints</span>
+
+            <strong>18</strong>
+
+            <small>Department total</small>
+
+        </div>
+
+
+        <div class="complaint-stat-card">
+
+            <span>Reported</span>
+
+            <strong>5</strong>
+
+            <small>Awaiting verification</small>
+
+        </div>
+
+
+        <div class="complaint-stat-card">
+
+            <span>In Progress</span>
+
+            <strong>7</strong>
+
+            <small>Currently being handled</small>
+
+        </div>
+
+
+        <div class="complaint-stat-card">
+
+            <span>Resolved</span>
+
+            <strong>6</strong>
+
+            <small>Successfully resolved</small>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= FILTER CARD ================= -->
+
+    <section class="complaints-filter-card">
+
+        <div class="search-box">
+
+            <span class="search-icon">⌕</span>
+
+            <input
+                type="text"
+                placeholder="Search by complaint ID, title or location..."
+            >
+
+        </div>
+
+
+        <div class="filter-row">
+
+            <select>
+                <option>All Status</option>
+                <option>Reported</option>
+                <option>In Progress</option>
+                <option>Resolved</option>
+            </select>
+
+
+            <select>
+                <option>All Priority</option>
+                <option>High</option>
+                <option>Medium</option>
+                <option>Low</option>
+            </select>
+
+
+            <select>
+                <option>All Categories</option>
+                <option>Road & Infrastructure</option>
+                <option>Sanitation</option>
+                <option>Streetlight / Electricity</option>
+                <option>Water Supply</option>
+                <option>Public Property</option>
+            </select>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= TABS ================= -->
+
+    <div class="complaint-tabs">
+
+        <button class="active">
+            All
+            <span>18</span>
+        </button>
+
+        <button>
+            Reported
+            <span>5</span>
+        </button>
+
+        <button>
+            In Progress
+            <span>7</span>
+        </button>
+
+        <button>
+            Resolved
+            <span>6</span>
+        </button>
+
+    </div>
+
+
+    <!-- ================= COMPLAINT LIST ================= -->
+
+    <section class="officer-complaints-list">
+
+
+        <!-- COMPLAINT 1 -->
+
+        <article class="officer-complaint-card">
+
+            <div class="complaint-card-top">
+
+                <div>
+
+                    <div class="complaint-id">
+                        #FMC-000124
+                    </div>
+
+                    <h2>
+                        Large Pothole on Main Road
+                    </h2>
+
+                    <span class="complaint-category">
+                        Road & Infrastructure
+                    </span>
+
+                </div>
+
+
+                <div class="complaint-badges">
+
+                    <span class="priority-badge high">
+                        HIGH
+                    </span>
+
+                    <span class="status-badge in-progress">
+                        IN PROGRESS
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <p class="complaint-description">
+                A large pothole has developed near the main road
+                and is causing difficulty for vehicles and pedestrians.
+            </p>
+
+
+            <div class="complaint-meta">
+
+                <span>
+                    ◎ Near Vijay Nagar Square, Indore
+                </span>
+
+                <span>
+                    ◷ 02 Sep 2026
+                </span>
+
+                <span>
+                    ↑ 18 Upvotes
+                </span>
+
+            </div>
+
+
+            <div class="complaint-card-bottom">
+
+                <div class="priority-info">
+                    <span>Priority</span>
+                    <strong class="high-text">HIGH</strong>
+                </div>
+
+                <a
+                    href="officer_complaint_details.html"
+                    class="view-complaint-btn"
+                >
+                    View Details →
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- COMPLAINT 2 -->
+
+        <article class="officer-complaint-card">
+
+            <div class="complaint-card-top">
+
+                <div>
+
+                    <div class="complaint-id">
+                        #FMC-000128
+                    </div>
+
+                    <h2>
+                        Damaged Road Near Market
+                    </h2>
+
+                    <span class="complaint-category">
+                        Road & Infrastructure
+                    </span>
+
+                </div>
+
+
+                <div class="complaint-badges">
+
+                    <span class="priority-badge high">
+                        HIGH
+                    </span>
+
+                    <span class="status-badge reported">
+                        REPORTED
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <p class="complaint-description">
+                Road surface is severely damaged with multiple
+                cracks and uneven patches near the market area.
+            </p>
+
+
+            <div class="complaint-meta">
+
+                <span>
+                    ◎ Scheme No. 54, Indore
+                </span>
+
+                <span>
+                    ◷ 03 Sep 2026
+                </span>
+
+                <span>
+                    ↑ 14 Upvotes
+                </span>
+
+            </div>
+
+
+            <div class="complaint-card-bottom">
+
+                <div class="priority-info">
+                    <span>Priority</span>
+                    <strong class="high-text">HIGH</strong>
+                </div>
+
+                <a
+                    href="officer_complaint_details.html"
+                    class="view-complaint-btn"
+                >
+                    View Details →
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- COMPLAINT 3 -->
+
+        <article class="officer-complaint-card">
+
+            <div class="complaint-card-top">
+
+                <div>
+
+                    <div class="complaint-id">
+                        #FMC-000121
+                    </div>
+
+                    <h2>
+                        Road Crack Near Residential Area
+                    </h2>
+
+                    <span class="complaint-category">
+                        Road & Infrastructure
+                    </span>
+
+                </div>
+
+
+                <div class="complaint-badges">
+
+                    <span class="priority-badge medium">
+                        MEDIUM
+                    </span>
+
+                    <span class="status-badge resolved">
+                        RESOLVED
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <p class="complaint-description">
+                A visible crack was reported on the road surface
+                near a residential area.
+            </p>
+
+
+            <div class="complaint-meta">
+
+                <span>
+                    ◎ Vijay Nagar, Indore
+                </span>
+
+                <span>
+                    ◷ 30 Aug 2026
+                </span>
+
+                <span>
+                    ↑ 11 Upvotes
+                </span>
+
+            </div>
+
+
+            <div class="complaint-card-bottom">
+
+                <div class="priority-info">
+                    <span>Priority</span>
+                    <strong class="medium-text">MEDIUM</strong>
+                </div>
+
+                <a
+                    href="officer_complaint_details.html"
+                    class="view-complaint-btn"
+                >
+                    View Details →
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- COMPLAINT 4 -->
+
+        <article class="officer-complaint-card">
+
+            <div class="complaint-card-top">
+
+                <div>
+
+                    <div class="complaint-id">
+                        #FMC-000130
+                    </div>
+
+                    <h2>
+                        Broken Footpath
+                    </h2>
+
+                    <span class="complaint-category">
+                        Road & Infrastructure
+                    </span>
+
+                </div>
+
+
+                <div class="complaint-badges">
+
+                    <span class="priority-badge low">
+                        LOW
+                    </span>
+
+                    <span class="status-badge reported">
+                        REPORTED
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <p class="complaint-description">
+                Several footpath tiles are broken and need repair
+                for safe pedestrian movement.
+            </p>
+
+
+            <div class="complaint-meta">
+
+                <span>
+                    ◎ Palasia, Indore
+                </span>
+
+                <span>
+                    ◷ 04 Sep 2026
+                </span>
+
+                <span>
+                    ↑ 4 Upvotes
+                </span>
+
+            </div>
+
+
+            <div class="complaint-card-bottom">
+
+                <div class="priority-info">
+                    <span>Priority</span>
+                    <strong class="low-text">LOW</strong>
+                </div>
+
+                <a
+                    href="officer_complaint_details.html"
+                    class="view-complaint-btn"
+                >
+                    View Details →
+                </a>
+
+            </div>
+
+        </article>
+
+
+    </section>
+
+
+    <!-- ================= PAGINATION ================= -->
+
+    <div class="pagination">
+
+        <button disabled>
+            ←
+        </button>
+
+        <button class="active">
+            1
+        </button>
+
+        <button>
+            2
+        </button>
+
+        <button>
+            3
+        </button>
+
+        <span>...</span>
+
+        <button>
+            5
+        </button>
+
+        <button>
+            →
+        </button>
+
+    </div>
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+
+    <div class="footer-content">
+
+        <div>
+            <strong>FixMyCity</strong>
+
+            <p>
+                Making cities better, one complaint at a time.
+            </p>
+        </div>
+
+        <span>
+            Officer Control Center
+        </span>
+
+    </div>
+
+</footer>
+
+
+</body>
+</html>

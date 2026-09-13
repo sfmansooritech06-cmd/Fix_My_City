@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Profile | FixMyCity</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<nav class="dashboard-navbar">
+
+    <div class="nav-logo">
+        <span class="logo-icon">✦</span>
+        <span>FixMyCity</span>
+    </div>
+
+    <div class="nav-links">
+        <a href="citizen_dashboard.html">Dashboard</a>
+        <a href="report_issue.html">Report Issue</a>
+        <a href="my_complaints.html">My Complaints</a>
+    </div>
+
+    <div class="nav-user">
+
+        <div class="user-avatar">
+            SF
+        </div>
+
+        <div class="user-info">
+            <span class="user-name">Sadaf Fatima</span>
+            <span class="user-role">Citizen</span>
+        </div>
+
+        <a href="index.html" class="logout-btn">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- ================= PROFILE PAGE ================= -->
+
+<main class="profile-page">
+
+    <!-- PAGE HEADER -->
+    <div class="profile-page-header">
+
+        <div>
+            <a href="citizen_dashboard.html" class="back-link">
+                ← Back to Dashboard
+            </a>
+
+            <h1>My Profile</h1>
+
+            <p>
+                Manage your personal information and account details.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- PROFILE LAYOUT -->
+    <div class="profile-layout">
+
+
+        <!-- ================= LEFT PROFILE CARD ================= -->
+
+        <section class="profile-main-card">
+
+            <div class="profile-cover"></div>
+
+            <div class="profile-avatar-large">
+                SF
+            </div>
+
+            <div class="profile-basic-info">
+
+                <h2>Sadaf Fatima</h2>
+
+                <p class="profile-email">
+                    sadaf@example.com
+                </p>
+
+                <span class="profile-status">
+                    ● Active Citizen
+                </span>
+
+            </div>
+
+
+            <!-- PERSONAL INFORMATION -->
+
+            <div class="profile-section">
+
+                <div class="section-heading">
+
+                    <div>
+                        <h3>Personal Information</h3>
+                        <p>Update your basic account information.</p>
+                    </div>
+
+                    <button class="profile-edit-btn">
+                        ✎ Edit Profile
+                    </button>
+
+                </div>
+
+
+                <div class="profile-form-grid">
+
+                    <div class="profile-field">
+
+                        <label>Full Name</label>
+
+                        <input
+                            type="text"
+                            value="Sadaf Fatima"
+                            readonly
+                        >
+
+                    </div>
+
+
+                    <div class="profile-field">
+
+                        <label>Citizen ID</label>
+
+                        <input
+                            type="text"
+                            value="FMC-CIT-000001"
+                            readonly
+                        >
+
+                    </div>
+
+
+                    <div class="profile-field">
+
+                        <label>Email Address</label>
+
+                        <input
+                            type="email"
+                            value="sadaf@example.com"
+                            readonly
+                        >
+
+                    </div>
+
+
+                    <div class="profile-field">
+
+                        <label>Phone Number</label>
+
+                        <input
+                            type="text"
+                            value="+91 98765 43210"
+                            readonly
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ACCOUNT INFORMATION -->
+
+            <div class="profile-section">
+
+                <div class="section-heading">
+
+                    <div>
+                        <h3>Account Information</h3>
+                        <p>Overview of your FixMyCity account.</p>
+                    </div>
+
+                </div>
+
+
+                <div class="account-info-grid">
+
+                    <div class="account-info-box">
+
+                        <span class="account-icon">◉</span>
+
+                        <div>
+                            <span>Citizen ID</span>
+                            <strong>FMC-CIT-000001</strong>
+                        </div>
+
+                    </div>
+
+
+                    <div class="account-info-box">
+
+                        <span class="account-icon">✓</span>
+
+                        <div>
+                            <span>Account Status</span>
+                            <strong>Active</strong>
+                        </div>
+
+                    </div>
+
+
+                    <div class="account-info-box">
+
+                        <span class="account-icon">◷</span>
+
+                        <div>
+                            <span>Member Since</span>
+                            <strong>2026</strong>
+                        </div>
+
+                    </div>
+
+
+                    <div class="account-info-box">
+
+                        <span class="account-icon">▣</span>
+
+                        <div>
+                            <span>Total Reports</span>
+                            <strong>12 Reports</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- CHANGE PASSWORD -->
+
+            <div class="profile-section">
+
+                <div class="section-heading">
+
+                    <div>
+                        <h3>Security</h3>
+                        <p>Keep your account secure.</p>
+                    </div>
+
+                </div>
+
+
+                <div class="security-row">
+
+                    <div>
+
+                        <strong>Password</strong>
+
+                        <p>
+                            Your password is securely protected.
+                        </p>
+
+                    </div>
+
+                    <button class="secondary-profile-btn">
+                        Change Password
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= RIGHT SIDEBAR ================= -->
+
+        <aside class="profile-sidebar">
+
+
+            <!-- PROFILE SUMMARY -->
+
+            <div class="profile-side-card">
+
+                <div class="side-card-title">
+
+                    <span class="side-icon">◆</span>
+
+                    <h3>Activity Summary</h3>
+
+                </div>
+
+
+                <div class="profile-stat">
+
+                    <span>Total Complaints</span>
+
+                    <strong>12</strong>
+
+                </div>
+
+
+                <div class="profile-stat">
+
+                    <span>In Progress</span>
+
+                    <strong>4</strong>
+
+                </div>
+
+
+                <div class="profile-stat">
+
+                    <span>Resolved</span>
+
+                    <strong>7</strong>
+
+                </div>
+
+
+                <div class="profile-stat">
+
+                    <span>Upvotes Given</span>
+
+                    <strong>23</strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- QUICK LINKS -->
+
+            <div class="profile-side-card">
+
+                <div class="side-card-title">
+
+                    <span class="side-icon">↗</span>
+
+                    <h3>Quick Links</h3>
+
+                </div>
+
+
+                <a href="report_issue.html" class="profile-quick-link">
+                    <span>＋</span>
+                    Report New Issue
+                </a>
+
+
+                <a href="my_complaints.html" class="profile-quick-link">
+                    <span>▣</span>
+                    View My Complaints
+                </a>
+
+
+                <a href="citizen_dashboard.html" class="profile-quick-link">
+                    <span>⌂</span>
+                    Dashboard
+                </a>
+
+            </div>
+
+
+
+            <!-- HELP CARD -->
+
+            <div class="profile-help-card">
+
+                <div class="help-icon">
+                    ?
+                </div>
+
+                <div>
+
+                    <h3>Need Help?</h3>
+
+                    <p>
+                        If you have any issue with your account,
+                        contact FixMyCity support.
+                    </p>
+
+                    <a href="#">
+                        Contact Support →
+                    </a>
+
+                </div>
+
+            </div>
+
+
+        </aside>
+
+    </div>
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="dashboard-footer">
+
+    <p>
+        © 2026 FixMyCity. Making cities better, one report at a time.
+    </p>
+
+</footer>
+
+
+</body>
+</html>

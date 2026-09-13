@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Login | FixMyCity</title>
+
+    <link rel="stylesheet" href="./css/style.css">
+
+</head>
+
+
+<body class="auth-page">
+
+
+<!-- =====================================================
+     AUTH NAVBAR
+===================================================== -->
+
+<header class="auth-navbar">
+
+    <a href="index.html" class="auth-logo">
+        FixMyCity
+    </a>
+
+    <a href="index.html" class="back-home">
+        ← Back to Home
+    </a>
+
+</header>
+
+
+
+<!-- =====================================================
+     LOGIN
+===================================================== -->
+
+<main class="auth-container">
+
+    <div class="login-card">
+
+
+        <!-- LOGO / HEADING -->
+
+        <div class="auth-heading">
+
+            <div class="auth-icon">
+                ◉
+            </div>
+
+            <h1>
+                Welcome back
+            </h1>
+
+            <p>
+                Sign in to continue to FixMyCity
+            </p>
+
+        </div>
+
+
+
+        <!-- =================================================
+             WHO ARE YOU
+        ================================================= -->
+
+        <div class="role-selection">
+
+            <label>
+                Who are you?
+            </label>
+
+
+            <div class="role-options">
+
+
+                <button class="role-option active">
+
+                    <span class="role-option-icon">
+                        👤
+                    </span>
+
+                    <span>
+                        Citizen
+                    </span>
+
+                </button>
+
+
+
+                    <a href="officer_login.html" class="role-option">
+
+                        <span class="role-option-icon">
+                            ◈
+                        </span>
+
+                        <span>
+                            Officer
+                        </span>
+
+                    </a>
+
+
+
+
+                <a href="admin_login.html" class="role-option">
+
+                    <span class="role-option-icon">
+                        ⚙
+                    </span>
+
+                    <span>
+                        Admin
+                    </span>
+
+                </a>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             LOGIN FORM
+        ================================================= -->
+
+        <form class="login-form">
+
+
+            <div class="form-group">
+
+                <label for="email">
+                    Email Address
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter your email"
+                    required
+                >
+
+            </div>
+
+
+
+            <div class="form-group">
+
+                <div class="password-label">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <a href="#">
+                        Forgot password?
+                    </a>
+
+                </div>
+
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Enter your password"
+                    required
+                >
+
+            </div>
+
+
+
+            <button
+                type="submit"
+                class="login-submit"
+            >
+                Sign In
+                <span>→</span>
+            </button>
+
+
+        </form>
+
+
+
+        <!-- =================================================
+             REGISTER
+        ================================================= -->
+
+        <div class="signup-text">
+
+            <span>
+                Don't have an account?
+            </span>
+
+            <a href="register.html">
+                Sign Up
+            </a>
+
+        </div>
+
+
+    </div>
+
+</main>
+
+
+</body>
+
+</html>
