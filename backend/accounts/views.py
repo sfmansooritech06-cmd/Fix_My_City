@@ -3,7 +3,11 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import make_password
 
 from .models import User, Citizen
+from django.shortcuts import render
 
+
+def home(request):
+    return render(request, "index.html")
 
 @csrf_exempt
 def register_citizen(request):
