@@ -92,3 +92,85 @@ class Officer(models.Model):
 
     def __str__(self):
         return f"{self.full_name} ({self.employee_id})"
+
+
+class Complaint(models.Model):
+    CATEGORY_CHOICES = (
+        ('pothole', 'Pothole'),
+        ('garbage', 'Garbage'),
+        ('streetlight', 'Streetlight'),
+        ('water', 'Water Leakage'),
+        ('property', 'Damaged Public Property'),
+        ('other', 'Other'),
+    )
+
+    STATUS_CHOICES = (
+        ('reported', 'Reported'),
+        ('in_progress', 'In Progress'),
+        ('resolved', 'Resolved'),
+    )
+
+    complaint_id = models.CharField(
+        max_length=20,
+        unique=True
+    )
+
+    citizen = models.ForeignKey(
+        Citizen,
+        on_delete=models.CASCADE,
+        related_name='complaints'
+    )
+
+    category = models.CharField(
+        max_length=30,
+        choices=CATEGORY_CHOICES
+    )
+
+    title = models.CharField(
+        max_length=200
+    )
+
+    description = models.TextField()
+
+    photo = models.ImageField(
+        upload_to='complaints/',
+        blank=True,
+        null=True
+    )
+
+    address = models.TextField()
+
+    latitude = models.DecimalField(
+        max_digits=10,
+        decimal_places=7,
+        blank=True,
+        null=True
+    )
+
+    longitude = models.DecimalField(
+        max_digits=10,
+        decimal_places=7,
+        blank=True,
+        null=True
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='reported'
+    )
+
+    upvotes = models.PositiveIntegerField(
+        default=0
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    def __str__(self):
+        return f"{self.complaint_id} - {self.title}"

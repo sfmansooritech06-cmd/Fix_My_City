@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +7,7 @@
 
     <title>Report an Issue | FixMyCity</title>
 
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 
 <body class="dashboard-page">
@@ -16,16 +17,16 @@
     <header class="dashboard-navbar">
 
         <div class="dashboard-logo">
-            <a href="index.html">FixMyCity</a>
+            <a href="{% url 'home' %}">FixMyCity</a>
         </div>
 
         <nav class="dashboard-nav">
 
-            <a href="citizen_dashboard.html">
+            <a href="{% url 'citizen_dashboard' %}">
                 Dashboard
             </a>
 
-            <a href="report_issue.html" class="active">
+            <a href="{% url 'report_issue' %}" class="active">
                 Report Issue
             </a>
 
@@ -88,7 +89,13 @@
 
         <!-- ================= REPORT FORM ================= -->
 
-        <form class="report-form">
+        <form
+            class="report-form"
+            method="POST"
+            enctype="multipart/form-data"
+            action="{% url 'submit_complaint' %}"
+        >
+         {% csrf_token %}
 
 
             <!-- ================= ISSUE INFORMATION ================= -->
@@ -135,6 +142,14 @@
                             Sanitation / Garbage
                         </option>
 
+                       <option value="pothole">
+                            Pothole
+                        </option>
+
+                        <option value="garbage">
+                            Garbage
+                        </option>
+
                         <option value="streetlight">
                             Streetlight / Electricity
                         </option>
@@ -143,8 +158,8 @@
                             Water Supply / Leakage
                         </option>
 
-                        <option value="public_property">
-                            Public Property
+                        <option value="property">
+                            Damaged Public Property
                         </option>
 
                         <option value="other">
@@ -371,16 +386,43 @@
 
                 <div class="coordinates-row">
 
+                    <div class="coordinates-row">
+
                     <div class="coordinate-box">
 
                         <span>Latitude</span>
 
-                        <strong>
+                        <strong id="latitude-display">
                             --.--------
                         </strong>
 
                     </div>
 
+                    <div class="coordinate-box">
+
+                        <span>Longitude</span>
+
+                        <strong id="longitude-display">
+                            --.--------
+                        </strong>
+
+                    </div>
+
+                </div>
+
+                    <input
+                        type="hidden"
+                        id="latitude"
+                        name="latitude"
+                        value=""
+                    >
+
+                    <input
+                        type="hidden"
+                        id="longitude"
+                        name="longitude"
+                        value=""
+                    >
                     <div class="coordinate-box">
 
                         <span>Longitude</span>

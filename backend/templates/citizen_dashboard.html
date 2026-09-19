@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +7,7 @@
 
     <title>Citizen Dashboard | FixMyCity</title>
 
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 
 <body class="dashboard-page">
@@ -15,33 +16,40 @@
     <header class="dashboard-navbar">
 
         <div class="dashboard-logo">
-            <a href="index.html">FixMyCity</a>
+            <a href="{% url 'home' %}">FixMyCity</a>
         </div>
 
         <nav class="dashboard-nav">
-            <a href="citizen_dashboard.html" class="active">
+
+            <a href="{% url 'citizen_dashboard' %}"
+               class="active">
                 Dashboard
             </a>
 
-            <a href="report_issue.html">
+            <a href="{% url 'report_issue' %}">
                 Report Issue
             </a>
 
             <a href="my_complaints.html">
                 My Complaints
             </a>
+
         </nav>
+
 
         <div class="dashboard-user">
 
             <div class="user-avatar">
-                SF
+                {{ initials }}
             </div>
 
             <div class="user-info">
-                <strong>Sadaf Fatima</strong>
+                <strong>{{ citizen.full_name }}</strong>
                 <span>Citizen</span>
             </div>
+
+
+            <!-- ================= LOGOUT ================= -->
 
             <button class="logout-btn">
                 Logout
@@ -52,33 +60,50 @@
     </header>
 
 
+
     <!-- ================= MAIN CONTENT ================= -->
+
     <main class="dashboard-container">
 
-        <!-- Welcome Section -->
+
+        <!-- ================= WELCOME SECTION ================= -->
+
         <section class="dashboard-welcome">
 
             <div>
-                <p class="welcome-label">CITIZEN DASHBOARD</p>
+
+                <p class="welcome-label">
+                    CITIZEN DASHBOARD
+                </p>
 
                 <h1>
-                    Welcome back, Sadaf 👋
+                    Welcome {{ citizen.full_name }} 👋
                 </h1>
 
                 <p>
                     Track your complaints and help make your city better.
                 </p>
+
             </div>
 
-            <a href="report_issue.html" class="primary-dashboard-btn">
+
+            <a href="{% url 'report_issue' %}"
+               class="primary-dashboard-btn">
+
                 + Report an Issue
+
             </a>
 
         </section>
 
 
+
         <!-- ================= STAT CARDS ================= -->
+
         <section class="dashboard-stats">
+
+
+            <!-- Total Reports -->
 
             <div class="stat-card">
 
@@ -87,12 +112,20 @@
                 </div>
 
                 <div>
-                    <span>Total Reports</span>
+
+                    <span>
+                        Total Reports
+                    </span>
+
                     <h2>12</h2>
+
                 </div>
 
             </div>
 
+
+
+            <!-- In Progress -->
 
             <div class="stat-card">
 
@@ -101,12 +134,20 @@
                 </div>
 
                 <div>
-                    <span>In Progress</span>
+
+                    <span>
+                        In Progress
+                    </span>
+
                     <h2>4</h2>
+
                 </div>
 
             </div>
 
+
+
+            <!-- Resolved -->
 
             <div class="stat-card">
 
@@ -115,12 +156,20 @@
                 </div>
 
                 <div>
-                    <span>Resolved</span>
+
+                    <span>
+                        Resolved
+                    </span>
+
                     <h2>7</h2>
+
                 </div>
 
             </div>
 
+
+
+            <!-- My Upvotes -->
 
             <div class="stat-card">
 
@@ -129,8 +178,13 @@
                 </div>
 
                 <div>
-                    <span>My Upvotes</span>
+
+                    <span>
+                        My Upvotes
+                    </span>
+
                     <h2>23</h2>
+
                 </div>
 
             </div>
@@ -138,7 +192,9 @@
         </section>
 
 
+
         <!-- ================= DASHBOARD GRID ================= -->
+
         <section class="dashboard-grid">
 
 
@@ -149,9 +205,17 @@
                 <div class="card-header">
 
                     <div>
-                        <p class="card-label">ACTIVITY</p>
-                        <h2>Recent Complaints</h2>
+
+                        <p class="card-label">
+                            ACTIVITY
+                        </p>
+
+                        <h2>
+                            Recent Complaints
+                        </h2>
+
                     </div>
+
 
                     <a href="my_complaints.html">
                         View All →
@@ -160,12 +224,19 @@
                 </div>
 
 
-                <!-- Complaint 1 -->
+
+                <!-- ================= COMPLAINT 1 ================= -->
+
                 <div class="complaint-item">
 
                     <div class="complaint-image road-image">
-                        <span>ROAD</span>
+
+                        <span>
+                            ROAD
+                        </span>
+
                     </div>
+
 
                     <div class="complaint-info">
 
@@ -181,9 +252,11 @@
 
                         </div>
 
+
                         <p>
                             Near Vijay Nagar Square, Indore
                         </p>
+
 
                         <div class="complaint-meta">
 
@@ -206,12 +279,19 @@
                 </div>
 
 
-                <!-- Complaint 2 -->
+
+                <!-- ================= COMPLAINT 2 ================= -->
+
                 <div class="complaint-item">
 
                     <div class="complaint-image garbage-image">
-                        <span>SANITATION</span>
+
+                        <span>
+                            SANITATION
+                        </span>
+
                     </div>
+
 
                     <div class="complaint-info">
 
@@ -227,9 +307,11 @@
 
                         </div>
 
+
                         <p>
                             Scheme No. 54, Indore
                         </p>
+
 
                         <div class="complaint-meta">
 
@@ -252,12 +334,19 @@
                 </div>
 
 
-                <!-- Complaint 3 -->
+
+                <!-- ================= COMPLAINT 3 ================= -->
+
                 <div class="complaint-item">
 
                     <div class="complaint-image light-image">
-                        <span>STREETLIGHT</span>
+
+                        <span>
+                            STREETLIGHT
+                        </span>
+
                     </div>
+
 
                     <div class="complaint-info">
 
@@ -273,9 +362,11 @@
 
                         </div>
 
+
                         <p>
                             Bengali Square, Indore
                         </p>
+
 
                         <div class="complaint-meta">
 
@@ -300,6 +391,7 @@
             </div>
 
 
+
             <!-- ================= QUICK ACTIONS ================= -->
 
             <div class="dashboard-card quick-actions-card">
@@ -307,86 +399,139 @@
                 <div class="card-header">
 
                     <div>
-                        <p class="card-label">SHORTCUTS</p>
-                        <h2>Quick Actions</h2>
+
+                        <p class="card-label">
+                            SHORTCUTS
+                        </p>
+
+                        <h2>
+                            Quick Actions
+                        </h2>
+
                     </div>
 
                 </div>
 
 
-                <a href="report_issue.html" class="quick-action">
+
+                <!-- Report Issue -->
+
+                <a href="{% url 'report_issue' %}"
+                   class="quick-action">
 
                     <div class="quick-action-icon">
                         +
                     </div>
 
                     <div>
-                        <h3>Report an Issue</h3>
+
+                        <h3>
+                            Report an Issue
+                        </h3>
+
                         <p>
                             Report a civic problem in your area
                         </p>
+
                     </div>
 
-                    <span>→</span>
+                    <span>
+                        →
+                    </span>
 
                 </a>
 
 
-                <a href="my_complaints.html" class="quick-action">
+
+                <!-- My Complaints -->
+
+                <a href="my_complaints.html"
+                   class="quick-action">
 
                     <div class="quick-action-icon">
                         ◉
                     </div>
 
                     <div>
-                        <h3>My Complaints</h3>
+
+                        <h3>
+                            My Complaints
+                        </h3>
+
                         <p>
                             Track your submitted complaints
                         </p>
+
                     </div>
 
-                    <span>→</span>
+                    <span>
+                        →
+                    </span>
 
                 </a>
 
 
-                <a href="#" class="quick-action">
+
+                <!-- Nearby Issues -->
+
+                <a href="#"
+                   class="quick-action">
 
                     <div class="quick-action-icon">
                         ↑
                     </div>
 
                     <div>
-                        <h3>Nearby Issues</h3>
+
+                        <h3>
+                            Nearby Issues
+                        </h3>
+
                         <p>
                             Support issues reported nearby
                         </p>
+
                     </div>
 
-                    <span>→</span>
+                    <span>
+                        →
+                    </span>
 
                 </a>
 
 
-                <a href="profile.html" class="quick-action">
+
+                <!-- My Profile -->
+
+                <a href="profile.html"
+                   class="quick-action">
 
                     <div class="quick-action-icon">
                         ◎
                     </div>
 
                     <div>
-                        <h3>My Profile</h3>
+
+                        <h3>
+                            My Profile
+                        </h3>
+
                         <p>
                             View and manage your profile
                         </p>
+
                     </div>
 
-                    <span>→</span>
+                    <span>
+                        →
+                    </span>
 
                 </a>
+
             </div>
 
         </section>
+
 
 
         <!-- ================= NEARBY ISSUES ================= -->
@@ -396,13 +541,21 @@
             <div class="card-header">
 
                 <div>
-                    <p class="card-label">COMMUNITY</p>
-                    <h2>Nearby Issues</h2>
+
+                    <p class="card-label">
+                        COMMUNITY
+                    </p>
+
+                    <h2>
+                        Nearby Issues
+                    </h2>
 
                     <p class="section-description">
                         Upvote existing issues instead of reporting duplicates.
                     </p>
+
                 </div>
+
 
                 <button class="secondary-btn">
                     View Map
@@ -411,10 +564,11 @@
             </div>
 
 
+
             <div class="nearby-grid">
 
 
-                <!-- Nearby Issue 1 -->
+                <!-- ================= NEARBY ISSUE 1 ================= -->
 
                 <div class="nearby-card">
 
@@ -430,6 +584,7 @@
 
                     </div>
 
+
                     <h3>
                         Damaged Road Near Square
                     </h3>
@@ -437,6 +592,7 @@
                     <p>
                         Major potholes causing traffic problems.
                     </p>
+
 
                     <div class="nearby-footer">
 
@@ -453,7 +609,8 @@
                 </div>
 
 
-                <!-- Nearby Issue 2 -->
+
+                <!-- ================= NEARBY ISSUE 2 ================= -->
 
                 <div class="nearby-card">
 
@@ -469,6 +626,7 @@
 
                     </div>
 
+
                     <h3>
                         Garbage Dumping Area
                     </h3>
@@ -476,6 +634,7 @@
                     <p>
                         Garbage has not been collected for several days.
                     </p>
+
 
                     <div class="nearby-footer">
 
@@ -492,7 +651,8 @@
                 </div>
 
 
-                <!-- Nearby Issue 3 -->
+
+                <!-- ================= NEARBY ISSUE 3 ================= -->
 
                 <div class="nearby-card">
 
@@ -508,6 +668,7 @@
 
                     </div>
 
+
                     <h3>
                         Water Leakage
                     </h3>
@@ -515,6 +676,7 @@
                     <p>
                         Continuous water leakage reported near the main road.
                     </p>
+
 
                     <div class="nearby-footer">
 
@@ -535,6 +697,7 @@
         </section>
 
 
+
         <!-- ================= STATUS TIMELINE ================= -->
 
         <section class="dashboard-card status-section">
@@ -542,9 +705,17 @@
             <div class="card-header">
 
                 <div>
-                    <p class="card-label">TRACKING</p>
-                    <h2>Complaint Status</h2>
+
+                    <p class="card-label">
+                        TRACKING
+                    </p>
+
+                    <h2>
+                        Complaint Status
+                    </h2>
+
                 </div>
+
 
                 <span class="complaint-id">
                     #FMC-000124
@@ -553,8 +724,11 @@
             </div>
 
 
+
             <div class="status-timeline">
 
+
+                <!-- Reported -->
 
                 <div class="timeline-step completed">
 
@@ -563,17 +737,26 @@
                     </div>
 
                     <div>
-                        <h3>Reported</h3>
+
+                        <h3>
+                            Reported
+                        </h3>
+
                         <p>
                             Complaint submitted successfully
                         </p>
+
                     </div>
 
                 </div>
 
 
+
                 <div class="timeline-line active"></div>
 
+
+
+                <!-- In Progress -->
 
                 <div class="timeline-step active">
 
@@ -582,17 +765,26 @@
                     </div>
 
                     <div>
-                        <h3>In Progress</h3>
+
+                        <h3>
+                            In Progress
+                        </h3>
+
                         <p>
                             Assigned officer is working on the issue
                         </p>
+
                     </div>
 
                 </div>
 
 
+
                 <div class="timeline-line"></div>
 
+
+
+                <!-- Resolved -->
 
                 <div class="timeline-step">
 
@@ -601,10 +793,15 @@
                     </div>
 
                     <div>
-                        <h3>Resolved</h3>
+
+                        <h3>
+                            Resolved
+                        </h3>
+
                         <p>
                             Issue will be marked resolved after completion
                         </p>
+
                     </div>
 
                 </div>
@@ -614,6 +811,7 @@
         </section>
 
     </main>
+
 
 
     <!-- ================= FOOTER ================= -->
@@ -629,6 +827,11 @@
         </span>
 
     </footer>
+
+
+    <!-- ================= MAIN JAVASCRIPT ================= -->
+
+    <script src="{% static 'js/script.js' %}"></script>
 
 </body>
 </html>

@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,8 +11,9 @@
           content="width=device-width, initial-scale=1.0">
 
     <title>Sign Up | FixMyCity</title>
-    <script src="./js/script.js"></script>
-    <link rel="stylesheet" href="./css/style.css">
+
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 </head>
 
@@ -20,11 +23,11 @@
 
 <header class="auth-navbar">
 
-    <a href="index.html" class="auth-logo">
+    <a href="{% url 'home' %}" class="auth-logo">
         FixMyCity
     </a>
 
-    <a href="login.html" class="back-home">
+    <a href="{% url 'login' %}" class="back-home">
         ← Back to Login
     </a>
 
@@ -58,12 +61,12 @@
 
         <form
             class="login-form"
+            id="registerForm"
             method="POST"
-            action="/api/register/"
+            action="{% url 'register_citizen' %}"
         >
 
-            <!-- Django CSRF -->
-            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+            {% csrf_token %}
 
 
             <div class="form-group">
@@ -155,6 +158,13 @@
             </div>
 
 
+            <!-- Registration Message -->
+
+            <div
+                id="registerMessage"
+                style="display: none;"
+            ></div>
+
 
             <button
                 type="submit"
@@ -174,7 +184,7 @@
                 Already have an account?
             </span>
 
-            <a href="login.html">
+            <a href="{% url 'login' %}">
                 Sign In
             </a>
 
@@ -184,6 +194,70 @@
 
 </main>
 
+
+
+<!-- =====================================================
+     REGISTRATION JAVASCRIPT
+===================================================== -->
+
+<script>
+
+const registerForm = document.getElementById("registerForm");
+const registerMessage = document.getElementById("registerMessage");
+
+registerForm.addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    const formData = new FormData(registerForm);
+
+    try {
+
+        const response = await fetch(
+            registerForm.action,
+            {
+                method: "POST",
+                body: formData
+            }
+        );
+
+        const data = await response.json();
+
+        registerMessage.style.display = "block";
+
+        if (data.success) {
+
+            registerMessage.style.color = "#22c55e";
+
+            registerMessage.innerHTML =
+                "Account created successfully!<br>" +
+                "Your Citizen ID is: <strong>" +
+                data.citizen_id +
+                "</strong>";
+
+            registerForm.reset();
+
+        } else {
+
+            registerMessage.style.color = "#ef4444";
+            registerMessage.textContent = data.message;
+
+        }
+
+    } catch (error) {
+
+        registerMessage.style.display = "block";
+        registerMessage.style.color = "#ef4444";
+
+        registerMessage.textContent =
+            "Something went wrong. Please try again.";
+
+        console.error(error);
+    }
+
+});
+
+</script>
 
 </body>
 

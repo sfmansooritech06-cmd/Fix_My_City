@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,7 +12,7 @@
 
     <title>Login | FixMyCity</title>
 
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 </head>
 
@@ -24,11 +26,11 @@
 
 <header class="auth-navbar">
 
-    <a href="index.html" class="auth-logo">
+    <a href="{% url 'home' %}" class="auth-logo">
         FixMyCity
     </a>
 
-    <a href="index.html" class="back-home">
+    <a href="{% url 'home' %}" class="back-home">
         ← Back to Home
     </a>
 
@@ -79,7 +81,12 @@
             <div class="role-options">
 
 
-                <button class="role-option active">
+                <!-- CITIZEN -->
+
+                <button
+                    type="button"
+                    class="role-option active"
+                >
 
                     <span class="role-option-icon">
                         👤
@@ -93,22 +100,31 @@
 
 
 
-                    <a href="officer_login.html" class="role-option">
+                <!-- OFFICER -->
 
-                        <span class="role-option-icon">
-                            ◈
-                        </span>
+                <a
+                    href="/officer-login/"
+                    class="role-option"
+                >
 
-                        <span>
-                            Officer
-                        </span>
+                    <span class="role-option-icon">
+                        ◈
+                    </span>
 
-                    </a>
+                    <span>
+                        Officer
+                    </span>
+
+                </a>
 
 
 
+                <!-- ADMIN -->
 
-                <a href="admin_login.html" class="role-option">
+                <a
+                    href="/admin-login/"
+                    class="role-option"
+                >
 
                     <span class="role-option-icon">
                         ⚙
@@ -121,6 +137,8 @@
                 </a>
 
 
+            </div>
+
         </div>
 
 
@@ -129,19 +147,27 @@
              LOGIN FORM
         ================================================= -->
 
-        <form class="login-form">
+        <form
+            class="login-form"
+            id="loginForm"
+            method="POST"
+            action="{% url 'citizen_login' %}"
+        >
+
+            {% csrf_token %}
 
 
             <div class="form-group">
 
-                <label for="email">
-                    Email Address
+                <label for="login_value">
+                    Email Address or Citizen ID
                 </label>
 
                 <input
-                    type="email"
-                    id="email"
-                    placeholder="Enter your email"
+                    type="text"
+                    id="login_value"
+                    name="login_value"
+                    placeholder="Enter email or citizen ID"
                     required
                 >
 
@@ -167,11 +193,21 @@
                 <input
                     type="password"
                     id="password"
+                    name="password"
                     placeholder="Enter your password"
                     required
                 >
 
             </div>
+
+
+
+            <!-- ERROR / SUCCESS MESSAGE -->
+
+            <div
+                id="loginMessage"
+                style="display: none;"
+            ></div>
 
 
 
@@ -198,7 +234,7 @@
                 Don't have an account?
             </span>
 
-            <a href="register.html">
+            <a href="{% url 'register' %}">
                 Sign Up
             </a>
 
@@ -208,6 +244,71 @@
     </div>
 
 </main>
+
+
+
+<!-- =====================================================
+     LOGIN JAVASCRIPT
+===================================================== -->
+
+<script>
+
+const loginForm = document.getElementById("loginForm");
+const loginMessage = document.getElementById("loginMessage");
+
+
+loginForm.addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    const formData = new FormData(loginForm);
+
+    try {
+
+        const response = await fetch(
+            loginForm.action,
+            {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
+                }
+            }
+        );
+
+        const data = await response.json();
+
+
+        loginMessage.style.display = "block";
+        loginMessage.textContent = data.message;
+
+
+        if (data.success) {
+
+            loginMessage.style.color = "#22c55e";
+
+            window.location.href = data.redirect;
+
+        } else {
+
+            loginMessage.style.color = "#ef4444";
+
+        }
+
+    } catch (error) {
+
+        loginMessage.style.display = "block";
+        loginMessage.style.color = "#ef4444";
+        loginMessage.textContent =
+            "Something went wrong. Please try again.";
+
+        console.error(error);
+
+    }
+
+});
+
+</script>
 
 
 </body>
