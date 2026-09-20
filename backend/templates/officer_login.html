@@ -1,22 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
+{% block title %}
+Officer Login | FixMyCity
+{% endblock %}
 
-    <meta charset="UTF-8">
+{% block body_class %}
+auth-page
+{% endblock %}
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Officer Login | FixMyCity</title>
-
-    <link rel="stylesheet" href="./css/style.css">
-
-</head>
-
-
-<body class="auth-page">
-
+{% block content %}
 
 <!-- =====================================================
      AUTH NAVBAR
@@ -24,16 +16,15 @@
 
 <header class="auth-navbar">
 
-    <a href="index.html" class="auth-logo">
+    <a href="{% url 'home' %}" class="auth-logo">
         FixMyCity
     </a>
 
-    <a href="login.html" class="back-home">
+    <a href="{% url 'login' %}" class="back-home">
         ← Back to Role Selection
     </a>
 
 </header>
-
 
 
 <!-- =====================================================
@@ -45,7 +36,7 @@
     <div class="login-card">
 
 
-        <!-- HEADING -->
+        <!-- ================= HEADING ================= -->
 
         <div class="auth-heading">
 
@@ -64,10 +55,15 @@
         </div>
 
 
+        <!-- ================= LOGIN FORM ================= -->
 
-        <!-- LOGIN FORM -->
+        <form
+            class="login-form"
+            method="POST"
+            action="{% url 'officer_login' %}"
+        >
 
-        <form class="login-form">
+            {% csrf_token %}
 
 
             <!-- EMPLOYEE ID -->
@@ -94,7 +90,6 @@
                 </small>
 
             </div>
-
 
 
             <!-- PASSWORD -->
@@ -125,7 +120,6 @@
             </div>
 
 
-
             <!-- LOGIN BUTTON -->
 
             <button
@@ -139,8 +133,7 @@
         </form>
 
 
-
-        <!-- REGISTER -->
+        <!-- ================= REGISTER ================= -->
 
         <div class="signup-text">
 
@@ -148,27 +141,25 @@
                 Don't have an officer account?
             </span>
 
-            <a href="officer_register.html">
+            <a href="{% url 'officer_register' %}">
                 Register
             </a>
 
         </div>
 
 
-
-        <!-- CITIZEN LOGIN -->
-
+        <!-- ================= CITIZEN LOGIN ================= -->
 
         <div class="auth-back-link">
 
-            <a href="login.html">
+            <a href="{% url 'login' %}">
                 ← Citizen Login
             </a>
 
         </div>
 
+    </div>
+
 </main>
 
-</body>
-
-</html>
+{% endblock %}

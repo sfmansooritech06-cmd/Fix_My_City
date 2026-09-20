@@ -1,21 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Officer Registration | FixMyCity</title>
-
-    <link rel="stylesheet" href="./css/style.css">
-
-</head>
+{% extends "base.html" %}
 
 
-<body class="auth-page">
+{% block title %}
+Officer Registration | FixMyCity
+{% endblock %}
+
+
+{% block body_class %}
+auth-page
+{% endblock %}
+
+
+{% block content %}
 
 
 <!-- =====================================================
@@ -24,11 +20,11 @@
 
 <header class="auth-navbar">
 
-    <a href="index.html" class="auth-logo">
+    <a href="{% url 'home' %}" class="auth-logo">
         FixMyCity
     </a>
 
-    <a href="officer_login.html" class="back-home">
+    <a href="{% url 'officer_login' %}" class="back-home">
         ← Back to Officer Login
     </a>
 
@@ -67,7 +63,13 @@
 
         <!-- REGISTRATION FORM -->
 
-        <form class="login-form">
+        <form
+            class="login-form"
+            method="POST"
+            action="{% url 'officer_register' %}"
+        >
+
+            {% csrf_token %}
 
 
             <!-- FULL NAME -->
@@ -194,7 +196,7 @@
                         Water Supply
                     </option>
 
-                    <option value="public_property">
+                    <option value="property">
                         Public Property
                     </option>
 
@@ -266,25 +268,29 @@
 
         <!-- LOGIN -->
 
-       <div class="signup-text">
+        <div class="signup-text">
 
-                <span>
-                    Already have an officer account?
-                </span>
+            <span>
+                Already have an officer account?
+            </span>
 
-                <a href="officer_login.html">
-                    Sign In
-                </a>
+            <a href="{% url 'officer_login' %}">
+                Sign In
+            </a>
 
-            </div>
+        </div>
 
-            <div class="auth-back-link">
 
-                <a href="officer_login.html">
-                    ← Back to Officer Login
-                </a>
+        <!-- BACK TO LOGIN -->
 
-            </div>
+        <div class="auth-back-link">
+
+            <a href="{% url 'officer_login' %}">
+                ← Back to Officer Login
+            </a>
+
+        </div>
+
 
 
         <!-- APPROVAL NOTICE -->
@@ -306,6 +312,4 @@
 </main>
 
 
-</body>
-
-</html>
+{% endblock %}

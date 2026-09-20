@@ -1,15 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "base.html" %}
 
-    <title>Complaint Details | FixMyCity</title>
+{% block title %}
+Complaint Details | FixMyCity
+{% endblock %}
 
-    <link rel="stylesheet" href="css/style.css">
-</head>
+{% block body_class %}
+officer-details-page
+{% endblock %}
 
-<body>
+{% block content %}
 
 <!-- ================= NAVBAR ================= -->
 
@@ -17,7 +16,7 @@
 
     <div class="nav-container">
 
-        <a href="officer_dashboard.html" class="logo">
+        <a href="{% url 'officer_dashboard' %}" class="logo">
             <span class="logo-mark">+</span>
             FixMyCity
         </a>
@@ -25,11 +24,11 @@
 
         <div class="nav-links">
 
-            <a href="officer_dashboard.html">
+            <a href="{% url 'officer_dashboard' %}">
                 Dashboard
             </a>
 
-            <a href="officer_complaints.html" class="active">
+            <a href="{% url 'officer_complaints' %}" class="active">
                 Complaints
             </a>
 
@@ -54,7 +53,7 @@
 
             </div>
 
-            <a href="officer_login.html" class="logout-btn">
+            <a href="{% url 'officer_login' %}" class="logout-btn">
                 Logout
             </a>
 
@@ -77,7 +76,7 @@
         <div>
 
             <a
-                href="officer_complaints.html"
+                href="{% url 'officer_complaints' %}"
                 class="back-link"
             >
                 ← Back to Complaints
@@ -669,6 +668,4 @@
 
 </footer>
 
-
-</body>
-</html>
+{% endblock %}

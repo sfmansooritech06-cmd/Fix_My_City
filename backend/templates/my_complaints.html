@@ -1,600 +1,634 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "base.html" %}
 
-    <title>My Complaints | FixMyCity</title>
+{% block title %}
+My Complaints | FixMyCity
+{% endblock %}
 
-    <link rel="stylesheet" href="./css/style.css">
-</head>
+{% block body_class %}
+dashboard-page
+{% endblock %}
 
-<body class="dashboard-page">
+{% block content %}
 
-    <!-- ================= NAVBAR ================= -->
+<!-- ================= NAVBAR ================= -->
 
-    <header class="dashboard-navbar">
+<header class="dashboard-navbar">
 
-        <div class="dashboard-logo">
-            <a href="index.html">FixMyCity</a>
+    <div class="dashboard-logo">
+        <a href="{% url 'home' %}">FixMyCity</a>
+    </div>
+
+    <nav class="dashboard-nav">
+
+        <a href="{% url 'citizen_dashboard' %}">
+            Dashboard
+        </a>
+
+        <a href="{% url 'report_issue' %}">
+            Report Issue
+        </a>
+
+        <a href="{% url 'my_complaints' %}" class="active">
+            My Complaints
+        </a>
+
+    </nav>
+
+    <div class="dashboard-user">
+
+        <div class="user-avatar">
+            SF
         </div>
 
-        <nav class="dashboard-nav">
+        <div class="user-info">
+            <strong>Sadaf Fatima</strong>
+            <span>Citizen</span>
+        </div>
 
-            <a href="citizen_dashboard.html">
-                Dashboard
-            </a>
+        <button class="logout-btn">
+            Logout
+        </button>
 
-            <a href="report_issue.html">
-                Report Issue
-            </a>
+    </div>
 
-            <a href="my_complaints.html" class="active">
+</header>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="complaints-container">
+
+    <!-- Page Heading -->
+
+    <section class="complaints-heading">
+
+        <div>
+
+            <p class="welcome-label">
+                COMPLAINT MANAGEMENT
+            </p>
+
+            <h1>
                 My Complaints
-            </a>
+            </h1>
 
-        </nav>
+            <p>
+                View and track all the civic issues you have reported.
+            </p>
 
-        <div class="dashboard-user">
+        </div>
 
-            <div class="user-avatar">
-                SF
-            </div>
+        <a
+            href="{% url 'report_issue' %}"
+            class="primary-dashboard-btn"
+        >
+            + Report an Issue
+        </a>
 
-            <div class="user-info">
-                <strong>Sadaf Fatima</strong>
-                <span>Citizen</span>
-            </div>
+    </section>
 
-            <button class="logout-btn">
-                Logout
+
+    <!-- ================= SUMMARY ================= -->
+
+    <section class="complaint-summary">
+
+        <div class="summary-card">
+
+            <span>Total Complaints</span>
+
+            <strong>12</strong>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <span>Reported</span>
+
+            <strong>1</strong>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <span>In Progress</span>
+
+            <strong>4</strong>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <span>Resolved</span>
+
+            <strong>7</strong>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= FILTER ================= -->
+
+    <section class="complaints-toolbar">
+
+        <div class="filter-tabs">
+
+            <button class="filter-tab active">
+                All
+            </button>
+
+            <button class="filter-tab">
+                Reported
+            </button>
+
+            <button class="filter-tab">
+                In Progress
+            </button>
+
+            <button class="filter-tab">
+                Resolved
             </button>
 
         </div>
 
-    </header>
 
+        <div class="complaint-search">
 
-    <!-- ================= MAIN ================= -->
+            <span>⌕</span>
 
-    <main class="complaints-container">
-
-        <!-- Page Heading -->
-
-        <section class="complaints-heading">
-
-            <div>
-
-                <p class="welcome-label">
-                    COMPLAINT MANAGEMENT
-                </p>
-
-                <h1>
-                    My Complaints
-                </h1>
-
-                <p>
-                    View and track all the civic issues you have reported.
-                </p>
-
-            </div>
-
-            <a
-                href="report_issue.html"
-                class="primary-dashboard-btn"
+            <input
+                type="text"
+                placeholder="Search complaints..."
             >
-                + Report an Issue
-            </a>
-
-        </section>
-
-
-        <!-- ================= SUMMARY ================= -->
-
-        <section class="complaint-summary">
-
-            <div class="summary-card">
-
-                <span>Total Complaints</span>
-
-                <strong>12</strong>
-
-            </div>
-
-
-            <div class="summary-card">
-
-                <span>Reported</span>
-
-                <strong>1</strong>
-
-            </div>
-
-
-            <div class="summary-card">
-
-                <span>In Progress</span>
-
-                <strong>4</strong>
-
-            </div>
-
-
-            <div class="summary-card">
-
-                <span>Resolved</span>
-
-                <strong>7</strong>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================= FILTER ================= -->
-
-        <section class="complaints-toolbar">
-
-            <div class="filter-tabs">
-
-                <button class="filter-tab active">
-                    All
-                </button>
-
-                <button class="filter-tab">
-                    Reported
-                </button>
-
-                <button class="filter-tab">
-                    In Progress
-                </button>
-
-                <button class="filter-tab">
-                    Resolved
-                </button>
-
-            </div>
-
-
-            <div class="complaint-search">
-
-                <span>⌕</span>
-
-                <input
-                    type="text"
-                    placeholder="Search complaints..."
-                >
-
-            </div>
-
-        </section>
-
-
-        <!-- ================= COMPLAINT LIST ================= -->
-
-        <section class="complaints-list">
-
-
-            <!-- Complaint 1 -->
-
-            <article class="complaint-full-card">
-
-                <div class="complaint-card-top">
-
-                    <div class="complaint-card-image road-image">
-                        ROAD
-                    </div>
-
-                    <div class="complaint-card-content">
-
-                        <div class="complaint-heading-row">
-
-                            <div>
-
-                                <span class="category-label road-label">
-                                    ROAD & INFRASTRUCTURE
-                                </span>
-
-                                <h2>
-                                    Large Pothole on Main Road
-                                </h2>
-
-                            </div>
-
-                            <span class="status-badge progress">
-                                In Progress
-                            </span>
-
-                        </div>
-
-
-                        <p class="complaint-description">
-                            Large pothole causing difficulty for vehicles
-                            and creating a safety risk for commuters.
-                        </p>
-
-
-                        <div class="complaint-details">
-
-                            <span>
-                                #FMC-000124
-                            </span>
-
-                            <span>
-                                📍 Vijay Nagar Square
-                            </span>
-
-                            <span>
-                                📅 02 Sep 2026
-                            </span>
-
-                            <span>
-                                ↑ 8 Upvotes
-                            </span>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="complaint-card-footer">
-
-                    <div class="mini-progress">
-
-                        <div class="mini-progress-label">
-                            <span>Resolution Progress</span>
-                            <strong>50%</strong>
-                        </div>
-
-                        <div class="progress-track">
-                            <div
-                                class="progress-fill"
-                                style="width: 50%;"
-                            ></div>
-                        </div>
-
-                    </div>
-
-                    <a
-                        href="complaint_details.html"
-                        class="view-complaint-btn"
-                    >
-                        View Details →
-                    </a>
-
-                </div>
-
-            </article>
-
-
-            <!-- Complaint 2 -->
-
-            <article class="complaint-full-card">
-
-                <div class="complaint-card-top">
-
-                    <div class="complaint-card-image garbage-image">
-                        SANITATION
-                    </div>
-
-                    <div class="complaint-card-content">
-
-                        <div class="complaint-heading-row">
-
-                            <div>
-
-                                <span class="category-label sanitation-label">
-                                    SANITATION
-                                </span>
-
-                                <h2>
-                                    Garbage Overflow Near Park
-                                </h2>
-
-                            </div>
-
-                            <span class="status-badge resolved">
-                                Resolved
-                            </span>
-
-                        </div>
-
-
-                        <p class="complaint-description">
-                            Garbage was overflowing near the public park
-                            and had not been collected for several days.
-                        </p>
-
-
-                        <div class="complaint-details">
-
-                            <span>
-                                #FMC-000119
-                            </span>
-
-                            <span>
-                                📍 Scheme No. 54
-                            </span>
-
-                            <span>
-                                📅 28 Aug 2026
-                            </span>
-
-                            <span>
-                                ↑ 5 Upvotes
-                            </span>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="complaint-card-footer">
-
-                    <div class="mini-progress">
-
-                        <div class="mini-progress-label">
-                            <span>Resolution Progress</span>
-                            <strong>100%</strong>
-                        </div>
-
-                        <div class="progress-track">
-                            <div
-                                class="progress-fill resolved-progress"
-                                style="width: 100%;"
-                            ></div>
-                        </div>
-
-                    </div>
-
-                    <a
-                        href="complaint_details.html"
-                        class="view-complaint-btn"
-                    >
-                        View Details →
-                    </a>
-
-                </div>
-
-            </article>
-
-
-            <!-- Complaint 3 -->
-
-            <article class="complaint-full-card">
-
-                <div class="complaint-card-top">
-
-                    <div class="complaint-card-image light-image">
-                        STREETLIGHT
-                    </div>
-
-                    <div class="complaint-card-content">
-
-                        <div class="complaint-heading-row">
-
-                            <div>
-
-                                <span class="category-label light-label">
-                                    STREETLIGHT / ELECTRICITY
-                                </span>
-
-                                <h2>
-                                    Streetlight Not Working
-                                </h2>
-
-                            </div>
-
-                            <span class="status-badge reported">
-                                Reported
-                            </span>
-
-                        </div>
-
-
-                        <p class="complaint-description">
-                            Streetlight near the main road has stopped
-                            working, making the area poorly lit at night.
-                        </p>
-
-
-                        <div class="complaint-details">
-
-                            <span>
-                                #FMC-000117
-                            </span>
-
-                            <span>
-                                📍 Bengali Square
-                            </span>
-
-                            <span>
-                                📅 26 Aug 2026
-                            </span>
-
-                            <span>
-                                ↑ 3 Upvotes
-                            </span>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="complaint-card-footer">
-
-                    <div class="mini-progress">
-
-                        <div class="mini-progress-label">
-                            <span>Resolution Progress</span>
-                            <strong>0%</strong>
-                        </div>
-
-                        <div class="progress-track">
-                            <div
-                                class="progress-fill"
-                                style="width: 0%;"
-                            ></div>
-                        </div>
-
-                    </div>
-
-                    <a
-                        href="complaint_details.html"
-                        class="view-complaint-btn"
-                    >
-                        View Details →
-                    </a>
-
-                </div>
-
-            </article>
-
-
-            <!-- Complaint 4 -->
-
-            <article class="complaint-full-card">
-
-                <div class="complaint-card-top">
-
-                    <div class="complaint-card-image water-image">
-                        WATER
-                    </div>
-
-                    <div class="complaint-card-content">
-
-                        <div class="complaint-heading-row">
-
-                            <div>
-
-                                <span class="category-label water-label">
-                                    WATER SUPPLY
-                                </span>
-
-                                <h2>
-                                    Water Leakage Near Road
-                                </h2>
-
-                            </div>
-
-                            <span class="status-badge progress">
-                                In Progress
-                            </span>
-
-                        </div>
-
-
-                        <p class="complaint-description">
-                            Continuous water leakage is causing water
-                            wastage and making the nearby road wet.
-                        </p>
-
-
-                        <div class="complaint-details">
-
-                            <span>
-                                #FMC-000115
-                            </span>
-
-                            <span>
-                                📍 Palasia
-                            </span>
-
-                            <span>
-                                📅 24 Aug 2026
-                            </span>
-
-                            <span>
-                                ↑ 7 Upvotes
-                            </span>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="complaint-card-footer">
-
-                    <div class="mini-progress">
-
-                        <div class="mini-progress-label">
-                            <span>Resolution Progress</span>
-                            <strong>50%</strong>
-                        </div>
-
-                        <div class="progress-track">
-                            <div
-                                class="progress-fill"
-                                style="width: 50%;"
-                            ></div>
-                        </div>
-
-                    </div>
-
-                    <a
-                        href="complaint_details.html"
-                        class="view-complaint-btn"
-                    >
-                        View Details →
-                    </a>
-
-                </div>
-
-            </article>
-
-        </section>
-
-
-        <!-- ================= PAGINATION ================= -->
-
-        <div class="complaints-pagination">
-
-            <button class="page-btn">
-                ←
-            </button>
-
-            <button class="page-btn active">
-                1
-            </button>
-
-            <button class="page-btn">
-                2
-            </button>
-
-            <button class="page-btn">
-                3
-            </button>
-
-            <button class="page-btn">
-                →
-            </button>
 
         </div>
 
-    </main>
+    </section>
 
 
-    <!-- ================= FOOTER ================= -->
+    <!-- ================= COMPLAINT LIST ================= -->
 
-    <footer class="dashboard-footer">
+    <section class="complaints-list">
 
-        <span>
-            © 2026 FixMyCity
-        </span>
 
-        <span>
-            Civic Issue Reporting Platform
-        </span>
+        <!-- Complaint 1 -->
 
-    </footer>
+        <article class="complaint-full-card">
 
-</body>
-</html>
+            <div class="complaint-card-top">
+
+                <div class="complaint-card-image road-image">
+                    ROAD
+                </div>
+
+                <div class="complaint-card-content">
+
+                    <div class="complaint-heading-row">
+
+                        <div>
+
+                            <span class="category-label road-label">
+                                ROAD & INFRASTRUCTURE
+                            </span>
+
+                            <h2>
+                                Large Pothole on Main Road
+                            </h2>
+
+                        </div>
+
+                        <span class="status-badge progress">
+                            In Progress
+                        </span>
+
+                    </div>
+
+
+                    <p class="complaint-description">
+                        Large pothole causing difficulty for vehicles
+                        and creating a safety risk for commuters.
+                    </p>
+
+
+                    <div class="complaint-details">
+
+                        <span>
+                            #FMC-000124
+                        </span>
+
+                        <span>
+                            📍 Vijay Nagar Square
+                        </span>
+
+                        <span>
+                            📅 02 Sep 2026
+                        </span>
+
+                        <span>
+                            ↑ 8 Upvotes
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="complaint-card-footer">
+
+                <div class="mini-progress">
+
+                    <div class="mini-progress-label">
+
+                        <span>
+                            Resolution Progress
+                        </span>
+
+                        <strong>
+                            50%
+                        </strong>
+
+                    </div>
+
+                    <div class="progress-track">
+
+                        <div
+                            class="progress-fill"
+                            style="width: 50%;"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+                <a
+                    href="{% url 'complaint_details' %}"
+                    class="view-complaint-btn"
+                >
+                    View Details →
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Complaint 2 -->
+
+        <article class="complaint-full-card">
+
+            <div class="complaint-card-top">
+
+                <div class="complaint-card-image garbage-image">
+                    SANITATION
+                </div>
+
+                <div class="complaint-card-content">
+
+                    <div class="complaint-heading-row">
+
+                        <div>
+
+                            <span class="category-label sanitation-label">
+                                SANITATION
+                            </span>
+
+                            <h2>
+                                Garbage Overflow Near Park
+                            </h2>
+
+                        </div>
+
+                        <span class="status-badge resolved">
+                            Resolved
+                        </span>
+
+                    </div>
+
+
+                    <p class="complaint-description">
+                        Garbage was overflowing near the public park
+                        and had not been collected for several days.
+                    </p>
+
+
+                    <div class="complaint-details">
+
+                        <span>
+                            #FMC-000119
+                        </span>
+
+                        <span>
+                            📍 Scheme No. 54
+                        </span>
+
+                        <span>
+                            📅 28 Aug 2026
+                        </span>
+
+                        <span>
+                            ↑ 5 Upvotes
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="complaint-card-footer">
+
+                <div class="mini-progress">
+
+                    <div class="mini-progress-label">
+
+                        <span>
+                            Resolution Progress
+                        </span>
+
+                        <strong>
+                            100%
+                        </strong>
+
+                    </div>
+
+                    <div class="progress-track">
+
+                        <div
+                            class="progress-fill resolved-progress"
+                            style="width: 100%;"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+                <a
+                    href="{% url 'complaint_details' %}"
+                    class="view-complaint-btn"
+                >
+                    View Details →
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Complaint 3 -->
+
+        <article class="complaint-full-card">
+
+            <div class="complaint-card-top">
+
+                <div class="complaint-card-image light-image">
+                    STREETLIGHT
+                </div>
+
+                <div class="complaint-card-content">
+
+                    <div class="complaint-heading-row">
+
+                        <div>
+
+                            <span class="category-label light-label">
+                                STREETLIGHT / ELECTRICITY
+                            </span>
+
+                            <h2>
+                                Streetlight Not Working
+                            </h2>
+
+                        </div>
+
+                        <span class="status-badge reported">
+                            Reported
+                        </span>
+
+                    </div>
+
+
+                    <p class="complaint-description">
+                        Streetlight near the main road has stopped
+                        working, making the area poorly lit at night.
+                    </p>
+
+
+                    <div class="complaint-details">
+
+                        <span>
+                            #FMC-000117
+                        </span>
+
+                        <span>
+                            📍 Bengali Square
+                        </span>
+
+                        <span>
+                            📅 26 Aug 2026
+                        </span>
+
+                        <span>
+                            ↑ 3 Upvotes
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="complaint-card-footer">
+
+                <div class="mini-progress">
+
+                    <div class="mini-progress-label">
+
+                        <span>
+                            Resolution Progress
+                        </span>
+
+                        <strong>
+                            0%
+                        </strong>
+
+                    </div>
+
+                    <div class="progress-track">
+
+                        <div
+                            class="progress-fill"
+                            style="width: 0%;"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+                <a
+                    href="{% url 'complaint_details' %}"
+                    class="view-complaint-btn"
+                >
+                    View Details →
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- Complaint 4 -->
+
+        <article class="complaint-full-card">
+
+            <div class="complaint-card-top">
+
+                <div class="complaint-card-image water-image">
+                    WATER
+                </div>
+
+                <div class="complaint-card-content">
+
+                    <div class="complaint-heading-row">
+
+                        <div>
+
+                            <span class="category-label water-label">
+                                WATER SUPPLY
+                            </span>
+
+                            <h2>
+                                Water Leakage Near Road
+                            </h2>
+
+                        </div>
+
+                        <span class="status-badge progress">
+                            In Progress
+                        </span>
+
+                    </div>
+
+
+                    <p class="complaint-description">
+                        Continuous water leakage is causing water
+                        wastage and making the nearby road wet.
+                    </p>
+
+
+                    <div class="complaint-details">
+
+                        <span>
+                            #FMC-000115
+                        </span>
+
+                        <span>
+                            📍 Palasia
+                        </span>
+
+                        <span>
+                            📅 24 Aug 2026
+                        </span>
+
+                        <span>
+                            ↑ 7 Upvotes
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="complaint-card-footer">
+
+                <div class="mini-progress">
+
+                    <div class="mini-progress-label">
+
+                        <span>
+                            Resolution Progress
+                        </span>
+
+                        <strong>
+                            50%
+                        </strong>
+
+                    </div>
+
+                    <div class="progress-track">
+
+                        <div
+                            class="progress-fill"
+                            style="width: 50%;"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+                <a
+                    href="{% url 'complaint_details' %}"
+                    class="view-complaint-btn"
+                >
+                    View Details →
+                </a>
+
+            </div>
+
+        </article>
+
+    </section>
+
+
+    <!-- ================= PAGINATION ================= -->
+
+    <div class="complaints-pagination">
+
+        <button class="page-btn">
+            ←
+        </button>
+
+        <button class="page-btn active">
+            1
+        </button>
+
+        <button class="page-btn">
+            2
+        </button>
+
+        <button class="page-btn">
+            3
+        </button>
+
+        <button class="page-btn">
+            →
+        </button>
+
+    </div>
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="dashboard-footer">
+
+    <span>
+        © 2026 FixMyCity
+    </span>
+
+    <span>
+        Civic Issue Reporting Platform
+    </span>
+
+</footer>
+
+{% endblock %}

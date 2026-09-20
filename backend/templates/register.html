@@ -1,24 +1,17 @@
-{% load static %}
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Sign Up | FixMyCity</title>
+{% extends "base.html" %}
 
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% block title %}
+Sign Up | FixMyCity
+{% endblock %}
 
-</head>
+
+{% block body_class %}
+auth-page
+{% endblock %}
 
 
-<body class="auth-page">
+{% block content %}
 
 
 <header class="auth-navbar">
@@ -57,7 +50,9 @@
 
 
 
-        <!-- Citizen Registration Form -->
+        <!-- =====================================================
+             CITIZEN REGISTRATION FORM
+        ===================================================== -->
 
         <form
             class="login-form"
@@ -68,6 +63,8 @@
 
             {% csrf_token %}
 
+
+            <!-- FULL NAME -->
 
             <div class="form-group">
 
@@ -87,6 +84,8 @@
 
 
 
+            <!-- EMAIL -->
+
             <div class="form-group">
 
                 <label for="email">
@@ -104,6 +103,8 @@
             </div>
 
 
+
+            <!-- PHONE -->
 
             <div class="form-group">
 
@@ -123,6 +124,8 @@
 
 
 
+            <!-- PASSWORD -->
+
             <div class="form-group">
 
                 <label for="password">
@@ -141,6 +144,8 @@
 
 
 
+            <!-- CONFIRM PASSWORD -->
+
             <div class="form-group">
 
                 <label for="confirm_password">
@@ -158,13 +163,17 @@
             </div>
 
 
-            <!-- Registration Message -->
+
+            <!-- REGISTRATION MESSAGE -->
 
             <div
                 id="registerMessage"
                 style="display: none;"
             ></div>
 
+
+
+            <!-- REGISTER BUTTON -->
 
             <button
                 type="submit"
@@ -178,6 +187,8 @@
 
 
 
+        <!-- LOGIN LINK -->
+
         <div class="signup-text">
 
             <span>
@@ -190,75 +201,138 @@
 
         </div>
 
+
     </div>
 
 </main>
 
 
+{% endblock %}
 
-<!-- =====================================================
-     REGISTRATION JAVASCRIPT
-===================================================== -->
+
+
+{% block extra_js %}
 
 <script>
 
-const registerForm = document.getElementById("registerForm");
-const registerMessage = document.getElementById("registerMessage");
+const registerForm =
+    document.getElementById("registerForm");
 
-registerForm.addEventListener("submit", async function(event) {
+const registerMessage =
+    document.getElementById("registerMessage");
 
-    event.preventDefault();
 
-    const formData = new FormData(registerForm);
+if (registerForm) {
 
-    try {
+    registerForm.addEventListener(
+        "submit",
+        async function(event) {
 
-        const response = await fetch(
-            registerForm.action,
-            {
-                method: "POST",
-                body: formData
+            event.preventDefault();
+
+
+            const formData =
+                new FormData(registerForm);
+
+
+            // Password validation
+
+            const password =
+                formData.get("password");
+
+            const confirmPassword =
+                formData.get("confirm_password");
+
+
+            if (password !== confirmPassword) {
+
+                registerMessage.style.display =
+                    "block";
+
+                registerMessage.style.color =
+                    "#ef4444";
+
+                registerMessage.textContent =
+                    "Passwords do not match.";
+
+                return;
             }
-        );
 
-        const data = await response.json();
 
-        registerMessage.style.display = "block";
+            try {
 
-        if (data.success) {
+                const response =
+                    await fetch(
+                        registerForm.action,
+                        {
+                            method: "POST",
+                            body: formData
+                        }
+                    );
 
-            registerMessage.style.color = "#22c55e";
 
-            registerMessage.innerHTML =
-                "Account created successfully!<br>" +
-                "Your Citizen ID is: <strong>" +
-                data.citizen_id +
-                "</strong>";
+                const data =
+                    await response.json();
 
-            registerForm.reset();
 
-        } else {
+                registerMessage.style.display =
+                    "block";
 
-            registerMessage.style.color = "#ef4444";
-            registerMessage.textContent = data.message;
+
+                if (data.success) {
+
+                    registerMessage.style.color =
+                        "#22c55e";
+
+
+                    registerMessage.innerHTML =
+                        "Account created successfully!<br>" +
+                        "Your Citizen ID is: <strong>" +
+                        data.citizen_id +
+                        "</strong>";
+
+
+                    registerForm.reset();
+
+
+                } else {
+
+                    registerMessage.style.color =
+                        "#ef4444";
+
+
+                    registerMessage.textContent =
+                        data.message;
+
+                }
+
+
+            } catch (error) {
+
+                registerMessage.style.display =
+                    "block";
+
+
+                registerMessage.style.color =
+                    "#ef4444";
+
+
+                registerMessage.textContent =
+                    "Something went wrong. Please try again.";
+
+
+                console.error(
+                    "Registration Error:",
+                    error
+                );
+
+            }
 
         }
+    );
 
-    } catch (error) {
-
-        registerMessage.style.display = "block";
-        registerMessage.style.color = "#ef4444";
-
-        registerMessage.textContent =
-            "Something went wrong. Please try again.";
-
-        console.error(error);
-    }
-
-});
+}
 
 </script>
 
-</body>
-
-</html>
+{% endblock %}

@@ -1,25 +1,14 @@
-{% load static %}
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html lang="en">
+{% block title %}
+FixMyCity | Civic Issue Reporting
+{% endblock %}
 
-<head>
+{% block body_class %}
+home-page
+{% endblock %}
 
-    <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>FixMyCity | Civic Issue Reporting</title>
-
-    <link rel="stylesheet"
-          href="{% static 'css/style.css' %}">
-
-</head>
-
-
-<body>
-
+{% block content %}
 
 <!-- =====================================================
      NAVBAR
@@ -30,84 +19,68 @@
     <div class="container">
 
         <a href="{% url 'home' %}"
-           class="logo"
-           data-i18n="logo">
+           class="logo">
             FixMyCity
         </a>
 
 
         <nav class="nav-links">
 
-            <a href="#home"
-               data-i18n="nav_home">
+            <a href="#home">
                 Home
             </a>
 
-            <a href="#issues"
-               data-i18n="nav_issues">
+            <a href="#issues">
                 Issues
             </a>
 
-            <a href="#how-it-works"
-               data-i18n="nav_how">
+            <a href="#how-it-works">
                 How It Works
             </a>
 
-            <a href="#about"
-               data-i18n="nav_about">
+            <a href="#about">
                 About
             </a>
+            <div class="language-switcher notranslate">
+
+                <button
+                    type="button"
+                    class="language-button"
+                    onclick="toggleLanguageMenu(event)"
+                >
+                    <span>◎</span>
+                    <span id="selectedLanguage">English</span>
+                    <span class="language-arrow">▾</span>
+                </button>
+
+                <div
+                    class="language-menu"
+                    id="languageMenu"
+                >
+                    <button
+                        type="button"
+                        onclick="selectLanguage('en')"
+                    >
+                        🇬🇧 English
+                    </button>
+
+                    <button
+                        type="button"
+                        onclick="selectLanguage('hi')"
+                    >
+                        🇮🇳 हिन्दी
+                    </button>
+                </div>
+
+            </div>
 
         </nav>
 
 
         <div class="nav-actions">
 
-            <!-- LANGUAGE -->
-
-            <div class="language-selector">
-
-                <button type="button"
-                        class="language-btn"
-                        onclick="toggleLanguageMenu()">
-
-                    <span id="current-language">
-                        EN
-                    </span>
-
-                    <span>
-                        ▾
-                    </span>
-
-                </button>
-
-
-                <div id="language-menu"
-                     class="language-menu">
-
-                    <button type="button"
-                            onclick="setLanguage('en')">
-
-                        English
-
-                    </button>
-
-
-                    <button type="button"
-                            onclick="setLanguage('hi')">
-
-                        हिन्दी
-
-                    </button>
-
-                </div>
-
-            </div>
-
-
             <a href="{% url 'login' %}"
-               class="login-btn"
-               data-i18n="who_are_you">
+               class="login-btn">
 
                 Who are you?
 
@@ -115,8 +88,7 @@
 
 
             <a href="#roles"
-               class="btn btn-primary"
-               data-i18n="report_issue">
+               class="btn btn-primary">
 
                 Report Issue
 
@@ -127,7 +99,6 @@
     </div>
 
 </header>
-
 
 
 <!-- =====================================================
@@ -144,8 +115,7 @@
         <div class="hero-content">
 
 
-            <div class="hero-tag"
-                 data-i18n="hero_tag">
+            <div class="hero-tag">
 
                 Civic Issue Reporting Platform
 
@@ -154,18 +124,18 @@
 
             <h1>
 
-                <span data-i18n="hero_title_1">
+                <span>
                     Together, Let's
                 </span>
 
-                <span data-i18n="hero_title_2">
+                <span>
                     Fix Our City.
                 </span>
 
             </h1>
 
 
-            <p data-i18n="hero_description">
+            <p>
 
                 Report civic problems, help your community,
                 and track the progress of issues that matter.
@@ -180,7 +150,7 @@
                 <a href="#roles"
                    class="btn btn-primary">
 
-                    <span data-i18n="report_issue">
+                    <span>
                         Report an Issue
                     </span>
 
@@ -190,15 +160,13 @@
 
 
                 <a href="#issues"
-                   class="btn btn-secondary"
-                   data-i18n="explore_issues">
+                   class="btn btn-secondary">
 
                     Explore Issues
 
                 </a>
 
             </div>
-
 
 
             <!-- =================================================
@@ -214,7 +182,7 @@
                         2,481
                     </h3>
 
-                    <p data-i18n="issues_reported">
+                    <p>
                         Issues Reported
                     </p>
 
@@ -227,7 +195,7 @@
                         1,842
                     </h3>
 
-                    <p data-i18n="issues_resolved">
+                    <p>
                         Issues Resolved
                     </p>
 
@@ -240,7 +208,7 @@
                         94%
                     </h3>
 
-                    <p data-i18n="resolution_rate">
+                    <p>
                         Resolution Rate
                     </p>
 
@@ -252,504 +220,476 @@
         </div>
 
 
+        <!-- =====================================================
+             CITY ISSUE MAP
+        ===================================================== -->
 
-<!-- =====================================================
-     CITY ISSUE MAP
-===================================================== -->
-
-<div class="map-container">
-
-
-    <!-- MAP TOP BAR -->
-
-    <div class="map-topbar">
+        <div class="map-container">
 
 
-        <div class="map-title">
+            <!-- MAP TOP BAR -->
 
-            <div class="map-pin-icon">
-                ●
-            </div>
+            <div class="map-topbar">
 
+                <div class="map-title">
 
-            <div>
+                    <div class="map-pin-icon">
+                        ●
+                    </div>
 
-                <h3 data-i18n="city_issue_map">
-                    City Issue Map
-                </h3>
+                    <div>
 
-                <span data-i18n="live_civic_activity">
-                    Live civic activity
-                </span>
+                        <h3>
+                            City Issue Map
+                        </h3>
 
-            </div>
+                        <span>
+                            Live civic activity
+                        </span>
 
-        </div>
+                    </div>
 
-
-        <div class="live-badge">
-
-            <span></span>
-
-            <span data-i18n="live">
-                LIVE
-            </span>
-
-        </div>
-
-    </div>
+                </div>
 
 
+                <div class="live-badge">
 
-    <!-- MAP AREA -->
+                    <span></span>
 
-    <div class="city-map">
+                    <span>
+                        LIVE
+                    </span>
 
-
-        <!-- Decorative roads -->
-
-        <div class="map-road r1"></div>
-        <div class="map-road r2"></div>
-        <div class="map-road r3"></div>
-        <div class="map-road r4"></div>
-        <div class="map-road r5"></div>
-
-
-        <!-- City blocks -->
-
-        <div class="city-block block1"></div>
-        <div class="city-block block2"></div>
-        <div class="city-block block3"></div>
-        <div class="city-block block4"></div>
-        <div class="city-block block5"></div>
-        <div class="city-block block6"></div>
-
-
-
-        <!-- CENTRAL LOCATION -->
-
-        <div class="current-location">
-
-            <div class="location-ring ring-one"></div>
-
-            <div class="location-ring ring-two"></div>
-
-            <div class="location-dot">
-
-                <span>
-                    ●
-                </span>
+                </div>
 
             </div>
 
-        </div>
+
+            <!-- MAP AREA -->
+
+            <div class="city-map">
 
 
+                <!-- Decorative roads -->
 
-        <!-- ISSUE MARKERS -->
-
-        <div class="issue-marker road-marker marker-1">
-
-            <span>
-                ▰
-            </span>
-
-            <div class="marker-tooltip">
-
-                <strong data-i18n="road_damage">
-                    Road Damage
-                </strong>
-
-                <small data-i18n="pothole_reported">
-                    Pothole reported
-                </small>
-
-            </div>
-
-        </div>
+                <div class="map-road r1"></div>
+                <div class="map-road r2"></div>
+                <div class="map-road r3"></div>
+                <div class="map-road r4"></div>
+                <div class="map-road r5"></div>
 
 
+                <!-- City blocks -->
 
-        <div class="issue-marker garbage-marker marker-2">
-
-            <span>
-                ▣
-            </span>
-
-            <div class="marker-tooltip">
-
-                <strong data-i18n="garbage_overflow">
-                    Garbage Overflow
-                </strong>
-
-                <small data-i18n="community_reported">
-                    Community reported
-                </small>
-
-            </div>
-
-        </div>
+                <div class="city-block block1"></div>
+                <div class="city-block block2"></div>
+                <div class="city-block block3"></div>
+                <div class="city-block block4"></div>
+                <div class="city-block block5"></div>
+                <div class="city-block block6"></div>
 
 
+                <!-- CENTRAL LOCATION -->
 
-        <div class="issue-marker light-marker marker-3">
+                <div class="current-location">
 
-            <span>
-                ●
-            </span>
+                    <div class="location-ring ring-one"></div>
 
-            <div class="marker-tooltip">
+                    <div class="location-ring ring-two"></div>
 
-                <strong data-i18n="streetlight">
-                    Streetlight
-                </strong>
+                    <div class="location-dot">
 
-                <small data-i18n="needs_attention">
-                    Needs attention
-                </small>
+                        <span>
+                            ●
+                        </span>
 
-            </div>
+                    </div>
 
-        </div>
+                </div>
 
 
+                <!-- ISSUE MARKERS -->
 
-        <div class="issue-marker water-marker marker-4">
-
-            <span>
-                ≈
-            </span>
-
-            <div class="marker-tooltip">
-
-                <strong data-i18n="water_leakage">
-                    Water Leakage
-                </strong>
-
-                <small data-i18n="new_report">
-                    New report
-                </small>
-
-            </div>
-
-        </div>
-
-
-
-        <div class="issue-marker road-marker marker-5">
-
-            <span>
-                ▰
-            </span>
-
-        </div>
-
-
-        <div class="issue-marker garbage-marker marker-6">
-
-            <span>
-                ▣
-            </span>
-
-        </div>
-
-
-
-        <!-- CITY NAME -->
-
-        <div class="city-name">
-            BHOPAL
-        </div>
-
-
-
-        <!-- LEFT INFO PANEL -->
-
-        <div class="map-info-panel">
-
-
-            <div class="panel-heading">
-
-                <span data-i18n="nearby_issues">
-                    Nearby Issues
-                </span>
-
-                <strong>
-                    42
-                </strong>
-
-            </div>
-
-
-
-            <div class="issue-row">
-
-                <div class="issue-type road-color">
+                <div class="issue-marker road-marker marker-1">
 
                     <span>
                         ▰
                     </span>
 
-                    <span data-i18n="road_damage">
-                        Road Damage
-                    </span>
+                    <div class="marker-tooltip">
+
+                        <strong>
+                            Road Damage
+                        </strong>
+
+                        <small>
+                            Pothole reported
+                        </small>
+
+                    </div>
 
                 </div>
 
-                <strong>
-                    18
-                </strong>
 
-            </div>
-
-
-
-            <div class="issue-row">
-
-                <div class="issue-type garbage-color">
+                <div class="issue-marker garbage-marker marker-2">
 
                     <span>
                         ▣
                     </span>
 
-                    <span data-i18n="garbage">
-                        Garbage
-                    </span>
+                    <div class="marker-tooltip">
+
+                        <strong>
+                            Garbage Overflow
+                        </strong>
+
+                        <small>
+                            Community reported
+                        </small>
+
+                    </div>
 
                 </div>
 
-                <strong>
-                    12
-                </strong>
 
-            </div>
-
-
-
-            <div class="issue-row">
-
-                <div class="issue-type light-color">
+                <div class="issue-marker light-marker marker-3">
 
                     <span>
                         ●
                     </span>
 
-                    <span data-i18n="streetlights">
-                        Streetlights
-                    </span>
+                    <div class="marker-tooltip">
+
+                        <strong>
+                            Streetlight
+                        </strong>
+
+                        <small>
+                            Needs attention
+                        </small>
+
+                    </div>
 
                 </div>
 
-                <strong>
-                    7
-                </strong>
 
-            </div>
-
-
-
-            <div class="issue-row">
-
-                <div class="issue-type water-color">
+                <div class="issue-marker water-marker marker-4">
 
                     <span>
                         ≈
                     </span>
 
-                    <span data-i18n="water_issues">
-                        Water Issues
+                    <div class="marker-tooltip">
+
+                        <strong>
+                            Water Leakage
+                        </strong>
+
+                        <small>
+                            New report
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="issue-marker road-marker marker-5">
+
+                    <span>
+                        ▰
                     </span>
 
                 </div>
 
-                <strong>
-                    5
-                </strong>
+
+                <div class="issue-marker garbage-marker marker-6">
+
+                    <span>
+                        ▣
+                    </span>
+
+                </div>
+
+
+                <!-- CITY NAME -->
+
+                <div class="city-name">
+                    BHOPAL
+                </div>
+
+
+                <!-- LEFT INFO PANEL -->
+
+                <div class="map-info-panel">
+
+                    <div class="panel-heading">
+
+                        <span>
+                            Nearby Issues
+                        </span>
+
+                        <strong>
+                            42
+                        </strong>
+
+                    </div>
+
+
+                    <div class="issue-row">
+
+                        <div class="issue-type road-color">
+
+                            <span>
+                                ▰
+                            </span>
+
+                            <span>
+                                Road Damage
+                            </span>
+
+                        </div>
+
+                        <strong>
+                            18
+                        </strong>
+
+                    </div>
+
+
+                    <div class="issue-row">
+
+                        <div class="issue-type garbage-color">
+
+                            <span>
+                                ▣
+                            </span>
+
+                            <span>
+                                Garbage
+                            </span>
+
+                        </div>
+
+                        <strong>
+                            12
+                        </strong>
+
+                    </div>
+
+
+                    <div class="issue-row">
+
+                        <div class="issue-type light-color">
+
+                            <span>
+                                ●
+                            </span>
+
+                            <span>
+                                Streetlights
+                            </span>
+
+                        </div>
+
+                        <strong>
+                            7
+                        </strong>
+
+                    </div>
+
+
+                    <div class="issue-row">
+
+                        <div class="issue-type water-color">
+
+                            <span>
+                                ≈
+                            </span>
+
+                            <span>
+                                Water Issues
+                            </span>
+
+                        </div>
+
+                        <strong>
+                            5
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- RIGHT MINI PANEL -->
+
+                <div class="map-status-card">
+
+                    <span class="status-label">
+                        CITY STATUS
+                    </span>
+
+
+                    <h4>
+                        Indore
+                    </h4>
+
+
+                    <div class="status-line">
+
+                        <span class="status-dot"></span>
+
+                        <span>
+                            Monitoring active
+                        </span>
+
+                    </div>
+
+
+                    <div class="status-progress">
+
+                        <div></div>
+
+                    </div>
+
+
+                    <small>
+                        Civic issues are being tracked
+                    </small>
+
+                </div>
+
+
+                <!-- MAP CONTROLS -->
+
+                <div class="map-controls">
+
+                    <button>
+                        +
+                    </button>
+
+                    <button>
+                        −
+                    </button>
+
+                </div>
+
+
+                <!-- COMPASS -->
+
+                <div class="compass">
+                    N
+                </div>
 
             </div>
 
-        </div>
+
+            <!-- MAP BOTTOM -->
+
+            <div class="map-bottom">
 
 
+                <div class="map-stat">
 
-        <!-- RIGHT MINI PANEL -->
+                    <span class="blue-dot"></span>
 
-        <div class="map-status-card">
+                    <div>
+
+                        <strong>
+                            42
+                        </strong>
+
+                        <small>
+                            Nearby Issues
+                        </small>
+
+                    </div>
+
+                </div>
 
 
-            <span class="status-label"
-                  data-i18n="city_status">
+                <div class="map-stat">
 
-                CITY STATUS
+                    <span class="green-dot"></span>
 
-            </span>
+                    <div>
+
+                        <strong>
+                            18
+                        </strong>
+
+                        <small>
+                            Resolved Today
+                        </small>
+
+                    </div>
+
+                </div>
 
 
-            <h4>
-                Indore
-            </h4>
+                <div class="map-stat">
+
+                    <span class="purple-dot"></span>
+
+                    <div>
+
+                        <strong>
+                            126
+                        </strong>
+
+                        <small>
+                            Community Upvotes
+                        </small>
+
+                    </div>
+
+                </div>
 
 
-            <div class="status-line">
+                <div class="map-legend">
 
-                <span class="status-dot"></span>
+                    <span>
 
-                <span data-i18n="monitoring_active">
-                    Monitoring active
-                </span>
+                        <i class="legend-road"></i>
+
+                        <span>
+                            Road
+                        </span>
+
+                    </span>
+
+
+                    <span>
+
+                        <i class="legend-garbage"></i>
+
+                        <span>
+                            Garbage
+                        </span>
+
+                    </span>
+
+
+                    <span>
+
+                        <i class="legend-light"></i>
+
+                        <span>
+                            Lighting
+                        </span>
+
+                    </span>
+
+                </div>
 
             </div>
 
-
-            <div class="status-progress">
-
-                <div></div>
-
-            </div>
-
-
-            <small data-i18n="issues_tracked">
-
-                Civic issues are being tracked
-
-            </small>
-
-        </div>
-
-
-
-        <!-- MAP CONTROLS -->
-
-        <div class="map-controls">
-
-            <button>
-                +
-            </button>
-
-            <button>
-                −
-            </button>
-
-        </div>
-
-
-
-        <!-- COMPASS -->
-
-        <div class="compass">
-            N
         </div>
 
     </div>
 
-
-
-    <!-- MAP BOTTOM -->
-
-    <div class="map-bottom">
-
-
-        <div class="map-stat">
-
-            <span class="blue-dot"></span>
-
-            <div>
-
-                <strong>
-                    42
-                </strong>
-
-                <small data-i18n="nearby_issues">
-                    Nearby Issues
-                </small>
-
-            </div>
-
-        </div>
-
-
-
-        <div class="map-stat">
-
-            <span class="green-dot"></span>
-
-            <div>
-
-                <strong>
-                    18
-                </strong>
-
-                <small data-i18n="resolved_today">
-                    Resolved Today
-                </small>
-
-            </div>
-
-        </div>
-
-
-
-        <div class="map-stat">
-
-            <span class="purple-dot"></span>
-
-            <div>
-
-                <strong>
-                    126
-                </strong>
-
-                <small data-i18n="community_upvotes">
-                    Community Upvotes
-                </small>
-
-            </div>
-
-        </div>
-
-
-
-        <div class="map-legend">
-
-
-            <span>
-
-                <i class="legend-road"></i>
-
-                <span data-i18n="road">
-                    Road
-                </span>
-
-            </span>
-
-
-            <span>
-
-                <i class="legend-garbage"></i>
-
-                <span data-i18n="garbage">
-                    Garbage
-                </span>
-
-            </span>
-
-
-            <span>
-
-                <i class="legend-light"></i>
-
-                <span data-i18n="lighting">
-                    Lighting
-                </span>
-
-            </span>
-
-        </div>
-
-    </div>
-
-</div>
-
+</section>
 
 
 <!-- =====================================================
@@ -759,45 +699,34 @@
 <section class="roles-section"
          id="roles">
 
-
     <div class="container">
-
 
         <div class="section-heading">
 
-
-            <div class="eyebrow"
-                 data-i18n="access_portal">
-
+            <div class="eyebrow">
                 Access Portal
-
             </div>
 
 
-            <h2 data-i18n="who_are_you">
+            <h2>
                 Who are you?
             </h2>
 
 
-            <p data-i18n="select_role">
-
+            <p>
                 Select your role to continue to
                 the FixMyCity portal.
-
             </p>
 
         </div>
 
 
-
         <div class="role-grid">
-
 
 
             <!-- CITIZEN -->
 
             <div class="role-card">
-
 
                 <div class="role-icon">
                     👤
@@ -809,24 +738,22 @@
                 </div>
 
 
-                <h3 data-i18n="citizen">
+                <h3>
                     Citizen
                 </h3>
 
 
-                <p data-i18n="citizen_description">
-
+                <p>
                     Report civic issues, upload photos,
                     share locations and upvote problems
                     reported by your community.
-
                 </p>
 
 
                 <a href="{% url 'login' %}"
                    class="role-btn">
 
-                    <span data-i18n="citizen_login">
+                    <span>
                         Citizen Login
                     </span>
 
@@ -839,15 +766,12 @@
 
                 <div class="role-register">
 
-                    <span data-i18n="new_citizen">
+                    <span>
                         New citizen?
                     </span>
 
-                    <a href="{% url 'register' %}"
-                       data-i18n="create_account">
-
+                    <a href="{% url 'register' %}">
                         Create account
-
                     </a>
 
                 </div>
@@ -855,11 +779,9 @@
             </div>
 
 
-
             <!-- OFFICER -->
 
             <div class="role-card">
-
 
                 <div class="role-icon">
                     ◈
@@ -871,24 +793,22 @@
                 </div>
 
 
-                <h3 data-i18n="officer">
+                <h3>
                     Officer
                 </h3>
 
 
-                <p data-i18n="officer_description">
-
+                <p>
                     View assigned complaints, update issue
                     status and manage civic problems
                     within your department.
-
                 </p>
 
 
-                <a href="#"
+                <a href="/officer-login/"
                    class="role-btn">
 
-                    <span data-i18n="officer_login">
+                    <span>
                         Officer Login
                     </span>
 
@@ -901,11 +821,9 @@
             </div>
 
 
-
             <!-- ADMIN -->
 
             <div class="role-card">
-
 
                 <div class="role-icon">
                     ⚙
@@ -917,24 +835,22 @@
                 </div>
 
 
-                <h3 data-i18n="admin">
+                <h3>
                     Admin
                 </h3>
 
 
-                <p data-i18n="admin_description">
-
+                <p>
                     Manage users, officers, departments
                     and monitor the complete civic
                     issue reporting system.
-
                 </p>
 
 
-                <a href="#"
+                <a href="/admin-login/"
                    class="role-btn">
 
-                    <span data-i18n="admin_login">
+                    <span>
                         Admin Login
                     </span>
 
@@ -953,7 +869,6 @@
 </section>
 
 
-
 <!-- =====================================================
      ISSUE CATEGORIES
 ===================================================== -->
@@ -961,41 +876,29 @@
 <section class="problems"
          id="issues">
 
-
     <div class="container">
-
 
         <div class="section-heading">
 
-
-            <div class="eyebrow"
-                 data-i18n="report_anything">
-
+            <div class="eyebrow">
                 Report Anything
-
             </div>
 
 
-            <h2 data-i18n="city_problem">
-
+            <h2>
                 What's happening in your city?
-
             </h2>
 
 
-            <p data-i18n="report_common_problems">
-
+            <p>
                 Report common civic problems and help
                 authorities take action faster.
-
             </p>
 
         </div>
 
 
-
         <div class="problem-grid">
-
 
 
             <!-- ROAD -->
@@ -1012,20 +915,17 @@
                 </div>
 
 
-                <h3 data-i18n="road_damage">
+                <h3>
                     Road Damage
                 </h3>
 
 
-                <p data-i18n="road_description">
-
+                <p>
                     Report potholes, damaged roads,
                     broken sidewalks and unsafe streets.
-
                 </p>
 
             </div>
-
 
 
             <!-- GARBAGE -->
@@ -1042,20 +942,17 @@
                 </div>
 
 
-                <h3 data-i18n="garbage_overflow">
+                <h3>
                     Garbage Overflow
                 </h3>
 
 
-                <p data-i18n="garbage_description">
-
+                <p>
                     Report overflowing garbage bins,
                     waste dumping and sanitation issues.
-
                 </p>
 
             </div>
-
 
 
             <!-- STREETLIGHT -->
@@ -1072,20 +969,17 @@
                 </div>
 
 
-                <h3 data-i18n="broken_streetlights">
+                <h3>
                     Broken Streetlights
                 </h3>
 
 
-                <p data-i18n="streetlight_description">
-
+                <p>
                     Report streetlights that are broken,
                     damaged or not functioning.
-
                 </p>
 
             </div>
-
 
 
             <!-- WATER -->
@@ -1102,16 +996,14 @@
                 </div>
 
 
-                <h3 data-i18n="water_issues">
+                <h3>
                     Water Issues
                 </h3>
 
 
-                <p data-i18n="water_description">
-
+                <p>
                     Report water leakage, pipeline damage
                     and other water-related problems.
-
                 </p>
 
             </div>
@@ -1121,7 +1013,6 @@
     </div>
 
 </section>
-
 
 
 <!-- =====================================================
@@ -1131,118 +1022,95 @@
 <section class="how-it-works"
          id="how-it-works">
 
-
     <div class="container">
-
 
         <div class="section-heading">
 
-
-            <div class="eyebrow"
-                 data-i18n="simple_process">
-
+            <div class="eyebrow">
                 Simple Process
-
             </div>
 
 
-            <h2 data-i18n="report_to_resolution">
-
+            <h2>
                 From report to resolution.
-
             </h2>
 
 
-            <p data-i18n="simple_transparent">
-
+            <p>
                 FixMyCity makes civic issue reporting
                 simple, transparent and community-driven.
-
             </p>
 
         </div>
 
 
-
         <div class="steps">
-
 
 
             <!-- STEP 1 -->
 
             <div class="step">
 
-
                 <div class="step-number">
                     01
                 </div>
 
 
-                <h3 data-i18n="report">
+                <h3>
                     Report
                 </h3>
 
 
-                <p data-i18n="report_step">
-
+                <p>
                     Capture a photo, select the issue
                     category, describe the problem and
                     mark its exact location on the map.
-
                 </p>
 
             </div>
-
 
 
             <!-- STEP 2 -->
 
             <div class="step">
 
-
                 <div class="step-number">
                     02
                 </div>
 
 
-                <h3 data-i18n="upvote">
+                <h3>
                     Upvote
                 </h3>
 
 
-                <p data-i18n="upvote_step">
-
+                <p>
                     Find existing nearby complaints and
                     upvote them instead of creating
                     duplicate reports.
-
                 </p>
 
             </div>
-
 
 
             <!-- STEP 3 -->
 
             <div class="step">
 
-
                 <div class="step-number">
                     03
                 </div>
 
 
-                <h3 data-i18n="track">
+                <h3>
                     Track
                 </h3>
 
 
-                <p data-i18n="track_step">
-
+                <p>
                     Follow your complaint as it moves
                     from Reported to In Progress and
                     finally to Resolved.
-
                 </p>
 
             </div>
@@ -1252,7 +1120,6 @@
     </div>
 
 </section>
-
 
 
 <!-- =====================================================
@@ -1261,35 +1128,25 @@
 
 <section id="about">
 
-
     <div class="container">
-
 
         <div class="section-heading">
 
-
-            <div class="eyebrow"
-                 data-i18n="about_fixmycity">
-
+            <div class="eyebrow">
                 About FixMyCity
-
             </div>
 
 
-            <h2 data-i18n="better_reporting">
-
+            <h2>
                 Better reporting. Better cities.
-
             </h2>
 
 
-            <p data-i18n="about_description">
-
+            <p>
                 FixMyCity connects citizens and civic
                 authorities through one transparent
                 platform for reporting and resolving
                 everyday city problems.
-
             </p>
 
         </div>
@@ -1299,40 +1156,32 @@
 </section>
 
 
-
 <!-- =====================================================
      CTA
 ===================================================== -->
 
 <section class="cta">
 
-
     <div class="container">
-
 
         <div class="cta-box">
 
-
-            <h2 data-i18n="see_something">
-
+            <h2>
                 See something broken?
-
             </h2>
 
 
-            <p data-i18n="cta_description">
-
+            <p>
                 Don't just ignore it. Report it,
                 let your community support it,
                 and help get it fixed.
-
             </p>
 
 
             <a href="#roles"
                class="btn btn-primary">
 
-                <span data-i18n="report_issue">
+                <span>
                     Report an Issue
                 </span>
 
@@ -1348,9 +1197,7 @@
 
 </section>
 
-
 </main>
-
 
 
 <!-- =====================================================
@@ -1359,63 +1206,43 @@
 
 <footer class="footer">
 
-
     <div class="container">
-
 
         <div class="footer-content">
 
-
             <div>
-
 
                 <div class="footer-logo">
                     FixMyCity
                 </div>
 
 
-                <p data-i18n="footer_tagline">
-
+                <p>
                     Building better cities together.
-
                 </p>
 
             </div>
 
 
-
             <div class="footer-links">
 
-
-                <a href="#home"
-                   data-i18n="nav_home">
-
+                <a href="#home">
                     Home
-
                 </a>
 
 
-                <a href="#issues"
-                   data-i18n="nav_issues">
-
+                <a href="#issues">
                     Issues
-
                 </a>
 
 
-                <a href="#how-it-works"
-                   data-i18n="nav_how">
-
+                <a href="#how-it-works">
                     How It Works
-
                 </a>
 
 
-                <a href="#about"
-                   data-i18n="nav_about">
-
+                <a href="#about">
                     About
-
                 </a>
 
             </div>
@@ -1426,15 +1253,4 @@
 
 </footer>
 
-
-
-<!-- =====================================================
-     LANGUAGE JAVASCRIPT
-===================================================== -->
-
-<script src="{% static 'js/script.js' %}"></script>
-
-
-</body>
-
-</html>
+{% endblock %}

@@ -1,24 +1,14 @@
-{% load static %}
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html lang="en">
+{% block title %}
+Login | FixMyCity
+{% endblock %}
 
-<head>
+{% block body_class %}
+auth-page
+{% endblock %}
 
-    <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Login | FixMyCity</title>
-
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-
-</head>
-
-
-<body class="auth-page">
-
+{% block content %}
 
 <!-- =====================================================
      AUTH NAVBAR
@@ -35,7 +25,6 @@
     </a>
 
 </header>
-
 
 
 <!-- =====================================================
@@ -64,7 +53,6 @@
             </p>
 
         </div>
-
 
 
         <!-- =================================================
@@ -99,7 +87,6 @@
                 </button>
 
 
-
                 <!-- OFFICER -->
 
                 <a
@@ -116,7 +103,6 @@
                     </span>
 
                 </a>
-
 
 
                 <!-- ADMIN -->
@@ -140,7 +126,6 @@
             </div>
 
         </div>
-
 
 
         <!-- =================================================
@@ -174,7 +159,6 @@
             </div>
 
 
-
             <div class="form-group">
 
                 <div class="password-label">
@@ -201,14 +185,12 @@
             </div>
 
 
-
             <!-- ERROR / SUCCESS MESSAGE -->
 
             <div
                 id="loginMessage"
                 style="display: none;"
             ></div>
-
 
 
             <button
@@ -221,7 +203,6 @@
 
 
         </form>
-
 
 
         <!-- =================================================
@@ -245,11 +226,14 @@
 
 </main>
 
+{% endblock %}
 
 
 <!-- =====================================================
      LOGIN JAVASCRIPT
 ===================================================== -->
+
+{% block extra_js %}
 
 <script>
 
@@ -299,6 +283,7 @@ loginForm.addEventListener("submit", async function(event) {
 
         loginMessage.style.display = "block";
         loginMessage.style.color = "#ef4444";
+
         loginMessage.textContent =
             "Something went wrong. Please try again.";
 
@@ -310,7 +295,4 @@ loginForm.addEventListener("submit", async function(event) {
 
 </script>
 
-
-</body>
-
-</html>
+{% endblock %}

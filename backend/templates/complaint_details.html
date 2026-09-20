@@ -1,433 +1,392 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "base.html" %}
 
-    <title>Complaint Details | FixMyCity</title>
+{% block title %}
+Complaint Details | FixMyCity
+{% endblock %}
 
-    <link rel="stylesheet" href="./css/style.css">
-</head>
+{% block body_class %}
+dashboard-page
+{% endblock %}
 
-<body class="dashboard-page">
+{% block content %}
 
-    <!-- ================= NAVBAR ================= -->
+<!-- ================= NAVBAR ================= -->
 
-    <header class="dashboard-navbar">
+<header class="dashboard-navbar">
 
-        <div class="dashboard-logo">
-            <a href="index.html">FixMyCity</a>
+    <div class="dashboard-logo">
+        <a href="{% url 'home' %}">FixMyCity</a>
+    </div>
+
+    <nav class="dashboard-nav">
+
+        <a href="{% url 'citizen_dashboard' %}">
+            Dashboard
+        </a>
+
+        <a href="{% url 'report_issue' %}">
+            Report Issue
+        </a>
+
+        <a href="my_complaints.html" class="active">
+            My Complaints
+        </a>
+
+    </nav>
+
+    <div class="dashboard-user">
+
+        <div class="user-avatar">
+            SF
         </div>
 
-        <nav class="dashboard-nav">
+        <div class="user-info">
+            <strong>Sadaf Fatima</strong>
+            <span>Citizen</span>
+        </div>
 
-            <a href="citizen_dashboard.html">
-                Dashboard
+        <button class="logout-btn">
+            Logout
+        </button>
+
+    </div>
+
+</header>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="details-container">
+
+
+    <!-- ================= PAGE HEADER ================= -->
+
+    <section class="details-header">
+
+        <div>
+
+            <a
+                href="my_complaints.html"
+                class="details-back"
+            >
+                ← Back to My Complaints
             </a>
 
-            <a href="report_issue.html">
-                Report Issue
-            </a>
+            <p class="welcome-label">
+                COMPLAINT DETAILS
+            </p>
 
-            <a href="my_complaints.html" class="active">
-                My Complaints
-            </a>
+            <div class="details-title-row">
 
-        </nav>
+                <div>
 
-        <div class="dashboard-user">
+                    <h1>
+                        Large Pothole on Main Road
+                    </h1>
 
-            <div class="user-avatar">
-                SF
+                    <p>
+                        Complaint ID:
+                        <strong>#FMC-000124</strong>
+                    </p>
+
+                </div>
+
+                <span class="status-badge progress large-status">
+                    In Progress
+                </span>
+
             </div>
-
-            <div class="user-info">
-                <strong>Sadaf Fatima</strong>
-                <span>Citizen</span>
-            </div>
-
-            <button class="logout-btn">
-                Logout
-            </button>
 
         </div>
 
-    </header>
+    </section>
 
 
-    <!-- ================= MAIN ================= -->
+    <!-- ================= DETAILS GRID ================= -->
 
-    <main class="details-container">
+    <section class="details-grid">
 
 
-        <!-- ================= PAGE HEADER ================= -->
+        <!-- ================= LEFT COLUMN ================= -->
 
-        <section class="details-header">
+        <div class="details-main">
 
-            <div>
 
-                <a
-                    href="my_complaints.html"
-                    class="details-back"
-                >
-                    ← Back to My Complaints
-                </a>
+            <!-- Issue Photo -->
 
-                <p class="welcome-label">
-                    COMPLAINT DETAILS
-                </p>
+            <div class="details-card">
 
-                <div class="details-title-row">
+                <div class="details-card-header">
 
                     <div>
 
-                        <h1>
-                            Large Pothole on Main Road
-                        </h1>
-
-                        <p>
-                            Complaint ID:
-                            <strong>#FMC-000124</strong>
+                        <p class="card-label">
+                            ISSUE PHOTO
                         </p>
+
+                        <h2>
+                            Reported Issue
+                        </h2>
 
                     </div>
 
-                    <span class="status-badge progress large-status">
-                        In Progress
+                    <span class="category-label road-label">
+                        ROAD & INFRASTRUCTURE
                     </span>
 
                 </div>
 
+
+                <div class="issue-large-image">
+
+                    <div class="image-placeholder-content">
+
+                        <span class="image-category">
+                            ROAD ISSUE
+                        </span>
+
+                        <h3>
+                            Large Pothole
+                        </h3>
+
+                        <p>
+                            Vijay Nagar Main Road
+                        </p>
+
+                    </div>
+
+                </div>
+
             </div>
 
-        </section>
+
+            <!-- Description -->
+
+            <div class="details-card">
+
+                <p class="card-label">
+                    DESCRIPTION
+                </p>
+
+                <h2>
+                    Issue Description
+                </h2>
+
+                <p class="full-description">
+                    A large pothole has developed on the main road
+                    near Vijay Nagar Square. The damaged section is
+                    causing difficulty for vehicles and creating a
+                    safety risk for commuters, especially during
+                    evening hours.
+                </p>
+
+            </div>
 
 
-        <!-- ================= DETAILS GRID ================= -->
+            <!-- Location -->
 
-        <section class="details-grid">
+            <div class="details-card">
 
+                <div class="details-card-header">
 
-            <!-- ================= LEFT COLUMN ================= -->
+                    <div>
 
-            <div class="details-main">
+                        <p class="card-label">
+                            LOCATION
+                        </p>
 
-
-                <!-- Issue Photo -->
-
-                <div class="details-card">
-
-                    <div class="details-card-header">
-
-                        <div>
-
-                            <p class="card-label">
-                                ISSUE PHOTO
-                            </p>
-
-                            <h2>
-                                Reported Issue
-                            </h2>
-
-                        </div>
-
-                        <span class="category-label road-label">
-                            ROAD & INFRASTRUCTURE
-                        </span>
+                        <h2>
+                            Issue Location
+                        </h2>
 
                     </div>
 
+                    <span class="location-status">
+                        📍 Location captured
+                    </span>
 
-                    <div class="issue-large-image">
+                </div>
 
-                        <div class="image-placeholder-content">
 
-                            <span class="image-category">
-                                ROAD ISSUE
-                            </span>
+                <div class="details-map">
 
-                            <h3>
-                                Large Pothole
-                            </h3>
+                    <div class="details-map-grid"></div>
+
+                    <div class="details-road road-a"></div>
+                    <div class="details-road road-b"></div>
+                    <div class="details-road road-c"></div>
+
+                    <div class="details-marker">
+                        ●
+                    </div>
+
+                    <div class="map-location-label">
+                        Vijay Nagar Square
+                    </div>
+
+                </div>
+
+
+                <div class="location-info">
+
+                    <div>
+
+                        <span>ADDRESS</span>
+
+                        <strong>
+                            Vijay Nagar Square, Indore
+                        </strong>
+
+                    </div>
+
+                    <div>
+
+                        <span>LATITUDE</span>
+
+                        <strong>
+                            22.7533
+                        </strong>
+
+                    </div>
+
+                    <div>
+
+                        <span>LONGITUDE</span>
+
+                        <strong>
+                            75.8937
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Status Timeline -->
+
+            <div class="details-card">
+
+                <div class="details-card-header">
+
+                    <div>
+
+                        <p class="card-label">
+                            STATUS TRACKING
+                        </p>
+
+                        <h2>
+                            Complaint Progress
+                        </h2>
+
+                    </div>
+
+                    <span class="updated-text">
+                        Last updated: 04 Sep 2026
+                    </span>
+
+                </div>
+
+
+                <div class="details-timeline">
+
+
+                    <!-- Reported -->
+
+                    <div class="detail-timeline-item completed">
+
+                        <div class="detail-timeline-icon">
+                            ✓
+                        </div>
+
+                        <div class="detail-timeline-content">
+
+                            <div>
+
+                                <h3>
+                                    Complaint Reported
+                                </h3>
+
+                                <span>
+                                    02 Sep 2026 • 10:32 AM
+                                </span>
+
+                            </div>
 
                             <p>
-                                Vijay Nagar Main Road
+                                Your complaint was successfully
+                                submitted to FixMyCity.
                             </p>
 
                         </div>
 
                     </div>
 
-                </div>
 
+                    <div class="detail-timeline-line active"></div>
 
-                <!-- Description -->
 
-                <div class="details-card">
+                    <!-- In Progress -->
 
-                    <p class="card-label">
-                        DESCRIPTION
-                    </p>
+                    <div class="detail-timeline-item active">
 
-                    <h2>
-                        Issue Description
-                    </h2>
-
-                    <p class="full-description">
-                        A large pothole has developed on the main road
-                        near Vijay Nagar Square. The damaged section is
-                        causing difficulty for vehicles and creating a
-                        safety risk for commuters, especially during
-                        evening hours.
-                    </p>
-
-                </div>
-
-
-                <!-- Location -->
-
-                <div class="details-card">
-
-                    <div class="details-card-header">
-
-                        <div>
-
-                            <p class="card-label">
-                                LOCATION
-                            </p>
-
-                            <h2>
-                                Issue Location
-                            </h2>
-
-                        </div>
-
-                        <span class="location-status">
-                            📍 Location captured
-                        </span>
-
-                    </div>
-
-
-                    <div class="details-map">
-
-                        <div class="details-map-grid"></div>
-
-                        <div class="details-road road-a"></div>
-                        <div class="details-road road-b"></div>
-                        <div class="details-road road-c"></div>
-
-                        <div class="details-marker">
-                            ●
-                        </div>
-
-                        <div class="map-location-label">
-                            Vijay Nagar Square
-                        </div>
-
-                    </div>
-
-
-                    <div class="location-info">
-
-                        <div>
-
-                            <span>ADDRESS</span>
-
-                            <strong>
-                                Vijay Nagar Square, Indore
-                            </strong>
-
-                        </div>
-
-                        <div>
-
-                            <span>LATITUDE</span>
-
-                            <strong>
-                                22.7533
-                            </strong>
-
-                        </div>
-
-                        <div>
-
-                            <span>LONGITUDE</span>
-
-                            <strong>
-                                75.8937
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Status Timeline -->
-
-                <div class="details-card">
-
-                    <div class="details-card-header">
-
-                        <div>
-
-                            <p class="card-label">
-                                STATUS TRACKING
-                            </p>
-
-                            <h2>
-                                Complaint Progress
-                            </h2>
-
-                        </div>
-
-                        <span class="updated-text">
-                            Last updated: 04 Sep 2026
-                        </span>
-
-                    </div>
-
-
-                    <div class="details-timeline">
-
-
-                        <!-- Reported -->
-
-                        <div class="detail-timeline-item completed">
-
-                            <div class="detail-timeline-icon">
-                                ✓
-                            </div>
-
-                            <div class="detail-timeline-content">
-
-                                <div>
-
-                                    <h3>
-                                        Complaint Reported
-                                    </h3>
-
-                                    <span>
-                                        02 Sep 2026 • 10:32 AM
-                                    </span>
-
-                                </div>
-
-                                <p>
-                                    Your complaint was successfully
-                                    submitted to FixMyCity.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="detail-timeline-line active"></div>
-
-
-                        <!-- In Progress -->
-
-                        <div class="detail-timeline-item active">
-
-                            <div class="detail-timeline-icon">
-                                ◷
-                            </div>
-
-                            <div class="detail-timeline-content">
-
-                                <div>
-
-                                    <h3>
-                                        In Progress
-                                    </h3>
-
-                                    <span>
-                                        04 Sep 2026 • 11:15 AM
-                                    </span>
-
-                                </div>
-
-                                <p>
-                                    Complaint has been assigned to the
-                                    Road & Infrastructure department.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="detail-timeline-line"></div>
-
-
-                        <!-- Resolved -->
-
-                        <div class="detail-timeline-item">
-
-                            <div class="detail-timeline-icon">
-                                3
-                            </div>
-
-                            <div class="detail-timeline-content">
-
-                                <div>
-
-                                    <h3>
-                                        Resolved
-                                    </h3>
-
-                                    <span>
-                                        Pending
-                                    </span>
-
-                                </div>
-
-                                <p>
-                                    The complaint will be marked resolved
-                                    after the issue has been fixed.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Resolution -->
-
-                <div class="details-card resolution-card">
-
-                    <p class="card-label">
-                        RESOLUTION
-                    </p>
-
-                    <h2>
-                        Resolution Information
-                    </h2>
-
-
-                    <div class="resolution-pending">
-
-                        <div class="resolution-icon">
+                        <div class="detail-timeline-icon">
                             ◷
                         </div>
 
-                        <div>
+                        <div class="detail-timeline-content">
 
-                            <h3>
-                                Resolution in progress
-                            </h3>
+                            <div>
+
+                                <h3>
+                                    In Progress
+                                </h3>
+
+                                <span>
+                                    04 Sep 2026 • 11:15 AM
+                                </span>
+
+                            </div>
 
                             <p>
-                                The assigned officer is currently working
-                                on this complaint. Resolution details will
-                                appear here once the issue is completed.
+                                Complaint has been assigned to the
+                                Road & Infrastructure department.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-timeline-line"></div>
+
+
+                    <!-- Resolved -->
+
+                    <div class="detail-timeline-item">
+
+                        <div class="detail-timeline-icon">
+                            3
+                        </div>
+
+                        <div class="detail-timeline-content">
+
+                            <div>
+
+                                <h3>
+                                    Resolved
+                                </h3>
+
+                                <span>
+                                    Pending
+                                </span>
+
+                            </div>
+
+                            <p>
+                                The complaint will be marked resolved
+                                after the issue has been fixed.
                             </p>
 
                         </div>
@@ -439,201 +398,242 @@
             </div>
 
 
-            <!-- ================= RIGHT COLUMN ================= -->
+            <!-- Resolution -->
 
-            <aside class="details-sidebar">
+            <div class="details-card resolution-card">
 
+                <p class="card-label">
+                    RESOLUTION
+                </p>
 
-                <!-- Complaint Overview -->
-
-                <div class="details-card">
-
-                    <p class="card-label">
-                        OVERVIEW
-                    </p>
-
-                    <h2>
-                        Complaint Information
-                    </h2>
+                <h2>
+                    Resolution Information
+                </h2>
 
 
-                    <div class="info-list">
+                <div class="resolution-pending">
 
-                        <div class="info-row">
-
-                            <span>Complaint ID</span>
-
-                            <strong>
-                                FMC-000124
-                            </strong>
-
-                        </div>
-
-                        <div class="info-row">
-
-                            <span>Category</span>
-
-                            <strong>
-                                Road & Infrastructure
-                            </strong>
-
-                        </div>
-
-                        <div class="info-row">
-
-                            <span>Reported On</span>
-
-                            <strong>
-                                02 Sep 2026
-                            </strong>
-
-                        </div>
-
-                        <div class="info-row">
-
-                            <span>Current Status</span>
-
-                            <strong class="blue-text">
-                                In Progress
-                            </strong>
-
-                        </div>
-
-                        <div class="info-row">
-
-                            <span>Department</span>
-
-                            <strong>
-                                Road & Infrastructure
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Upvotes -->
-
-                <div class="details-card upvote-detail-card">
-
-                    <p class="card-label">
-                        COMMUNITY SUPPORT
-                    </p>
-
-                    <h2>
-                        Upvotes
-                    </h2>
-
-
-                    <div class="upvote-number">
-                        <strong>
-                            8
-                        </strong>
-
-                        <span>
-                            people support this issue
-                        </span>
-                    </div>
-
-
-                    <button class="large-upvote-btn">
-                        ↑ &nbsp; Upvote Issue
-                    </button>
-
-
-                    <p class="upvote-note">
-                        Upvoting helps officials identify issues
-                        that affect more citizens.
-                    </p>
-
-                </div>
-
-
-                <!-- Assigned Department -->
-
-                <div class="details-card">
-
-                    <p class="card-label">
-                        ASSIGNMENT
-                    </p>
-
-                    <h2>
-                        Responsible Department
-                    </h2>
-
-
-                    <div class="department-box">
-
-                        <div class="department-icon">
-                            R
-                        </div>
-
-                        <div>
-
-                            <strong>
-                                Road & Infrastructure
-                            </strong>
-
-                            <span>
-                                Municipal Department
-                            </span>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Help -->
-
-                <div class="details-help">
-
-                    <div class="help-icon">
-                        ?
+                    <div class="resolution-icon">
+                        ◷
                     </div>
 
                     <div>
 
                         <h3>
-                            Need help?
+                            Resolution in progress
                         </h3>
 
                         <p>
-                            If you believe the complaint information
-                            is incorrect, contact the administration.
+                            The assigned officer is currently working
+                            on this complaint. Resolution details will
+                            appear here once the issue is completed.
                         </p>
-
-                        <a href="#">
-                            Contact Support →
-                        </a>
 
                     </div>
 
                 </div>
 
-            </aside>
+            </div>
 
-        </section>
-
-    </main>
+        </div>
 
 
-    <!-- ================= FOOTER ================= -->
+        <!-- ================= RIGHT COLUMN ================= -->
 
-    <footer class="dashboard-footer">
+        <aside class="details-sidebar">
 
-        <span>
-            © 2026 FixMyCity
-        </span>
 
-        <span>
-            Civic Issue Reporting Platform
-        </span>
+            <!-- Complaint Overview -->
 
-    </footer>
+            <div class="details-card">
 
-</body>
-</html>
+                <p class="card-label">
+                    OVERVIEW
+                </p>
+
+                <h2>
+                    Complaint Information
+                </h2>
+
+
+                <div class="info-list">
+
+                    <div class="info-row">
+
+                        <span>Complaint ID</span>
+
+                        <strong>
+                            FMC-000124
+                        </strong>
+
+                    </div>
+
+                    <div class="info-row">
+
+                        <span>Category</span>
+
+                        <strong>
+                            Road & Infrastructure
+                        </strong>
+
+                    </div>
+
+                    <div class="info-row">
+
+                        <span>Reported On</span>
+
+                        <strong>
+                            02 Sep 2026
+                        </strong>
+
+                    </div>
+
+                    <div class="info-row">
+
+                        <span>Current Status</span>
+
+                        <strong class="blue-text">
+                            In Progress
+                        </strong>
+
+                    </div>
+
+                    <div class="info-row">
+
+                        <span>Department</span>
+
+                        <strong>
+                            Road & Infrastructure
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Upvotes -->
+
+            <div class="details-card upvote-detail-card">
+
+                <p class="card-label">
+                    COMMUNITY SUPPORT
+                </p>
+
+                <h2>
+                    Upvotes
+                </h2>
+
+
+                <div class="upvote-number">
+
+                    <strong>
+                        8
+                    </strong>
+
+                    <span>
+                        people support this issue
+                    </span>
+
+                </div>
+
+
+                <button class="large-upvote-btn">
+                    ↑ &nbsp; Upvote Issue
+                </button>
+
+
+                <p class="upvote-note">
+                    Upvoting helps officials identify issues
+                    that affect more citizens.
+                </p>
+
+            </div>
+
+
+            <!-- Assigned Department -->
+
+            <div class="details-card">
+
+                <p class="card-label">
+                    ASSIGNMENT
+                </p>
+
+                <h2>
+                    Responsible Department
+                </h2>
+
+
+                <div class="department-box">
+
+                    <div class="department-icon">
+                        R
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Road & Infrastructure
+                        </strong>
+
+                        <span>
+                            Municipal Department
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Help -->
+
+            <div class="details-help">
+
+                <div class="help-icon">
+                    ?
+                </div>
+
+                <div>
+
+                    <h3>
+                        Need help?
+                    </h3>
+
+                    <p>
+                        If you believe the complaint information
+                        is incorrect, contact the administration.
+                    </p>
+
+                    <a href="#">
+                        Contact Support →
+                    </a>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+    </section>
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="dashboard-footer">
+
+    <span>
+        © 2026 FixMyCity
+    </span>
+
+    <span>
+        Civic Issue Reporting Platform
+    </span>
+
+</footer>
+
+{% endblock %}

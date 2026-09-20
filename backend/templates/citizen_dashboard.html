@@ -1,14 +1,10 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "base.html" %}
 
-    <title>Citizen Dashboard | FixMyCity</title>
+{% block title %}
+Citizen Dashboard | FixMyCity
+{% endblock %}
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
+{% block content %}
 
 <body class="dashboard-page">
 
@@ -36,7 +32,6 @@
 
         </nav>
 
-
         <div class="dashboard-user">
 
             <div class="user-avatar">
@@ -47,7 +42,6 @@
                 <strong>{{ citizen.full_name }}</strong>
                 <span>Citizen</span>
             </div>
-
 
             <!-- ================= LOGOUT ================= -->
 
@@ -60,11 +54,9 @@
     </header>
 
 
-
     <!-- ================= MAIN CONTENT ================= -->
 
     <main class="dashboard-container">
-
 
         <!-- ================= WELCOME SECTION ================= -->
 
@@ -86,7 +78,6 @@
 
             </div>
 
-
             <a href="{% url 'report_issue' %}"
                class="primary-dashboard-btn">
 
@@ -97,11 +88,9 @@
         </section>
 
 
-
         <!-- ================= STAT CARDS ================= -->
 
         <section class="dashboard-stats">
-
 
             <!-- Total Reports -->
 
@@ -122,7 +111,6 @@
                 </div>
 
             </div>
-
 
 
             <!-- In Progress -->
@@ -146,7 +134,6 @@
             </div>
 
 
-
             <!-- Resolved -->
 
             <div class="stat-card">
@@ -166,7 +153,6 @@
                 </div>
 
             </div>
-
 
 
             <!-- My Upvotes -->
@@ -192,11 +178,9 @@
         </section>
 
 
-
         <!-- ================= DASHBOARD GRID ================= -->
 
         <section class="dashboard-grid">
-
 
             <!-- ================= RECENT COMPLAINTS ================= -->
 
@@ -216,13 +200,11 @@
 
                     </div>
 
-
                     <a href="my_complaints.html">
                         View All →
                     </a>
 
                 </div>
-
 
 
                 <!-- ================= COMPLAINT 1 ================= -->
@@ -236,7 +218,6 @@
                         </span>
 
                     </div>
-
 
                     <div class="complaint-info">
 
@@ -252,11 +233,9 @@
 
                         </div>
 
-
                         <p>
                             Near Vijay Nagar Square, Indore
                         </p>
-
 
                         <div class="complaint-meta">
 
@@ -279,7 +258,6 @@
                 </div>
 
 
-
                 <!-- ================= COMPLAINT 2 ================= -->
 
                 <div class="complaint-item">
@@ -291,7 +269,6 @@
                         </span>
 
                     </div>
-
 
                     <div class="complaint-info">
 
@@ -307,11 +284,9 @@
 
                         </div>
 
-
                         <p>
                             Scheme No. 54, Indore
                         </p>
-
 
                         <div class="complaint-meta">
 
@@ -334,7 +309,6 @@
                 </div>
 
 
-
                 <!-- ================= COMPLAINT 3 ================= -->
 
                 <div class="complaint-item">
@@ -346,7 +320,6 @@
                         </span>
 
                     </div>
-
 
                     <div class="complaint-info">
 
@@ -362,11 +335,9 @@
 
                         </div>
 
-
                         <p>
                             Bengali Square, Indore
                         </p>
-
 
                         <div class="complaint-meta">
 
@@ -391,7 +362,6 @@
             </div>
 
 
-
             <!-- ================= QUICK ACTIONS ================= -->
 
             <div class="dashboard-card quick-actions-card">
@@ -411,7 +381,6 @@
                     </div>
 
                 </div>
-
 
 
                 <!-- Report Issue -->
@@ -442,7 +411,6 @@
                 </a>
 
 
-
                 <!-- My Complaints -->
 
                 <a href="my_complaints.html"
@@ -471,7 +439,6 @@
                 </a>
 
 
-
                 <!-- Nearby Issues -->
 
                 <a href="#"
@@ -498,7 +465,6 @@
                     </span>
 
                 </a>
-
 
 
                 <!-- My Profile -->
@@ -533,7 +499,6 @@
         </section>
 
 
-
         <!-- ================= NEARBY ISSUES ================= -->
 
         <section class="dashboard-card nearby-section">
@@ -556,7 +521,6 @@
 
                 </div>
 
-
                 <button class="secondary-btn">
                     View Map
                 </button>
@@ -564,11 +528,9 @@
             </div>
 
 
-
             <div class="nearby-grid">
 
-
-                <!-- ================= NEARBY ISSUE 1 ================= -->
+                <!-- Nearby Issue 1 -->
 
                 <div class="nearby-card">
 
@@ -584,7 +546,6 @@
 
                     </div>
 
-
                     <h3>
                         Damaged Road Near Square
                     </h3>
@@ -592,7 +553,6 @@
                     <p>
                         Major potholes causing traffic problems.
                     </p>
-
 
                     <div class="nearby-footer">
 
@@ -609,8 +569,7 @@
                 </div>
 
 
-
-                <!-- ================= NEARBY ISSUE 2 ================= -->
+                <!-- Nearby Issue 2 -->
 
                 <div class="nearby-card">
 
@@ -626,7 +585,6 @@
 
                     </div>
 
-
                     <h3>
                         Garbage Dumping Area
                     </h3>
@@ -634,7 +592,6 @@
                     <p>
                         Garbage has not been collected for several days.
                     </p>
-
 
                     <div class="nearby-footer">
 
@@ -651,8 +608,7 @@
                 </div>
 
 
-
-                <!-- ================= NEARBY ISSUE 3 ================= -->
+                <!-- Nearby Issue 3 -->
 
                 <div class="nearby-card">
 
@@ -668,7 +624,6 @@
 
                     </div>
 
-
                     <h3>
                         Water Leakage
                     </h3>
@@ -676,7 +631,6 @@
                     <p>
                         Continuous water leakage reported near the main road.
                     </p>
-
 
                     <div class="nearby-footer">
 
@@ -697,7 +651,6 @@
         </section>
 
 
-
         <!-- ================= STATUS TIMELINE ================= -->
 
         <section class="dashboard-card status-section">
@@ -716,7 +669,6 @@
 
                 </div>
 
-
                 <span class="complaint-id">
                     #FMC-000124
                 </span>
@@ -724,9 +676,7 @@
             </div>
 
 
-
             <div class="status-timeline">
-
 
                 <!-- Reported -->
 
@@ -751,9 +701,7 @@
                 </div>
 
 
-
                 <div class="timeline-line active"></div>
-
 
 
                 <!-- In Progress -->
@@ -779,9 +727,7 @@
                 </div>
 
 
-
                 <div class="timeline-line"></div>
-
 
 
                 <!-- Resolved -->
@@ -813,7 +759,6 @@
     </main>
 
 
-
     <!-- ================= FOOTER ================= -->
 
     <footer class="dashboard-footer">
@@ -828,10 +773,6 @@
 
     </footer>
 
-
-    <!-- ================= MAIN JAVASCRIPT ================= -->
-
-    <script src="{% static 'js/script.js' %}"></script>
-
 </body>
-</html>
+
+{% endblock %}
