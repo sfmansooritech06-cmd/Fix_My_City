@@ -3,28 +3,28 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.http import require_POST
 
-from .models import User, Citizen,Complaint
+from .models import User, Citizen, Complaint, Officer
 
 
-# =========================
+# =====================================================
 # LANDING PAGE
-# =========================
+# =====================================================
 
 def home(request):
     return render(request, "index.html")
 
 
-# =========================
+# =====================================================
 # CITIZEN REGISTER PAGE
-# =========================
+# =====================================================
 
 def register_page(request):
     return render(request, "register.html")
 
 
-# =========================
+# =====================================================
 # CITIZEN REGISTER
-# =========================
+# =====================================================
 
 @require_POST
 def register_citizen(request):
@@ -58,7 +58,6 @@ def register_citizen(request):
 
     # Generate username internally
     username = email.split("@")[0]
-
     original_username = username
     counter = 1
 
@@ -99,17 +98,17 @@ def register_citizen(request):
     }, status=201)
 
 
-# =========================
+# =====================================================
 # CITIZEN LOGIN PAGE
-# =========================
+# =====================================================
 
 def login_page(request):
     return render(request, "login.html")
 
 
-# =========================
+# =====================================================
 # CITIZEN LOGIN
-# =========================
+# =====================================================
 
 def citizen_login(request):
 
@@ -168,11 +167,12 @@ def citizen_login(request):
     }, status=401)
 
 
-# =========================
+# =====================================================
 # CITIZEN DASHBOARD
-# =========================
+# =====================================================
 
 def citizen_dashboard(request):
+
     if not request.user.is_authenticated:
         return redirect("/login/")
 
@@ -181,7 +181,7 @@ def citizen_dashboard(request):
 
     citizen = request.user.citizen_profile
 
-    # Generate initials from citizen's full name
+    # Generate initials
     name_parts = citizen.full_name.strip().split()
 
     if len(name_parts) >= 2:
@@ -199,9 +199,9 @@ def citizen_dashboard(request):
     )
 
 
-# =========================
-# LOGOUT
-# =========================
+# =====================================================
+# CITIZEN LOGOUT
+# =====================================================
 
 def citizen_logout(request):
 
@@ -209,9 +209,13 @@ def citizen_logout(request):
 
     return redirect("/login/")
 
-# Report Issue
+
+# =====================================================
+# REPORT ISSUE
+# =====================================================
 
 def report_issue(request):
+
     if not request.user.is_authenticated:
         return redirect("/login/")
 
@@ -236,9 +240,13 @@ def report_issue(request):
         }
     )
 
-# Submit Complaints
+
+# =====================================================
+# SUBMIT COMPLAINT
+# =====================================================
 
 def submit_complaint(request):
+
     if not request.user.is_authenticated:
         return redirect("/login/")
 
@@ -296,3 +304,163 @@ def submit_complaint(request):
         "message": "Complaint submitted successfully.",
         "complaint_id": complaint.complaint_id
     })
+
+
+# =====================================================
+# OFFICER LOGIN PAGE
+# =====================================================
+
+def officer_login_page(request):
+    return render(request, "officer_login.html")
+
+
+# =====================================================
+# OFFICER LOGIN
+# =====================================================
+
+def officer_login(request):
+
+    if request.method != "POST":
+        return JsonResponse({
+            "success": False,
+            "message": "Only POST method is allowed."
+        }, status=405)
+
+    # Get login details from HTML form
+    employee_id = request.POST.get(
+        "employee_id",
+        ""
+    ).strip()
+
+    password = request.POST.get(
+        "password",
+        ""
+    )
+
+    # Check empty fields
+    if not employee_id or not password:
+        return JsonResponse({
+            "success": False,
+            "message": "Please enter Employee ID and Password."
+        }, status=400)
+
+    # Find officer using Employee ID
+    try:
+
+        officer = Officer.objects.select_related(
+            "user"
+        ).get(
+            employee_id__iexact=employee_id
+        )
+
+    except Officer.DoesNotExist:
+
+        return JsonResponse({
+            "success": False,
+            "message": "Invalid Employee ID or Password."
+        }, status=401)
+
+    # Check officer approval
+    if not officer.is_approved:
+
+        return JsonResponse({
+            "success": False,
+            "message": "Your officer account has not been approved yet."
+        }, status=403)
+
+    # Check whether linked User account is active
+    if not officer.user.is_active:
+
+        return JsonResponse({
+            "success": False,
+            "message": "Your officer account is inactive."
+        }, status=403)
+
+    # Authenticate using Django User password
+    user = authenticate(
+        request,
+        username=officer.user.username,
+        password=password
+    )
+
+    # Password incorrect
+    if user is None:
+
+        return JsonResponse({
+            "success": False,
+            "message": "Invalid Employee ID or Password."
+        }, status=401)
+
+    # Successful login
+    login(request, user)
+
+    return JsonResponse({
+        "success": True,
+        "message": "Officer login successful.",
+        "redirect": "/officer-dashboard/"
+    })
+
+
+# =====================================================
+# OFFICER DASHBOARD
+# =====================================================
+
+def officer_dashboard(request):
+
+    # User must be logged in
+    if not request.user.is_authenticated:
+        return redirect("/officer/login/")
+
+    # Only officers can access this dashboard
+    if request.user.role != "officer":
+        return redirect("/officer/login/")
+
+    # Get Officer profile
+    try:
+
+        officer = request.user.officer_profile
+
+    except Officer.DoesNotExist:
+
+        logout(request)
+
+        return redirect("/officer/login/")
+
+    # Officer must be approved
+    if not officer.is_approved:
+
+        logout(request)
+
+        return redirect("/officer/login/")
+
+    # Generate initials
+    name_parts = officer.full_name.strip().split()
+
+    if len(name_parts) >= 2:
+        initials = (
+            name_parts[0][0] +
+            name_parts[1][0]
+        )
+    else:
+        initials = name_parts[0][0]
+
+    return render(
+        request,
+        "officer_dashboard.html",
+        {
+            "officer": officer,
+            "initials": initials.upper(),
+        }
+    )
+
+
+# =====================================================
+# OFFICER LOGOUT
+# =====================================================
+
+def officer_logout(request):
+
+    logout(request)
+
+    return redirect("/officer/login/")
+

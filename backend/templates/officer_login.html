@@ -67,7 +67,8 @@
 
         <!-- LOGIN FORM -->
 
-        <form class="login-form">
+        <form method="post"   action="{% url 'officer_login_submit' %}"  class="login-form">
+            {% csrf_token %}
 
 
             <!-- EMPLOYEE ID -->
