@@ -8,6 +8,7 @@ from .views import (
     citizen_login,
     citizen_dashboard,
     citizen_logout,
+    my_complaints,
     report_issue,
     submit_complaint,
 )
@@ -34,6 +35,12 @@ urlpatterns = [
         "citizen-dashboard/",
         citizen_dashboard,
         name="citizen_dashboard"
+    ),
+    # My complaints
+    path(
+        "my-complaints/",
+        my_complaints,
+        name="my_complaints"
     ),
     # Report an issue
     path("report_issue/", report_issue, name="report_issue"),

@@ -11,6 +11,48 @@ dashboard-page
 {% endblock %}
 
 
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+>
+
+<style>
+    /* Self-contained so it works even if style.css wasn't updated */
+
+    #leafletMap {
+        width: 100%;
+        height: 100%;
+    }
+
+    .map-hint {
+        margin-top: 10px;
+        color: #5f7083;
+        font-size: 10px;
+    }
+
+    .leaflet-control-zoom a {
+        background: #0c1722 !important;
+        color: #9eb0c2 !important;
+        border-color: #2a3c4f !important;
+    }
+
+    .leaflet-control-zoom a:hover {
+        color: #4da3ff !important;
+    }
+
+    .leaflet-control-attribution {
+        background: rgba(5, 12, 19, 0.75) !important;
+        color: #5f7083 !important;
+    }
+
+    .leaflet-control-attribution a {
+        color: #7ea4c7 !important;
+    }
+</style>
+{% endblock %}
+
+
 {% block content %}
 
 
@@ -321,6 +363,7 @@ dashboard-page
                 <label
                     for="issue_photo"
                     class="upload-box"
+                    id="uploadBox"
                 >
 
                     <div class="upload-icon">
@@ -343,6 +386,32 @@ dashboard-page
                     </span>
 
                 </label>
+
+
+                <div
+                    class="photo-preview"
+                    id="photoPreview"
+                >
+                    <img
+                        id="photoPreviewImg"
+                        src=""
+                        alt="Selected issue photo"
+                    >
+
+                    <button
+                        type="button"
+                        id="removePhotoBtn"
+                        class="remove-photo-btn"
+                    >
+                        ✕ Remove Photo
+                    </button>
+                </div>
+
+
+                <p
+                    class="photo-error"
+                    id="photoError"
+                ></p>
 
             </div>
 
@@ -406,46 +475,14 @@ dashboard-page
 
             <div class="location-map">
 
-                <div class="map-grid"></div>
-
-
-                <div class="map-road road-one"></div>
-
-                <div class="map-road road-two"></div>
-
-                <div class="map-road road-three"></div>
-
-
-                <div class="map-marker">
-
-                    <div class="marker-pulse"></div>
-
-
-                    <div class="marker-pin">
-                        ●
-                    </div>
-
-                </div>
-
-
-                <div class="map-label">
-                    Selected Location
-                </div>
-
-
-                <div class="map-controls">
-
-                    <button type="button">
-                        +
-                    </button>
-
-                    <button type="button">
-                        −
-                    </button>
-
-                </div>
+                <div id="leafletMap" style="width: 100%; height: 100%;"></div>
 
             </div>
+
+
+            <p class="map-hint" id="mapHint">
+                Click anywhere on the map to place the marker, or drag it once placed.
+            </p>
 
 
 
@@ -456,12 +493,13 @@ dashboard-page
                 <button
                     type="button"
                     class="location-btn"
+                    id="useLocationBtn"
                 >
                     ◎ Use Current Location
                 </button>
 
 
-                <span>
+                <span id="locationStatus">
                     Pin the location as accurately as possible.
                 </span>
 
@@ -660,4 +698,267 @@ dashboard-page
 </footer>
 
 
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+(function () {
+
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+    const ALLOWED_MIME_TYPES = ["image/jpeg", "image/jpg", "image/png"];
+    const ALLOWED_EXTENSIONS = ["jpg", "jpeg", "png"];
+
+    const reportForm = document.querySelector(".report-form");
+    const photoInput = document.getElementById("issue_photo");
+    const uploadBox = document.getElementById("uploadBox");
+    const photoPreview = document.getElementById("photoPreview");
+    const photoPreviewImg = document.getElementById("photoPreviewImg");
+    const removePhotoBtn = document.getElementById("removePhotoBtn");
+    const photoError = document.getElementById("photoError");
+
+    function showError(message) {
+        photoError.textContent = message;
+        photoError.classList.add("show");
+    }
+
+    function clearError() {
+        photoError.textContent = "";
+        photoError.classList.remove("show");
+    }
+
+    function resetPhotoInput() {
+        photoInput.value = "";
+        photoPreview.classList.remove("show");
+        photoPreviewImg.src = "";
+        uploadBox.style.display = "flex";
+    }
+
+    photoInput.addEventListener("change", function () {
+
+        clearError();
+
+        const file = photoInput.files[0];
+
+        if (!file) {
+            resetPhotoInput();
+            return;
+        }
+
+        const extension = file.name.split(".").pop().toLowerCase();
+
+        if (!ALLOWED_MIME_TYPES.includes(file.type) || !ALLOWED_EXTENSIONS.includes(extension)) {
+            showError("Only JPG, JPEG or PNG images are allowed.");
+            resetPhotoInput();
+            return;
+        }
+
+        if (file.size > MAX_FILE_SIZE) {
+            showError("Image size must not exceed 5 MB.");
+            resetPhotoInput();
+            return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+            photoPreviewImg.src = event.target.result;
+            photoPreview.classList.add("show");
+            uploadBox.style.display = "none";
+        };
+
+        reader.readAsDataURL(file);
+    });
+
+    removePhotoBtn.addEventListener("click", function () {
+        clearError();
+        resetPhotoInput();
+    });
+
+    reportForm.addEventListener("submit", function (event) {
+        if (!photoInput.files || photoInput.files.length === 0) {
+            event.preventDefault();
+            showError("Please upload a photo of the issue before submitting.");
+            uploadBox.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+    });
+
+})();
+</script>
+
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+></script>
+
+<script>
+(function () {
+
+    if (typeof L === "undefined") {
+        console.error(
+            "Leaflet failed to load from the CDN. Check your internet " +
+            "connection, or that unpkg.com is not blocked on this network."
+        );
+        return;
+    }
+
+    // Fallback starting view: roughly the center of India, zoomed out.
+    // Only used before the user picks a location — never submitted as-is.
+    const DEFAULT_LAT = 22.9734;
+    const DEFAULT_LNG = 78.6569;
+    const DEFAULT_ZOOM = 5;
+    const SELECTED_ZOOM = 16;
+
+    const locationStatus = document.getElementById("locationStatus");
+    const useLocationBtn = document.getElementById("useLocationBtn");
+    const latitudeDisplay = document.getElementById("latitude-display");
+    const longitudeDisplay = document.getElementById("longitude-display");
+    const latitudeInput = document.getElementById("latitude");
+    const longitudeInput = document.getElementById("longitude");
+    const addressInput = document.getElementById("location");
+
+    const map = L.map("leafletMap").setView([DEFAULT_LAT, DEFAULT_LNG], DEFAULT_ZOOM);
+
+    // Stadia Maps' dark theme tiles. Works without a key on localhost, but
+    // the api_key is added anyway so this keeps working if you deploy later
+    // without adding domain-based auth. Replace YOUR_API_KEY below with the
+    // key from your Stadia Maps dashboard.
+    L.tileLayer("https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png?api_key= 75b33f7f-a195-427b-846e-f30d02d0de0f", {
+        maxZoom: 20,
+        attribution:
+            '&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> ' +
+            '&copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> ' +
+            '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    let marker = null;
+
+    function placeMarker(lat, lng) {
+        if (marker) {
+            marker.setLatLng([lat, lng]);
+        } else {
+            marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+
+            marker.on("dragend", function () {
+                const pos = marker.getLatLng();
+                updateCoordinateFields(pos.lat, pos.lng);
+                reverseGeocode(pos.lat, pos.lng);
+            });
+        }
+
+        map.setView([lat, lng], SELECTED_ZOOM);
+    }
+
+    function updateCoordinateFields(lat, lng) {
+        const latFixed = lat.toFixed(7);
+        const lngFixed = lng.toFixed(7);
+
+        latitudeDisplay.textContent = latFixed;
+        longitudeDisplay.textContent = lngFixed;
+
+        latitudeInput.value = latFixed;
+        longitudeInput.value = lngFixed;
+    }
+
+    function reverseGeocode(lat, lng) {
+        locationStatus.textContent = "Looking up address...";
+
+        fetch(
+            "https://nominatim.openstreetmap.org/reverse?format=json&lat=" +
+            encodeURIComponent(lat) + "&lon=" + encodeURIComponent(lng) +
+            "&zoom=18&addressdetails=1",
+            {
+                headers: {
+                    "Accept-Language": "en"
+                }
+            }
+        )
+            .then(function (response) {
+                if (!response.ok) {
+                    throw new Error("Geocoding request failed");
+                }
+                return response.json();
+            })
+            .then(function (data) {
+                if (data && data.display_name) {
+                    addressInput.value = data.display_name;
+                    locationStatus.textContent =
+                        "Location set. Drag the marker or edit the address if needed.";
+                } else {
+                    locationStatus.textContent =
+                        "Address not found automatically — please type it manually.";
+                }
+            })
+            .catch(function () {
+                locationStatus.textContent =
+                    "Could not fetch the address automatically — please type it manually.";
+            });
+    }
+
+    // Manual adjustment: click anywhere on the map to (re)place the marker
+    map.on("click", function (event) {
+        const lat = event.latlng.lat;
+        const lng = event.latlng.lng;
+
+        placeMarker(lat, lng);
+        updateCoordinateFields(lat, lng);
+        reverseGeocode(lat, lng);
+    });
+
+    // "Use My Current Location" button
+    useLocationBtn.addEventListener("click", function () {
+
+        if (!navigator.geolocation) {
+            locationStatus.textContent =
+                "Geolocation is not supported by your browser. Please select the location on the map manually.";
+            return;
+        }
+
+        locationStatus.textContent = "Detecting your location...";
+
+        navigator.geolocation.getCurrentPosition(
+            function (position) {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+
+                placeMarker(lat, lng);
+                updateCoordinateFields(lat, lng);
+                reverseGeocode(lat, lng);
+            },
+            function (error) {
+                let message =
+                    "Unable to detect your location. Please select it manually on the map.";
+
+                if (error.code === error.PERMISSION_DENIED) {
+                    message =
+                        "Location permission denied. Please select your location manually on the map.";
+                } else if (error.code === error.POSITION_UNAVAILABLE) {
+                    message =
+                        "Location information is unavailable right now. Please select it manually on the map.";
+                } else if (error.code === error.TIMEOUT) {
+                    message =
+                        "Location request timed out. Please select it manually on the map.";
+                }
+
+                locationStatus.textContent = message;
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            }
+        );
+    });
+
+    // The map is created inside a normally-flowing container (not display:none),
+    // but forcing a resize check after layout settles avoids grey/broken tiles
+    // in some browsers.
+    window.addEventListener("load", function () {
+        setTimeout(function () {
+            map.invalidateSize();
+        }, 150);
+    });
+
+})();
+</script>
 {% endblock %}

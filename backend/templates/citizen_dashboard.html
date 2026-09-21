@@ -26,7 +26,7 @@ Citizen Dashboard | FixMyCity
                 Report Issue
             </a>
 
-            <a href="my_complaints.html">
+            <a href="{% url 'my_complaints' %}">
                 My Complaints
             </a>
 
@@ -45,9 +45,7 @@ Citizen Dashboard | FixMyCity
 
             <!-- ================= LOGOUT ================= -->
 
-            <button class="logout-btn">
-                Logout
-            </button>
+            <a href="{% url 'citizen_logout' %}" class="logout-btn">Logout</a>
 
         </div>
 
@@ -106,7 +104,7 @@ Citizen Dashboard | FixMyCity
                         Total Reports
                     </span>
 
-                    <h2>12</h2>
+                    <h2>{{ total_complaints }}</h2>
 
                 </div>
 
@@ -127,7 +125,7 @@ Citizen Dashboard | FixMyCity
                         In Progress
                     </span>
 
-                    <h2>4</h2>
+                    <h2>{{ in_progress_count }}</h2>
 
                 </div>
 
@@ -148,7 +146,7 @@ Citizen Dashboard | FixMyCity
                         Resolved
                     </span>
 
-                    <h2>7</h2>
+                    <h2>{{ resolved_count }}</h2>
 
                 </div>
 
@@ -169,7 +167,7 @@ Citizen Dashboard | FixMyCity
                         My Upvotes
                     </span>
 
-                    <h2>23</h2>
+                    <h2>{{ my_upvotes|default:"0" }}</h2>
 
                 </div>
 
@@ -200,23 +198,21 @@ Citizen Dashboard | FixMyCity
 
                     </div>
 
-                    <a href="my_complaints.html">
+                    <a href="{% url 'my_complaints' %}">
                         View All →
                     </a>
 
                 </div>
 
 
-                <!-- ================= COMPLAINT 1 ================= -->
+                {% for complaint in recent_complaints %}
 
                 <div class="complaint-item">
 
                     <div class="complaint-image road-image">
-
                         <span>
-                            ROAD
+                            {{ complaint.get_category_display|upper }}
                         </span>
-
                     </div>
 
                     <div class="complaint-info">
@@ -224,31 +220,41 @@ Citizen Dashboard | FixMyCity
                         <div class="complaint-title-row">
 
                             <h3>
-                                Large Pothole on Main Road
+                                {{ complaint.title }}
                             </h3>
 
-                            <span class="status-badge progress">
-                                In Progress
-                            </span>
+                            {% if complaint.status == "reported" %}
+                                <span class="status-badge reported">
+                                    Reported
+                                </span>
+                            {% elif complaint.status == "in_progress" %}
+                                <span class="status-badge progress">
+                                    In Progress
+                                </span>
+                            {% elif complaint.status == "resolved" %}
+                                <span class="status-badge resolved">
+                                    Resolved
+                                </span>
+                            {% endif %}
 
                         </div>
 
                         <p>
-                            Near Vijay Nagar Square, Indore
+                            {{ complaint.address }}
                         </p>
 
                         <div class="complaint-meta">
 
                             <span>
-                                #FMC-000124
+                                #{{ complaint.complaint_id }}
                             </span>
 
                             <span>
-                                📅 02 Sep 2026
+                                📅 {{ complaint.created_at|date:"d M Y" }}
                             </span>
 
                             <span>
-                                ↑ 8 Upvotes
+                                ↑ {{ complaint.upvotes }} Upvotes
                             </span>
 
                         </div>
@@ -257,107 +263,16 @@ Citizen Dashboard | FixMyCity
 
                 </div>
 
-
-                <!-- ================= COMPLAINT 2 ================= -->
+                {% empty %}
 
                 <div class="complaint-item">
-
-                    <div class="complaint-image garbage-image">
-
-                        <span>
-                            SANITATION
-                        </span>
-
-                    </div>
-
                     <div class="complaint-info">
-
-                        <div class="complaint-title-row">
-
-                            <h3>
-                                Garbage Overflow Near Park
-                            </h3>
-
-                            <span class="status-badge resolved">
-                                Resolved
-                            </span>
-
-                        </div>
-
-                        <p>
-                            Scheme No. 54, Indore
-                        </p>
-
-                        <div class="complaint-meta">
-
-                            <span>
-                                #FMC-000119
-                            </span>
-
-                            <span>
-                                📅 28 Aug 2026
-                            </span>
-
-                            <span>
-                                ↑ 5 Upvotes
-                            </span>
-
-                        </div>
-
+                        <h3>No complaints yet</h3>
+                        <p>Report your first civic issue to see it here.</p>
                     </div>
-
                 </div>
 
-
-                <!-- ================= COMPLAINT 3 ================= -->
-
-                <div class="complaint-item">
-
-                    <div class="complaint-image light-image">
-
-                        <span>
-                            STREETLIGHT
-                        </span>
-
-                    </div>
-
-                    <div class="complaint-info">
-
-                        <div class="complaint-title-row">
-
-                            <h3>
-                                Streetlight Not Working
-                            </h3>
-
-                            <span class="status-badge reported">
-                                Reported
-                            </span>
-
-                        </div>
-
-                        <p>
-                            Bengali Square, Indore
-                        </p>
-
-                        <div class="complaint-meta">
-
-                            <span>
-                                #FMC-000117
-                            </span>
-
-                            <span>
-                                📅 26 Aug 2026
-                            </span>
-
-                            <span>
-                                ↑ 3 Upvotes
-                            </span>
-
-                        </div>
-
-                    </div>
-
-                </div>
+                {% endfor %}
 
             </div>
 
@@ -413,7 +328,7 @@ Citizen Dashboard | FixMyCity
 
                 <!-- My Complaints -->
 
-                <a href="my_complaints.html"
+                <a href="{% url 'my_complaints' %}"
                    class="quick-action">
 
                     <div class="quick-action-icon">
@@ -469,7 +384,7 @@ Citizen Dashboard | FixMyCity
 
                 <!-- My Profile -->
 
-                <a href="profile.html"
+                <a href="#"
                    class="quick-action">
 
                     <div class="quick-action-icon">
@@ -669,12 +584,15 @@ Citizen Dashboard | FixMyCity
 
                 </div>
 
-                <span class="complaint-id">
-                    #FMC-000124
-                </span>
+                {% if latest_complaint %}
+                    <span class="complaint-id">
+                        #{{ latest_complaint.complaint_id }}
+                    </span>
+                {% endif %}
 
             </div>
 
+            {% if latest_complaint %}
 
             <div class="status-timeline">
 
@@ -687,74 +605,75 @@ Citizen Dashboard | FixMyCity
                     </div>
 
                     <div>
-
-                        <h3>
-                            Reported
-                        </h3>
-
-                        <p>
-                            Complaint submitted successfully
-                        </p>
-
+                        <h3>Reported</h3>
+                        <p>Complaint submitted successfully</p>
                     </div>
 
                 </div>
 
-
-                <div class="timeline-line active"></div>
+                <div class="timeline-line {% if latest_complaint.status == 'in_progress' or latest_complaint.status == 'resolved' %}active{% endif %}"></div>
 
 
                 <!-- In Progress -->
 
-                <div class="timeline-step active">
+                <div class="timeline-step {% if latest_complaint.status == 'in_progress' %}active{% elif latest_complaint.status == 'resolved' %}completed{% endif %}">
 
                     <div class="timeline-dot">
-                        ◷
+                        {% if latest_complaint.status == 'resolved' %}✓{% elif latest_complaint.status == 'in_progress' %}◷{% else %}2{% endif %}
                     </div>
 
                     <div>
+                        <h3>In Progress</h3>
 
-                        <h3>
-                            In Progress
-                        </h3>
-
-                        <p>
-                            Assigned officer is working on the issue
-                        </p>
-
+                        {% if latest_complaint.status == 'in_progress' %}
+                            <p>Assigned officer is working on the issue</p>
+                        {% elif latest_complaint.status == 'resolved' %}
+                            <p>Issue work has been completed</p>
+                        {% else %}
+                            <p>Waiting for the complaint to be assigned</p>
+                        {% endif %}
                     </div>
 
                 </div>
 
-
-                <div class="timeline-line"></div>
+                <div class="timeline-line {% if latest_complaint.status == 'resolved' %}active{% endif %}"></div>
 
 
                 <!-- Resolved -->
 
-                <div class="timeline-step">
+                <div class="timeline-step {% if latest_complaint.status == 'resolved' %}active{% endif %}">
 
                     <div class="timeline-dot">
-                        3
+                        {% if latest_complaint.status == 'resolved' %}✓{% else %}3{% endif %}
                     </div>
 
                     <div>
+                        <h3>Resolved</h3>
 
-                        <h3>
-                            Resolved
-                        </h3>
-
-                        <p>
-                            Issue will be marked resolved after completion
-                        </p>
-
+                        {% if latest_complaint.status == 'resolved' %}
+                            <p>Issue has been resolved successfully</p>
+                        {% else %}
+                            <p>Issue will be marked resolved after completion</p>
+                        {% endif %}
                     </div>
 
                 </div>
 
             </div>
 
+            {% else %}
+
+            <div class="complaint-item">
+                <div class="complaint-info">
+                    <h3>No complaint to track</h3>
+                    <p>Your complaint status will appear here after you submit an issue.</p>
+                </div>
+            </div>
+
+            {% endif %}
+
         </section>
+
 
     </main>
 
