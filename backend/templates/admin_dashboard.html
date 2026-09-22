@@ -1,47 +1,76 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | FixMyCity</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
+{% extends "base.html" %}
 
-<body>
+
+{% block title %}
+Admin Dashboard | FixMyCity
+{% endblock %}
+
+
+{% block body_class %}
+dashboard-page
+{% endblock %}
+
+
+{% block content %}
+
 
 <!-- ================= NAVBAR ================= -->
 
-<nav class="navbar">
-    <div class="nav-container">
+<header class="dashboard-navbar">
 
-        <a href="admin_dashboard.html" class="logo">
-            <span class="logo-mark">+</span>
+    <div class="dashboard-logo">
+        <a href="{% url 'admin_dashboard' %}">
             FixMyCity
         </a>
+    </div>
 
-        <div class="nav-links">
-            <a href="admin_dashboard.html" class="active">Dashboard</a>
-            <a href="#officer-requests">Officer Requests</a>
-            <a href="#officers">Officers</a>
-            <a href="#complaints">Complaints</a>
+
+    <nav class="dashboard-nav">
+
+        <a href="{% url 'admin_dashboard' %}" class="active">
+            Dashboard
+        </a>
+
+        <a href="{% url 'admin_officer_verification' %}">
+            Officer Requests
+        </a>
+
+        <a href="#officers">
+            Officers
+        </a>
+
+        <a href="#complaints">
+            Complaints
+        </a>
+
+    </nav>
+
+
+    <div class="dashboard-user">
+
+        <div class="user-avatar">
+            {{ admin_initials }}
         </div>
 
-        <div class="nav-user">
-            <div class="user-avatar">AD</div>
-            <div class="user-info">
-                <strong>Admin</strong>
-                <span>System Administrator</span>
-            </div>
-            <a href="admin_login.html" class="logout-btn">Logout</a>
+        <div class="user-info">
+            <strong>{{ admin_name }}</strong>
+            <span>System Administrator</span>
         </div>
+
+        <a href="{% url 'admin_logout' %}" class="logout-btn">
+            Logout
+        </a>
 
     </div>
-</nav>
+
+</header>
+
 
 
 <!-- ================= MAIN ================= -->
 
 <main class="admin-dashboard">
+
 
     <!-- HEADER -->
 
@@ -76,7 +105,7 @@
             <div class="stat-icon">!</div>
             <div>
                 <span>Pending Requests</span>
-                <strong>5</strong>
+                <strong>{{ pending_requests_count }}</strong>
                 <small>Requires approval</small>
             </div>
         </div>
@@ -86,7 +115,7 @@
             <div class="stat-icon">◉</div>
             <div>
                 <span>Approved Officers</span>
-                <strong>24</strong>
+                <strong>{{ approved_officers_count }}</strong>
                 <small>Active officers</small>
             </div>
         </div>
@@ -96,7 +125,7 @@
             <div class="stat-icon">▣</div>
             <div>
                 <span>Total Complaints</span>
-                <strong>186</strong>
+                <strong>{{ total_complaints_count }}</strong>
                 <small>All departments</small>
             </div>
         </div>
@@ -106,7 +135,7 @@
             <div class="stat-icon">○</div>
             <div>
                 <span>Unassigned</span>
-                <strong>12</strong>
+                <strong>{{ unassigned_count }}</strong>
                 <small>Awaiting assignment</small>
             </div>
         </div>
@@ -126,46 +155,47 @@
                 <p>Review and approve newly registered officers.</p>
             </div>
 
-            <span class="request-count">5 Pending</span>
+            <span class="request-count">{{ pending_requests_count }} Pending</span>
 
         </div>
 
 
-        <div class="officer-request-list">
+        <div class="officer-request-list" id="officerRequestList">
 
+            {% for officer in pending_officer_requests %}
 
-            <!-- REQUEST 1 -->
+            <!-- REQUEST -->
 
-            <div class="officer-request">
+            <div class="officer-request" data-officer-id="{{ officer.id }}">
 
-                <div class="officer-avatar">RS</div>
+                <div class="officer-avatar">{{ officer.initials }}</div>
 
                 <div class="officer-details">
 
-                    <h3>Rahul Sharma</h3>
+                    <h3>{{ officer.full_name }}</h3>
 
                     <span class="employee-id">
-                        Employee ID: FMCOF00001
+                        Employee ID: {{ officer.employee_id }}
                     </span>
 
                     <div class="officer-meta">
-                        <span>✉ rahul.sharma@fixmycity.gov</span>
-                        <span>☎ +91 98765 43210</span>
-                        <span>Road & Infrastructure</span>
+                        <span>✉ {{ officer.email }}</span>
+                        <span>☎ {{ officer.phone }}</span>
+                        <span>{{ officer.department }}</span>
                     </div>
 
-                    <small>Registered on 08 Sep 2026</small>
+                    <small>Registered on {{ officer.created_at|date:"d M Y" }}</small>
 
                 </div>
 
 
                 <div class="request-actions">
 
-                    <button class="approve-btn">
+                    <button class="approve-btn" type="button">
                         ✓ Approve
                     </button>
 
-                    <button class="reject-btn">
+                    <button class="reject-btn" type="button">
                         ✕ Reject
                     </button>
 
@@ -173,131 +203,20 @@
 
             </div>
 
-
-            <!-- REQUEST 2 -->
-
-            <div class="officer-request">
-
-                <div class="officer-avatar">AK</div>
-
-                <div class="officer-details">
-
-                    <h3>Amit Kumar</h3>
-
-                    <span class="employee-id">
-                        Employee ID: FMCOF00002
-                    </span>
-
-                    <div class="officer-meta">
-                        <span>✉ amit.kumar@fixmycity.gov</span>
-                        <span>☎ +91 98261 24567</span>
-                        <span>Sanitation</span>
-                    </div>
-
-                    <small>Registered on 08 Sep 2026</small>
-
-                </div>
-
-
-                <div class="request-actions">
-
-                    <button class="approve-btn">
-                        ✓ Approve
-                    </button>
-
-                    <button class="reject-btn">
-                        ✕ Reject
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <!-- REQUEST 3 -->
+            {% empty %}
 
             <div class="officer-request">
-
-                <div class="officer-avatar">PS</div>
-
                 <div class="officer-details">
-
-                    <h3>Priya Singh</h3>
-
-                    <span class="employee-id">
-                        Employee ID: FMCOF00003
-                    </span>
-
-                    <div class="officer-meta">
-                        <span>✉ priya.singh@fixmycity.gov</span>
-                        <span>☎ +91 97552 31421</span>
-                        <span>Streetlight / Electricity</span>
-                    </div>
-
-                    <small>Registered on 07 Sep 2026</small>
-
+                    <p>No pending officer requests right now.</p>
                 </div>
-
-
-                <div class="request-actions">
-
-                    <button class="approve-btn">
-                        ✓ Approve
-                    </button>
-
-                    <button class="reject-btn">
-                        ✕ Reject
-                    </button>
-
-                </div>
-
             </div>
 
-
-            <!-- REQUEST 4 -->
-
-            <div class="officer-request">
-
-                <div class="officer-avatar">MV</div>
-
-                <div class="officer-details">
-
-                    <h3>Manish Verma</h3>
-
-                    <span class="employee-id">
-                        Employee ID: FMCOF00004
-                    </span>
-
-                    <div class="officer-meta">
-                        <span>✉ manish.verma@fixmycity.gov</span>
-                        <span>☎ +91 96302 78452</span>
-                        <span>Water Supply</span>
-                    </div>
-
-                    <small>Registered on 06 Sep 2026</small>
-
-                </div>
-
-
-                <div class="request-actions">
-
-                    <button class="approve-btn">
-                        ✓ Approve
-                    </button>
-
-                    <button class="reject-btn">
-                        ✕ Reject
-                    </button>
-
-                </div>
-
-            </div>
-
+            {% endfor %}
 
         </div>
 
         <div class="view-all-row">
-            <a href="#officers">View all officer requests →</a>
+            <a href="{% url 'admin_officer_verification' %}">View all officer requests →</a>
         </div>
 
     </section>
@@ -319,61 +238,25 @@
                     <h2>Department Officers</h2>
                 </div>
 
-                <span class="total-badge">24 Officers</span>
+                <span class="total-badge">{{ approved_officers_count }} Officers</span>
 
             </div>
 
 
             <div class="department-list">
 
-                <div class="department-row">
-                    <div>
-                        <strong>Road & Infrastructure</strong>
-                        <span>Road and public infrastructure</span>
-                    </div>
-
-                    <strong>8</strong>
-                </div>
-
+                {% for dept in department_stats %}
 
                 <div class="department-row">
                     <div>
-                        <strong>Sanitation</strong>
-                        <span>Waste and cleanliness</span>
+                        <strong>{{ dept.label }}</strong>
+                        <span>{{ dept.description }}</span>
                     </div>
 
-                    <strong>5</strong>
+                    <strong>{{ dept.count }}</strong>
                 </div>
 
-
-                <div class="department-row">
-                    <div>
-                        <strong>Streetlight / Electricity</strong>
-                        <span>Streetlight related issues</span>
-                    </div>
-
-                    <strong>4</strong>
-                </div>
-
-
-                <div class="department-row">
-                    <div>
-                        <strong>Water Supply</strong>
-                        <span>Water leakage and supply</span>
-                    </div>
-
-                    <strong>3</strong>
-                </div>
-
-
-                <div class="department-row">
-                    <div>
-                        <strong>Public Property</strong>
-                        <span>Damaged public property</span>
-                    </div>
-
-                    <strong>4</strong>
-                </div>
+                {% endfor %}
 
             </div>
 
@@ -391,7 +274,7 @@
                     <h2>Complaint Overview</h2>
                 </div>
 
-                <a href="officer_complaints.html" class="small-link">
+                <a href="#complaints" class="small-link">
                     View All →
                 </a>
 
@@ -406,7 +289,7 @@
                         Reported
                     </span>
 
-                    <strong>32</strong>
+                    <strong>{{ reported_count }}</strong>
                 </div>
 
 
@@ -416,7 +299,7 @@
                         In Progress
                     </span>
 
-                    <strong>64</strong>
+                    <strong>{{ in_progress_count }}</strong>
                 </div>
 
 
@@ -426,7 +309,7 @@
                         Resolved
                     </span>
 
-                    <strong>78</strong>
+                    <strong>{{ resolved_count }}</strong>
                 </div>
 
 
@@ -436,7 +319,7 @@
                         Unassigned
                     </span>
 
-                    <strong>12</strong>
+                    <strong>{{ unassigned_count }}</strong>
                 </div>
 
             </div>
@@ -462,52 +345,38 @@
 
         <div class="activity-list">
 
-            <div class="activity-item">
-
-                <div class="activity-icon">✓</div>
-
-                <div>
-                    <strong>Officer registration request received</strong>
-                    <p>Rahul Sharma submitted a registration request.</p>
-                </div>
-
-                <span>Today</span>
-
-            </div>
-
+            {% for item in recent_activity %}
 
             <div class="activity-item">
 
-                <div class="activity-icon">↑</div>
+                <div class="activity-icon">{{ item.icon }}</div>
 
                 <div>
-                    <strong>Complaint received</strong>
-                    <p>New complaint reported in Vijay Nagar area.</p>
+                    <strong>{{ item.title }}</strong>
+                    <p>{{ item.description }}</p>
                 </div>
 
-                <span>Today</span>
+                <span>{{ item.timestamp|timesince }} ago</span>
 
             </div>
 
+            {% empty %}
 
             <div class="activity-item">
-
-                <div class="activity-icon">✓</div>
-
                 <div>
-                    <strong>Complaint resolved</strong>
-                    <p>FMC-000121 marked as resolved.</p>
+                    <strong>No recent activity</strong>
+                    <p>Activity will appear here as officers register and complaints come in.</p>
                 </div>
-
-                <span>Yesterday</span>
-
             </div>
+
+            {% endfor %}
 
         </div>
 
     </section>
 
 </main>
+
 
 
 <!-- ================= FOOTER ================= -->
@@ -527,5 +396,94 @@
 
 </footer>
 
-</body>
-</html>
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+(function () {
+
+    function getCookie(name) {
+        let cookieValue = null;
+
+        if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+
+                if (cookie.substring(0, name.length + 1) === name + "=") {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+
+        return cookieValue;
+    }
+
+    const csrftoken = getCookie("csrftoken");
+
+    function handleOfficerAction(officerId, action, rowElement) {
+
+        const url = action === "approve"
+            ? "/admin/approve-officer/" + officerId + "/"
+            : "/admin/reject-officer/" + officerId + "/";
+
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrftoken
+            }
+        })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                if (data.success) {
+                    // Reload so the stats cards, badge count and department
+                    // totals all stay in sync with the database.
+                    window.location.reload();
+                } else {
+                    alert(data.message || "Something went wrong. Please try again.");
+                }
+            })
+            .catch(function () {
+                alert("Unable to reach the server. Please check your connection and try again.");
+            });
+    }
+
+    const requestList = document.getElementById("officerRequestList");
+
+    if (requestList) {
+        requestList.addEventListener("click", function (event) {
+
+            const approveBtn = event.target.closest(".approve-btn");
+            const rejectBtn = event.target.closest(".reject-btn");
+
+            if (!approveBtn && !rejectBtn) {
+                return;
+            }
+
+            const row = event.target.closest(".officer-request");
+
+            if (!row || !row.dataset.officerId) {
+                return;
+            }
+
+            const officerId = row.dataset.officerId;
+
+            if (approveBtn) {
+                handleOfficerAction(officerId, "approve", row);
+            } else if (rejectBtn) {
+                if (confirm("Reject this officer's registration? This cannot be undone.")) {
+                    handleOfficerAction(officerId, "reject", row);
+                }
+            }
+        });
+    }
+
+})();
+</script>
+{% endblock %}

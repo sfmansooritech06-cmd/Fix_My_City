@@ -65,8 +65,9 @@ auth-page
 
         <form
             class="login-form"
+            id="officerRegisterForm"
             method="POST"
-            action="{% url 'officer_register' %}"
+            action="{% url 'officer_register_submit' %}"
         >
 
             {% csrf_token %}
@@ -312,4 +313,70 @@ auth-page
 </main>
 
 
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+(function () {
+
+    const form = document.getElementById("officerRegisterForm");
+
+    if (!form) {
+        return;
+    }
+
+    form.addEventListener("submit", async function (event) {
+
+        event.preventDefault();
+
+        const password = form.querySelector("#password").value;
+        const confirmPassword = form.querySelector("#confirm_password").value;
+
+        if (password !== confirmPassword) {
+            alert("Passwords do not match.");
+            return;
+        }
+
+        const formData = new FormData(form);
+        const submitBtn = form.querySelector(".login-submit");
+        const originalBtnHTML = submitBtn.innerHTML;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Submitting...";
+
+        try {
+
+            const response = await fetch(form.action, {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert(
+                    "Registration submitted successfully!\n\n" +
+                    "Employee ID: " + data.employee_id + "\n" +
+                    data.message
+                );
+                window.location.href = "{% url 'officer_login' %}";
+            } else {
+                alert(data.message || "Registration failed. Please check your details and try again.");
+            }
+
+        } catch (error) {
+            console.error("Officer registration error:", error);
+            alert(
+                "Unable to connect to the server.\n" +
+                "Please make sure the Django server is running."
+            );
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnHTML;
+        }
+    });
+
+})();
+</script>
 {% endblock %}

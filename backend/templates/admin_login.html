@@ -1,51 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
+{% block title %}
+Admin Login | FixMyCity
+{% endblock %}
 
-    <meta charset="UTF-8">
+{% block body_class %}
+auth-page
+{% endblock %}
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Admin Login | FixMyCity</title>
-
-    <link rel="stylesheet" href="./css/style.css">
-
-</head>
-
-
-<body class="auth-page">
-
-
-<!-- =====================================================
-     AUTH NAVBAR
-===================================================== -->
+{% block content %}
 
 <header class="auth-navbar">
 
-    <a href="index.html" class="auth-logo">
+    <a href="{% url 'home' %}" class="auth-logo">
         FixMyCity
     </a>
 
-    <a href="login.html" class="back-home">
+    <a href="{% url 'login' %}" class="back-home">
         ← Role Selection
     </a>
 
 </header>
 
 
-
-<!-- =====================================================
-     ADMIN LOGIN
-===================================================== -->
-
 <main class="auth-container">
 
     <div class="login-card">
-
-
-        <!-- HEADING -->
 
         <div class="auth-heading">
 
@@ -64,10 +44,16 @@
         </div>
 
 
+        <!-- ADMIN LOGIN FORM -->
 
-        <!-- LOGIN FORM -->
+        <form
+            class="login-form"
+            id="adminLoginForm"
+            method="POST"
+            action="{% url 'admin_login_submit' %}"
+        >
 
-        <form class="login-form">
+            {% csrf_token %}
 
 
             <!-- ADMIN ID -->
@@ -89,7 +75,6 @@
             </div>
 
 
-
             <!-- PASSWORD -->
 
             <div class="form-group">
@@ -106,7 +91,6 @@
 
                 </div>
 
-
                 <input
                     type="password"
                     id="password"
@@ -117,6 +101,13 @@
 
             </div>
 
+
+            <!-- MESSAGE -->
+
+            <div
+                id="adminLoginMessage"
+                style="display: none;"
+            ></div>
 
 
             <!-- LOGIN BUTTON -->
@@ -132,23 +123,91 @@
         </form>
 
 
-
-        <!-- CITIZEN / OFFICER NAVIGATION -->
-
         <div class="auth-back-link">
 
-            <a href="login.html">
+            <a href="{% url 'login' %}">
                 ← Back to Role Selection
             </a>
 
         </div>
 
-
     </div>
 
 </main>
 
+{% endblock %}
 
-</body>
 
-</html>
+{% block extra_js %}
+
+<script>
+
+const adminLoginForm =
+    document.getElementById("adminLoginForm");
+
+const adminLoginMessage =
+    document.getElementById("adminLoginMessage");
+
+
+adminLoginForm.addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    const formData = new FormData(adminLoginForm);
+
+    try {
+
+        const response = await fetch(
+            adminLoginForm.action,
+            {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
+                }
+            }
+        );
+
+        const data = await response.json();
+
+        adminLoginMessage.style.display = "block";
+
+        adminLoginMessage.textContent =
+            data.message;
+
+
+        if (data.success) {
+
+            adminLoginMessage.style.color =
+                "#22c55e";
+
+            window.location.href =
+                data.redirect;
+
+        } else {
+
+            adminLoginMessage.style.color =
+                "#ef4444";
+
+        }
+
+    } catch (error) {
+
+        adminLoginMessage.style.display =
+            "block";
+
+        adminLoginMessage.style.color =
+            "#ef4444";
+
+        adminLoginMessage.textContent =
+            "Something went wrong. Please try again.";
+
+        console.error(error);
+
+    }
+
+});
+
+</script>
+
+{% endblock %}

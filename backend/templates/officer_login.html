@@ -59,8 +59,9 @@ auth-page
 
         <form
             class="login-form"
+            id="officerLoginForm"
             method="POST"
-            action="{% url 'officer_login' %}"
+            action="{% url 'officer_login_submit' %}"
         >
 
             {% csrf_token %}
@@ -162,4 +163,57 @@ auth-page
 
 </main>
 
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+(function () {
+
+    const form = document.getElementById("officerLoginForm");
+
+    if (!form) {
+        return;
+    }
+
+    form.addEventListener("submit", async function (event) {
+
+        event.preventDefault();
+
+        const formData = new FormData(form);
+        const submitBtn = form.querySelector(".login-submit");
+        const originalBtnHTML = submitBtn.innerHTML;
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Signing in...";
+
+        try {
+
+            const response = await fetch(form.action, {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                window.location.href = data.redirect;
+            } else {
+                alert(data.message || "Login failed. Please check your details and try again.");
+            }
+
+        } catch (error) {
+            console.error("Officer login error:", error);
+            alert(
+                "Unable to connect to the server.\n" +
+                "Please make sure the Django server is running."
+            );
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnHTML;
+        }
+    });
+
+})();
+</script>
 {% endblock %}

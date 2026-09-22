@@ -1,0 +1,283 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+Officer Verification | FixMyCity
+{% endblock %}
+
+
+{% block body_class %}
+dashboard-page
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- ================= NAVBAR ================= -->
+
+<header class="dashboard-navbar">
+
+    <div class="dashboard-logo">
+        <a href="{% url 'admin_dashboard' %}">
+            FixMyCity
+        </a>
+    </div>
+
+
+    <nav class="dashboard-nav">
+
+        <a href="{% url 'admin_dashboard' %}">
+            Dashboard
+        </a>
+
+        <a href="{% url 'admin_officer_verification' %}" class="active">
+            Officer Requests
+        </a>
+
+        <a href="{% url 'admin_dashboard' %}#officers">
+            Officers
+        </a>
+
+        <a href="{% url 'admin_dashboard' %}#complaints">
+            Complaints
+        </a>
+
+    </nav>
+
+
+    <div class="dashboard-user">
+
+        <div class="user-avatar">
+            {{ admin_initials }}
+        </div>
+
+        <div class="user-info">
+            <strong>{{ admin_name }}</strong>
+            <span>System Administrator</span>
+        </div>
+
+        <a href="{% url 'admin_logout' %}" class="logout-btn">
+            Logout
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="admin-dashboard">
+
+
+    <!-- HEADER -->
+
+    <section class="admin-header">
+
+        <div>
+            <span class="section-label">OFFICER MANAGEMENT</span>
+
+            <h1>
+                Officer <span>Verification</span>
+            </h1>
+
+            <p>
+                Review every pending officer registration and approve
+                or reject before they can log in.
+            </p>
+        </div>
+
+        <a href="{% url 'admin_dashboard' %}" class="admin-date" style="text-decoration:none;">
+            <span>← BACK TO</span>
+            <strong>Dashboard</strong>
+        </a>
+
+    </section>
+
+
+    <!-- ================= OFFICER REQUESTS ================= -->
+
+    <section class="admin-card">
+
+        <div class="admin-card-header">
+
+            <div>
+                <span class="section-label">ALL PENDING REQUESTS</span>
+                <h2>Officer Registration Requests</h2>
+                <p>Approving grants login access; rejecting deletes the registration.</p>
+            </div>
+
+            <span class="request-count">{{ pending_count }} Pending</span>
+
+        </div>
+
+
+        <div class="officer-request-list" id="officerRequestList">
+
+            {% for officer in pending_officers %}
+
+            <!-- REQUEST -->
+
+            <div class="officer-request" data-officer-id="{{ officer.id }}">
+
+                <div class="officer-avatar">{{ officer.initials }}</div>
+
+                <div class="officer-details">
+
+                    <h3>{{ officer.full_name }}</h3>
+
+                    <span class="employee-id">
+                        Employee ID: {{ officer.employee_id }}
+                    </span>
+
+                    <div class="officer-meta">
+                        <span>✉ {{ officer.email }}</span>
+                        <span>☎ {{ officer.phone }}</span>
+                        <span>{{ officer.department }}</span>
+                    </div>
+
+                    <small>Registered on {{ officer.created_at|date:"d M Y, h:i A" }}</small>
+
+                </div>
+
+
+                <div class="request-actions">
+
+                    <button class="approve-btn" type="button">
+                        ✓ Approve
+                    </button>
+
+                    <button class="reject-btn" type="button">
+                        ✕ Reject
+                    </button>
+
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <div class="officer-request">
+                <div class="officer-details">
+                    <p>No pending officer requests. All caught up!</p>
+                </div>
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+</main>
+
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+
+    <div class="footer-content">
+
+        <div>
+            <strong>FixMyCity</strong>
+            <p>Making cities better, one complaint at a time.</p>
+        </div>
+
+        <span>Admin Control Center</span>
+
+    </div>
+
+</footer>
+
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+(function () {
+
+    function getCookie(name) {
+        let cookieValue = null;
+
+        if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+
+                if (cookie.substring(0, name.length + 1) === name + "=") {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+
+        return cookieValue;
+    }
+
+    const csrftoken = getCookie("csrftoken");
+
+    function handleOfficerAction(officerId, action) {
+
+        const url = action === "approve"
+            ? "/admin/approve-officer/" + officerId + "/"
+            : "/admin/reject-officer/" + officerId + "/";
+
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrftoken
+            }
+        })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                if (data.success) {
+                    window.location.reload();
+                } else {
+                    alert(data.message || "Something went wrong. Please try again.");
+                }
+            })
+            .catch(function () {
+                alert("Unable to reach the server. Please check your connection and try again.");
+            });
+    }
+
+    const requestList = document.getElementById("officerRequestList");
+
+    if (requestList) {
+        requestList.addEventListener("click", function (event) {
+
+            const approveBtn = event.target.closest(".approve-btn");
+            const rejectBtn = event.target.closest(".reject-btn");
+
+            if (!approveBtn && !rejectBtn) {
+                return;
+            }
+
+            const row = event.target.closest(".officer-request");
+
+            if (!row || !row.dataset.officerId) {
+                return;
+            }
+
+            const officerId = row.dataset.officerId;
+
+            if (approveBtn) {
+                handleOfficerAction(officerId, "approve");
+            } else if (rejectBtn) {
+                if (confirm("Reject this officer's registration? This cannot be undone.")) {
+                    handleOfficerAction(officerId, "reject");
+                }
+            }
+        });
+    }
+
+})();
+</script>
+{% endblock %}
