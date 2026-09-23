@@ -89,14 +89,14 @@ dashboard-page
     <div class="dashboard-user">
 
         <div class="user-avatar">
-            SF
+            {{ initials }}
         </div>
 
 
         <div class="user-info">
 
             <strong>
-                Sadaf Fatima
+                {{ citizen.full_name }}
             </strong>
 
             <span>
@@ -106,7 +106,7 @@ dashboard-page
         </div>
 
 
-        <a href="{% url 'home' %}" class="logout-btn">
+        <a href="{% url 'citizen_logout' %}" class="logout-btn">
             Logout
         </a>
 
