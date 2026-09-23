@@ -160,28 +160,10 @@ def citizen_login(request):
                 "message": "Your account is inactive."
             }, status=403)
 
-        # Admin approval check
-        try:
-            citizen_profile = user.citizen_profile
-        except Citizen.DoesNotExist:
-            return JsonResponse({
-                "success": False,
-                "message": "Citizen profile not found."
-            }, status=404)
-
-        if not citizen_profile.is_approved:
-            return JsonResponse({
-                "success": False,
-                "message": "Your account is waiting for admin approval."
-            }, status=403)
 
         login(request, user)
 
-        return JsonResponse({
-            "success": True,
-            "message": "Login successful.",
-            "redirect": "/citizen-dashboard/"
-        })
+        return redirect("/citizen-dashboard/")
 
     return JsonResponse({
         "success": False,
