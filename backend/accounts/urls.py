@@ -14,12 +14,14 @@ from .views import (
     submit_complaint,
     my_complaints,
 
-    # Officer
+   # Officer
     officer_register_page,
     officer_register,
     officer_login_page,
     officer_login,
     officer_dashboard,
+    officer_complaints,
+    officer_complaint_details,
     officer_logout,
 
     # Admin Verification & Login
@@ -80,10 +82,32 @@ urlpatterns = [
 
 
     # =====================================================
-    # OFFICER DASHBOARD & LOGOUT
-    # =====================================================
-    path("officer-dashboard/", officer_dashboard, name="officer_dashboard"),
-    path("officer-logout/", officer_logout, name="officer_logout"),
+# OFFICER DASHBOARD & COMPLAINTS
+# =====================================================
+
+    path(
+        "officer-dashboard/",
+        officer_dashboard,
+        name="officer_dashboard"
+    ),
+
+    path(
+        "officer-complaints/",
+        officer_complaints,
+        name="officer_complaints"
+    ),
+
+    path(
+        "officer-complaint-details/",
+        officer_complaint_details,
+        name="officer_complaint_details"
+    ),
+
+    path(
+        "officer-logout/",
+        officer_logout,
+        name="officer_logout"
+    ),
 
 
     # =====================================================

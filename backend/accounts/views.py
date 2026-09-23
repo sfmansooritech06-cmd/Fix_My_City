@@ -171,12 +171,16 @@ def citizen_login(request):
 # =====================================================
 
 def citizen_dashboard(request):
+
+    # Check login
     if not request.user.is_authenticated:
         return redirect("/login/")
 
+    # Only citizen can access citizen dashboard
     if request.user.role != "citizen":
         return redirect("/login/")
 
+    # Get logged-in citizen profile
     citizen = request.user.citizen_profile
 
     # All complaints of logged-in citizen
@@ -184,7 +188,10 @@ def citizen_dashboard(request):
         citizen=citizen
     ).order_by("-created_at")
 
-    # Dashboard counts
+    # =====================================================
+    # DASHBOARD COUNTS
+    # =====================================================
+
     total_complaints = complaints.count()
 
     in_progress_count = complaints.filter(
@@ -195,31 +202,58 @@ def citizen_dashboard(request):
         status="resolved"
     ).count()
 
+    # =====================================================
+    # RECENT COMPLAINTS
+    # =====================================================
+
     # Latest 3 complaints
     recent_complaints = complaints[:3]
 
     # Latest complaint for status tracking
     latest_complaint = complaints.first()
 
-    # Generate initials
+    # =====================================================
+    # GENERATE CITIZEN INITIALS
+    # =====================================================
+
     name_parts = citizen.full_name.strip().split()
 
     if len(name_parts) >= 2:
-        initials = name_parts[0][0] + name_parts[1][0]
-    else:
+        # First name + Last name
+        initials = (
+            name_parts[0][0] +
+            name_parts[-1][0]
+        )
+    elif len(name_parts) == 1:
+        # Only one name
         initials = name_parts[0][0]
+    else:
+        # Fallback
+        initials = "C"
+
+    initials = initials.upper()
+
+    # =====================================================
+    # DASHBOARD DATA
+    # =====================================================
 
     return render(
         request,
         "citizen_dashboard.html",
         {
             "citizen": citizen,
-            "initials": initials.upper(),
+            "initials": initials,
+
             "total_complaints": total_complaints,
+
             "in_progress_count": in_progress_count,
+
             "resolved_count": resolved_count,
+
             "recent_complaints": recent_complaints,
+
             "latest_complaint": latest_complaint,
+
             # Upvote system abhi implement nahi hua hai
             "my_upvotes": 0,
         }

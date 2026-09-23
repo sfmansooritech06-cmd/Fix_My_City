@@ -63,6 +63,7 @@ auth-page
             method="POST"
             action="{% url 'officer_login_submit' %}"
         >
+
             {% csrf_token %}
 
 
@@ -108,7 +109,6 @@ auth-page
 
                 </div>
 
-
                 <input
                     type="password"
                     id="password"
@@ -120,14 +120,36 @@ auth-page
             </div>
 
 
+            <!-- =================================================
+                 ERROR / SUCCESS MESSAGE
+            ================================================= -->
+
+            <div
+                id="officerLoginMessage"
+                style="
+                    display: none;
+                    margin-bottom: 15px;
+                    padding: 10px 12px;
+                    border-radius: 8px;
+                    font-size: 14px;
+                "
+            ></div>
+
+
             <!-- LOGIN BUTTON -->
 
             <button
                 type="submit"
                 class="login-submit"
+                id="officerLoginButton"
             >
+
                 Sign In
-                <span>→</span>
+
+                <span>
+                    →
+                </span>
+
             </button>
 
         </form>
@@ -165,54 +187,147 @@ auth-page
 {% endblock %}
 
 
+<!-- =====================================================
+     OFFICER LOGIN JAVASCRIPT
+===================================================== -->
+
 {% block extra_js %}
+
 <script>
+
 (function () {
 
     const form = document.getElementById("officerLoginForm");
+    const message = document.getElementById("officerLoginMessage");
+    const submitBtn = document.getElementById("officerLoginButton");
+
 
     if (!form) {
         return;
     }
 
+
     form.addEventListener("submit", async function (event) {
 
         event.preventDefault();
 
-        const formData = new FormData(form);
-        const submitBtn = form.querySelector(".login-submit");
-        const originalBtnHTML = submitBtn.innerHTML;
 
+        // Hide previous message
+        message.style.display = "none";
+        message.textContent = "";
+
+
+        // Disable button
         submitBtn.disabled = true;
-        submitBtn.textContent = "Signing in...";
+        submitBtn.style.opacity = "0.7";
+
+
+        const formData = new FormData(form);
+
 
         try {
 
             const response = await fetch(form.action, {
+
                 method: "POST",
-                body: formData
+
+                body: formData,
+
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
+                }
+
             });
+
 
             const data = await response.json();
 
+
+            // Show message
+            message.style.display = "block";
+            message.textContent = data.message || "Login failed.";
+
+
+            // =================================================
+            // LOGIN SUCCESS
+            // =================================================
+
             if (data.success) {
-                window.location.href = data.redirect;
-            } else {
-                alert(data.message || "Login failed. Please check your details and try again.");
+
+                message.style.color = "#22c55e";
+
+                message.style.backgroundColor =
+                    "rgba(34, 197, 94, 0.10)";
+
+                message.style.border =
+                    "1px solid rgba(34, 197, 94, 0.25)";
+
+
+                // Redirect to officer dashboard
+                setTimeout(function () {
+
+                    window.location.href = data.redirect;
+
+                }, 500);
+
             }
 
+
+            // =================================================
+            // LOGIN FAILED
+            // =================================================
+
+            else {
+
+                message.style.color = "#ef4444";
+
+                message.style.backgroundColor =
+                    "rgba(239, 68, 68, 0.10)";
+
+                message.style.border =
+                    "1px solid rgba(239, 68, 68, 0.25)";
+
+
+                // Enable button again
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = "1";
+
+
+                // Focus password field
+                document.getElementById("password").focus();
+
+            }
+
+
         } catch (error) {
+
             console.error("Officer login error:", error);
-            alert(
-                "Unable to connect to the server.\n" +
-                "Please make sure the Django server is running."
-            );
-        } finally {
+
+
+            message.style.display = "block";
+
+            message.style.color = "#ef4444";
+
+            message.style.backgroundColor =
+                "rgba(239, 68, 68, 0.10)";
+
+            message.style.border =
+                "1px solid rgba(239, 68, 68, 0.25)";
+
+            message.textContent =
+                "Something went wrong. Please try again.";
+
+
+            // Enable button
             submitBtn.disabled = false;
-            submitBtn.innerHTML = originalBtnHTML;
+            submitBtn.style.opacity = "1";
+
         }
+
     });
 
 })();
+
 </script>
+
 {% endblock %}
