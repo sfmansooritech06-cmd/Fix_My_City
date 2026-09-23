@@ -1,48 +1,69 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "base.html" %}
 
-    <title>Officer Complaints | FixMyCity</title>
+{% block title %}
+Officer Complaints | FixMyCity
+{% endblock %}
 
-    <!-- Main CSS -->
-    <link rel="stylesheet" href="css/style.css">
-</head>
+{% block body_class %}
+complaints-page
+{% endblock %}
 
-<body>
+{% block content %}
 
 <!-- ================= NAVBAR ================= -->
 
 <nav class="navbar">
+
     <div class="nav-container">
 
-        <a href="officer_dashboard.html" class="logo">
+        <a href="{% url 'officer_dashboard' %}" class="logo">
             <span class="logo-mark">+</span>
             FixMyCity
         </a>
 
+
         <div class="nav-links">
-            <a href="officer_dashboard.html">Dashboard</a>
-            <a href="officer_complaints.html" class="active">Complaints</a>
+
+            <a href="{% url 'officer_dashboard' %}">
+                Dashboard
+            </a>
+
+            <a href="{% url 'officer_complaints' %}" class="active">
+                Complaints
+            </a>
+
         </div>
+
 
         <div class="nav-user">
 
-            <div class="user-avatar">RS</div>
-
-            <div class="user-info">
-                <strong>Rahul Sharma</strong>
-                <span>Road & Infrastructure</span>
+            <div class="user-avatar">
+                RS
             </div>
 
-            <a href="officer_login.html" class="logout-btn">
+            <div class="user-info">
+
+                <strong>
+                    Rahul Sharma
+                </strong>
+
+                <span>
+                    Road & Infrastructure
+                </span>
+
+            </div>
+
+            <a
+                href="{% url 'officer_login' %}"
+                class="logout-btn"
+            >
                 Logout
             </a>
 
         </div>
 
     </div>
+
 </nav>
 
 
@@ -50,7 +71,8 @@
 
 <main class="complaints-page">
 
-    <!-- PAGE HEADER -->
+
+    <!-- ================= PAGE HEADER ================= -->
 
     <section class="page-header">
 
@@ -70,7 +92,11 @@
 
         </div>
 
-        <a href="officer_dashboard.html" class="back-link">
+
+        <a
+            href="{% url 'officer_dashboard' %}"
+            class="back-link"
+        >
             ← Back to Dashboard
         </a>
 
@@ -83,44 +109,68 @@
 
         <div class="complaint-stat-card">
 
-            <span>All Complaints</span>
+            <span>
+                All Complaints
+            </span>
 
-            <strong>18</strong>
+            <strong>
+                18
+            </strong>
 
-            <small>Department total</small>
-
-        </div>
-
-
-        <div class="complaint-stat-card">
-
-            <span>Reported</span>
-
-            <strong>5</strong>
-
-            <small>Awaiting verification</small>
+            <small>
+                Department total
+            </small>
 
         </div>
 
 
         <div class="complaint-stat-card">
 
-            <span>In Progress</span>
+            <span>
+                Reported
+            </span>
 
-            <strong>7</strong>
+            <strong>
+                5
+            </strong>
 
-            <small>Currently being handled</small>
+            <small>
+                Awaiting verification
+            </small>
 
         </div>
 
 
         <div class="complaint-stat-card">
 
-            <span>Resolved</span>
+            <span>
+                In Progress
+            </span>
 
-            <strong>6</strong>
+            <strong>
+                7
+            </strong>
 
-            <small>Successfully resolved</small>
+            <small>
+                Currently being handled
+            </small>
+
+        </div>
+
+
+        <div class="complaint-stat-card">
+
+            <span>
+                Resolved
+            </span>
+
+            <strong>
+                6
+            </strong>
+
+            <small>
+                Successfully resolved
+            </small>
 
         </div>
 
@@ -133,7 +183,9 @@
 
         <div class="search-box">
 
-            <span class="search-icon">⌕</span>
+            <span class="search-icon">
+                ⌕
+            </span>
 
             <input
                 type="text"
@@ -146,28 +198,73 @@
         <div class="filter-row">
 
             <select>
-                <option>All Status</option>
-                <option>Reported</option>
-                <option>In Progress</option>
-                <option>Resolved</option>
+
+                <option>
+                    All Status
+                </option>
+
+                <option>
+                    Reported
+                </option>
+
+                <option>
+                    In Progress
+                </option>
+
+                <option>
+                    Resolved
+                </option>
+
             </select>
 
 
             <select>
-                <option>All Priority</option>
-                <option>High</option>
-                <option>Medium</option>
-                <option>Low</option>
+
+                <option>
+                    All Priority
+                </option>
+
+                <option>
+                    High
+                </option>
+
+                <option>
+                    Medium
+                </option>
+
+                <option>
+                    Low
+                </option>
+
             </select>
 
 
             <select>
-                <option>All Categories</option>
-                <option>Road & Infrastructure</option>
-                <option>Sanitation</option>
-                <option>Streetlight / Electricity</option>
-                <option>Water Supply</option>
-                <option>Public Property</option>
+
+                <option>
+                    All Categories
+                </option>
+
+                <option>
+                    Road & Infrastructure
+                </option>
+
+                <option>
+                    Sanitation
+                </option>
+
+                <option>
+                    Streetlight / Electricity
+                </option>
+
+                <option>
+                    Water Supply
+                </option>
+
+                <option>
+                    Public Property
+                </option>
+
             </select>
 
         </div>
@@ -184,15 +281,18 @@
             <span>18</span>
         </button>
 
+
         <button>
             Reported
             <span>5</span>
         </button>
 
+
         <button>
             In Progress
             <span>7</span>
         </button>
+
 
         <button>
             Resolved
@@ -207,7 +307,7 @@
     <section class="officer-complaints-list">
 
 
-        <!-- COMPLAINT 1 -->
+        <!-- ================= COMPLAINT 1 ================= -->
 
         <article class="officer-complaint-card">
 
@@ -271,12 +371,20 @@
             <div class="complaint-card-bottom">
 
                 <div class="priority-info">
-                    <span>Priority</span>
-                    <strong class="high-text">HIGH</strong>
+
+                    <span>
+                        Priority
+                    </span>
+
+                    <strong class="high-text">
+                        HIGH
+                    </strong>
+
                 </div>
 
+
                 <a
-                    href="officer_complaint_details.html"
+                    href="{% url 'officer_complaint_details' %}"
                     class="view-complaint-btn"
                 >
                     View Details →
@@ -287,7 +395,7 @@
         </article>
 
 
-        <!-- COMPLAINT 2 -->
+        <!-- ================= COMPLAINT 2 ================= -->
 
         <article class="officer-complaint-card">
 
@@ -351,12 +459,20 @@
             <div class="complaint-card-bottom">
 
                 <div class="priority-info">
-                    <span>Priority</span>
-                    <strong class="high-text">HIGH</strong>
+
+                    <span>
+                        Priority
+                    </span>
+
+                    <strong class="high-text">
+                        HIGH
+                    </strong>
+
                 </div>
 
+
                 <a
-                    href="officer_complaint_details.html"
+                    href="{% url 'officer_complaint_details' %}"
                     class="view-complaint-btn"
                 >
                     View Details →
@@ -367,7 +483,7 @@
         </article>
 
 
-        <!-- COMPLAINT 3 -->
+        <!-- ================= COMPLAINT 3 ================= -->
 
         <article class="officer-complaint-card">
 
@@ -431,12 +547,20 @@
             <div class="complaint-card-bottom">
 
                 <div class="priority-info">
-                    <span>Priority</span>
-                    <strong class="medium-text">MEDIUM</strong>
+
+                    <span>
+                        Priority
+                    </span>
+
+                    <strong class="medium-text">
+                        MEDIUM
+                    </strong>
+
                 </div>
 
+
                 <a
-                    href="officer_complaint_details.html"
+                    href="{% url 'officer_complaint_details' %}"
                     class="view-complaint-btn"
                 >
                     View Details →
@@ -447,7 +571,7 @@
         </article>
 
 
-        <!-- COMPLAINT 4 -->
+        <!-- ================= COMPLAINT 4 ================= -->
 
         <article class="officer-complaint-card">
 
@@ -511,12 +635,20 @@
             <div class="complaint-card-bottom">
 
                 <div class="priority-info">
-                    <span>Priority</span>
-                    <strong class="low-text">LOW</strong>
+
+                    <span>
+                        Priority
+                    </span>
+
+                    <strong class="low-text">
+                        LOW
+                    </strong>
+
                 </div>
 
+
                 <a
-                    href="officer_complaint_details.html"
+                    href="{% url 'officer_complaint_details' %}"
                     class="view-complaint-btn"
                 >
                     View Details →
@@ -550,7 +682,9 @@
             3
         </button>
 
-        <span>...</span>
+        <span>
+            ...
+        </span>
 
         <button>
             5
@@ -572,11 +706,15 @@
     <div class="footer-content">
 
         <div>
-            <strong>FixMyCity</strong>
+
+            <strong>
+                FixMyCity
+            </strong>
 
             <p>
                 Making cities better, one complaint at a time.
             </p>
+
         </div>
 
         <span>
@@ -587,6 +725,4 @@
 
 </footer>
 
-
-</body>
-</html>
+{% endblock %}

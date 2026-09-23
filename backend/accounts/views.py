@@ -3,8 +3,14 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.http import require_POST
 
-from .models import User, Citizen, Complaint, Officer
+from .models import User, Citizen, Officer, Complaint
 
+import os
+from PIL import Image, UnidentifiedImageError
+
+ALLOWED_IMAGE_EXTENSIONS = {"jpg", "jpeg", "png"}
+ALLOWED_IMAGE_FORMATS = {"JPEG", "PNG"}
+MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024  # 5 MB
 
 # =====================================================
 # LANDING PAGE
@@ -28,7 +34,6 @@ def register_page(request):
 
 @require_POST
 def register_citizen(request):
-
     full_name = request.POST.get("full_name", "").strip()
     email = request.POST.get("email", "").strip().lower()
     phone = request.POST.get("phone", "").strip()
@@ -111,7 +116,6 @@ def login_page(request):
 # =====================================================
 
 def citizen_login(request):
-
     if request.method != "POST":
         return JsonResponse({
             "success": False,
@@ -136,7 +140,6 @@ def citizen_login(request):
 
     if citizen:
         user = citizen.user
-
     # Login using Email
     else:
         user = User.objects.filter(
@@ -146,11 +149,25 @@ def citizen_login(request):
 
     # Password verification
     if user and user.check_password(password):
-
         if not user.is_active:
             return JsonResponse({
                 "success": False,
                 "message": "Your account is inactive."
+            }, status=403)
+
+        # Admin approval check
+        try:
+            citizen_profile = user.citizen_profile
+        except Citizen.DoesNotExist:
+            return JsonResponse({
+                "success": False,
+                "message": "Citizen profile not found."
+            }, status=404)
+
+        if not citizen_profile.is_approved:
+            return JsonResponse({
+                "success": False,
+                "message": "Your account is waiting for admin approval."
             }, status=403)
 
         login(request, user)
@@ -172,7 +189,6 @@ def citizen_login(request):
 # =====================================================
 
 def citizen_dashboard(request):
-
     if not request.user.is_authenticated:
         return redirect("/login/")
 
@@ -180,6 +196,28 @@ def citizen_dashboard(request):
         return redirect("/login/")
 
     citizen = request.user.citizen_profile
+
+    # All complaints of logged-in citizen
+    complaints = Complaint.objects.filter(
+        citizen=citizen
+    ).order_by("-created_at")
+
+    # Dashboard counts
+    total_complaints = complaints.count()
+
+    in_progress_count = complaints.filter(
+        status="in_progress"
+    ).count()
+
+    resolved_count = complaints.filter(
+        status="resolved"
+    ).count()
+
+    # Latest 3 complaints
+    recent_complaints = complaints[:3]
+
+    # Latest complaint for status tracking
+    latest_complaint = complaints.first()
 
     # Generate initials
     name_parts = citizen.full_name.strip().split()
@@ -195,27 +233,22 @@ def citizen_dashboard(request):
         {
             "citizen": citizen,
             "initials": initials.upper(),
+            "total_complaints": total_complaints,
+            "in_progress_count": in_progress_count,
+            "resolved_count": resolved_count,
+            "recent_complaints": recent_complaints,
+            "latest_complaint": latest_complaint,
+            # Upvote system abhi implement nahi hua hai
+            "my_upvotes": 0,
         }
     )
 
 
 # =====================================================
-# CITIZEN LOGOUT
+# MY COMPLAINTS
 # =====================================================
 
-def citizen_logout(request):
-
-    logout(request)
-
-    return redirect("/login/")
-
-
-# =====================================================
-# REPORT ISSUE
-# =====================================================
-
-def report_issue(request):
-
+def my_complaints(request):
     if not request.user.is_authenticated:
         return redirect("/login/")
 
@@ -224,6 +257,281 @@ def report_issue(request):
 
     citizen = request.user.citizen_profile
 
+    # Get only this citizen's complaints
+    complaints = Complaint.objects.filter(
+        citizen=citizen
+    ).order_by("-created_at")
+
+    # Summary counts
+    total_complaints = complaints.count()
+    reported_count = complaints.filter(status="reported").count()
+    in_progress_count = complaints.filter(status="in_progress").count()
+    resolved_count = complaints.filter(status="resolved").count()
+
+    return render(
+        request,
+        "my_complaints.html",
+        {
+            "citizen": citizen,
+            "complaints": complaints,
+            "total_complaints": total_complaints,
+            "reported_count": reported_count,
+            "in_progress_count": in_progress_count,
+            "resolved_count": resolved_count,
+        }
+    )
+
+
+# =====================================================
+# OFFICER REGISTER PAGE
+# =====================================================
+
+def officer_register_page(request):
+    return render(request, "officer_register.html")
+
+
+# =====================================================
+# OFFICER REGISTER
+# =====================================================
+
+@require_POST
+def officer_register(request):
+    full_name = request.POST.get("full_name", "").strip()
+    employee_id = request.POST.get("employee_id", "").strip().upper()
+    email = request.POST.get("email", "").strip().lower()
+    phone = request.POST.get("phone", "").strip()
+    department = request.POST.get("department", "").strip()
+    password = request.POST.get("password", "")
+    confirm_password = request.POST.get("confirm_password", "")
+
+    # Required fields
+    if not all([full_name, employee_id, email, phone, department, password, confirm_password]):
+        return JsonResponse({
+            "success": False,
+            "message": "All fields are required."
+        }, status=400)
+
+    # Employee ID validation
+    if not employee_id.isalnum() or len(employee_id) > 10:
+        return JsonResponse({
+            "success": False,
+            "message": "Employee ID must contain only letters and numbers and cannot exceed 10 characters."
+        }, status=400)
+
+    # Phone validation
+    if not phone.isdigit() or len(phone) != 10:
+        return JsonResponse({
+            "success": False,
+            "message": "Please enter a valid 10-digit phone number."
+        }, status=400)
+
+    # Password validation
+    if password != confirm_password:
+        return JsonResponse({
+            "success": False,
+            "message": "Passwords do not match."
+        }, status=400)
+
+    if len(password) < 8:
+        return JsonResponse({
+            "success": False,
+            "message": "Password must contain at least 8 characters."
+        }, status=400)
+
+    # Duplicate checks
+    if Officer.objects.filter(employee_id__iexact=employee_id).exists():
+        return JsonResponse({
+            "success": False,
+            "message": "Employee ID is already registered."
+        }, status=400)
+
+    if User.objects.filter(email__iexact=email).exists():
+        return JsonResponse({
+            "success": False,
+            "message": "Email is already registered."
+        }, status=400)
+
+    # Employee ID is used as username because officer login uses Employee ID
+    if User.objects.filter(username__iexact=employee_id).exists():
+        return JsonResponse({
+            "success": False,
+            "message": "Employee ID is already in use."
+        }, status=400)
+
+    # Create User account in pending state
+    user = User.objects.create_user(
+        username=employee_id,
+        email=email,
+        password=password,
+        role="officer"
+    )
+
+    # Officer remains blocked until admin approves
+    officer = Officer.objects.create(
+        user=user,
+        employee_id=employee_id,
+        full_name=full_name,
+        phone=phone,
+        department=department,
+        is_approved=False
+    )
+
+    return JsonResponse({
+        "success": True,
+        "message": "Officer registration submitted. Your account is pending admin verification.",
+        "employee_id": officer.employee_id
+    }, status=201)
+
+
+# =====================================================
+# OFFICER LOGIN PAGE
+# =====================================================
+
+def officer_login_page(request):
+    return render(request, "officer_login.html")
+
+
+# =====================================================
+# OFFICER LOGIN
+# =====================================================
+
+def officer_login(request):
+    if request.method != "POST":
+        return JsonResponse({
+            "success": False,
+            "message": "Only POST method is allowed."
+        }, status=405)
+
+    # Get login details from HTML form
+    employee_id = request.POST.get("employee_id", "").strip()
+    password = request.POST.get("password", "")
+
+    # Check empty fields
+    if not employee_id or not password:
+        return JsonResponse({
+            "success": False,
+            "message": "Please enter Employee ID and Password."
+        }, status=400)
+
+    # Find officer using Employee ID
+    try:
+        officer = Officer.objects.select_related("user").get(employee_id__iexact=employee_id)
+    except Officer.DoesNotExist:
+        return JsonResponse({
+            "success": False,
+            "message": "Invalid Employee ID or Password."
+        }, status=401)
+
+    # Check officer approval
+    if not officer.is_approved:
+        return JsonResponse({
+            "success": False,
+            "message": "Your officer account has not been approved yet."
+        }, status=403)
+
+    # Check whether linked User account is active
+    if not officer.user.is_active:
+        return JsonResponse({
+            "success": False,
+            "message": "Your officer account is inactive."
+        }, status=403)
+
+    # Authenticate using Django User password
+    user = authenticate(
+        request,
+        username=officer.user.username,
+        password=password
+    )
+
+    # Password incorrect
+    if user is None:
+        return JsonResponse({
+            "success": False,
+            "message": "Invalid Employee ID or Password."
+        }, status=401)
+
+    # Successful login
+    login(request, user)
+
+    return JsonResponse({
+        "success": True,
+        "message": "Officer login successful.",
+        "redirect": "/officer-dashboard/"
+    })
+
+
+# =====================================================
+# OFFICER DASHBOARD
+# =====================================================
+
+def officer_dashboard(request):
+    # User must be logged in
+    if not request.user.is_authenticated:
+        return redirect("/officer-login/")
+
+    # Only officers can access this dashboard
+    if request.user.role != "officer":
+        return redirect("/officer-login/")
+
+    # Get Officer profile
+    try:
+        officer = request.user.officer_profile
+    except Officer.DoesNotExist:
+        logout(request)
+        return redirect("/officer-login/")
+
+    # Officer must be approved
+    if not officer.is_approved:
+        logout(request)
+        return redirect("/officer-login/")
+
+    # Generate initials
+    name_parts = officer.full_name.strip().split()
+    if len(name_parts) >= 2:
+        initials = name_parts[0][0] + name_parts[1][0]
+    else:
+        initials = name_parts[0][0]
+
+    return render(
+        request,
+        "officer_dashboard.html",
+        {
+            "officer": officer,
+            "initials": initials.upper(),
+        }
+    )
+
+
+# =====================================================
+# OFFICER LOGOUT
+# =====================================================
+
+def officer_logout(request):
+    logout(request)
+    return redirect("/officer-login/")
+
+
+# =====================================================
+# CITIZEN LOGOUT
+# =====================================================
+
+def citizen_logout(request):
+    logout(request)
+    return redirect("/login/")
+
+
+# =====================================================
+# REPORT ISSUE
+# =====================================================
+
+def report_issue(request):
+    if not request.user.is_authenticated:
+        return redirect("/login/")
+
+    if request.user.role != "citizen":
+        return redirect("/login/")
+
+    citizen = request.user.citizen_profile
     name_parts = citizen.full_name.strip().split()
 
     if len(name_parts) >= 2:
@@ -246,7 +554,6 @@ def report_issue(request):
 # =====================================================
 
 def submit_complaint(request):
-
     if not request.user.is_authenticated:
         return redirect("/login/")
 
@@ -262,28 +569,78 @@ def submit_complaint(request):
     title = request.POST.get("issue_title", "").strip()
     description = request.POST.get("description", "").strip()
     address = request.POST.get("location", "").strip()
-
     latitude = request.POST.get("latitude", "").strip()
     longitude = request.POST.get("longitude", "").strip()
-
     photo = request.FILES.get("issue_photo")
 
-    # Required fields
+    # Required text fields
     if not category or not title or not description or not address:
         return JsonResponse({
             "success": False,
             "message": "Please fill all required fields."
         }, status=400)
 
+    # -----------------------------------------------------
+    # PHOTO VALIDATION
+    # -----------------------------------------------------
+    if not photo:
+        return JsonResponse({
+            "success": False,
+            "message": "Please upload a photo of the issue."
+        }, status=400)
+
+    extension = os.path.splitext(photo.name)[1].lower().lstrip(".")
+
+    if extension not in ALLOWED_IMAGE_EXTENSIONS:
+        return JsonResponse({
+            "success": False,
+            "message": "Only JPG, JPEG or PNG image files are allowed."
+        }, status=400)
+
+    if photo.size > MAX_IMAGE_SIZE_BYTES:
+        return JsonResponse({
+            "success": False,
+            "message": "Image size must not exceed 5 MB."
+        }, status=400)
+
+    try:
+        img = Image.open(photo)
+        img.verify()
+    except (UnidentifiedImageError, IOError, SyntaxError):
+        return JsonResponse({
+            "success": False,
+            "message": "The uploaded file is not a valid image or is corrupted."
+        }, status=400)
+
+    photo.seek(0)
+
+    try:
+        img_check = Image.open(photo)
+        if img_check.format not in ALLOWED_IMAGE_FORMATS:
+            return JsonResponse({
+                "success": False,
+                "message": "Only JPG, JPEG or PNG image files are allowed."
+            }, status=400)
+    except (UnidentifiedImageError, IOError, SyntaxError):
+        return JsonResponse({
+            "success": False,
+            "message": "The uploaded file is not a valid image or is corrupted."
+        }, status=400)
+
+    photo.seek(0)
+
+    # -----------------------------------------------------
+    # END PHOTO VALIDATION
+    # -----------------------------------------------------
+
     # Generate complaint ID
     last_complaint = Complaint.objects.order_by("-id").first()
-
     if last_complaint:
         next_number = last_complaint.id + 1
     else:
         next_number = 1
 
-    complaint_id = f"FMC-{next_number:06d}"
+    complaint_id = f"FMC-CMP-{next_number:06d}"
 
     # Create complaint
     complaint = Complaint.objects.create(
@@ -307,160 +664,340 @@ def submit_complaint(request):
 
 
 # =====================================================
-# OFFICER LOGIN PAGE
+# ADMIN LOGIN PAGE
 # =====================================================
 
-def officer_login_page(request):
-    return render(request, "officer_login.html")
+def admin_login_page(request):
+    return render(request, "admin_login.html")
 
 
 # =====================================================
-# OFFICER LOGIN
+# ADMIN LOGIN
 # =====================================================
 
-def officer_login(request):
+@require_POST
+def admin_login(request):
+    admin_id = request.POST.get("admin_id", "").strip()
+    password = request.POST.get("password", "")
 
-    if request.method != "POST":
+    if not admin_id or not password:
         return JsonResponse({
             "success": False,
-            "message": "Only POST method is allowed."
-        }, status=405)
-
-    # Get login details from HTML form
-    employee_id = request.POST.get(
-        "employee_id",
-        ""
-    ).strip()
-
-    password = request.POST.get(
-        "password",
-        ""
-    )
-
-    # Check empty fields
-    if not employee_id or not password:
-        return JsonResponse({
-            "success": False,
-            "message": "Please enter Employee ID and Password."
+            "message": "Please enter Admin ID and password."
         }, status=400)
 
-    # Find officer using Employee ID
     try:
-
-        officer = Officer.objects.select_related(
-            "user"
-        ).get(
-            employee_id__iexact=employee_id
-        )
-
-    except Officer.DoesNotExist:
-
+        user = User.objects.get(username=admin_id)
+    except User.DoesNotExist:
         return JsonResponse({
             "success": False,
-            "message": "Invalid Employee ID or Password."
+            "message": "Invalid Admin ID or password."
         }, status=401)
 
-    # Check officer approval
-    if not officer.is_approved:
-
+    if user.role != "admin":
         return JsonResponse({
             "success": False,
-            "message": "Your officer account has not been approved yet."
+            "message": "You are not authorized as an admin."
         }, status=403)
 
-    # Check whether linked User account is active
-    if not officer.user.is_active:
-
-        return JsonResponse({
-            "success": False,
-            "message": "Your officer account is inactive."
-        }, status=403)
-
-    # Authenticate using Django User password
-    user = authenticate(
+    authenticated_user = authenticate(
         request,
-        username=officer.user.username,
+        username=user.username,
         password=password
     )
 
-    # Password incorrect
-    if user is None:
-
+    if authenticated_user is None:
         return JsonResponse({
             "success": False,
-            "message": "Invalid Employee ID or Password."
+            "message": "Invalid Admin ID or password."
         }, status=401)
 
-    # Successful login
-    login(request, user)
+    if not user.is_active:
+        return JsonResponse({
+            "success": False,
+            "message": "Your admin account is inactive."
+        }, status=403)
+
+    login(request, authenticated_user)
 
     return JsonResponse({
         "success": True,
-        "message": "Officer login successful.",
-        "redirect": "/officer-dashboard/"
+        "message": "Login successful.",
+        "redirect": "/admin-dashboard/"
     })
 
 
 # =====================================================
-# OFFICER DASHBOARD
+# ADMIN DASHBOARD
 # =====================================================
 
-def officer_dashboard(request):
-
-    # User must be logged in
+def admin_dashboard(request):
     if not request.user.is_authenticated:
-        return redirect("/officer/login/")
+        return redirect("/admin-login/")
 
-    # Only officers can access this dashboard
-    if request.user.role != "officer":
-        return redirect("/officer/login/")
+    if request.user.role != "admin":
+        return redirect("/admin-login/")
 
-    # Get Officer profile
-    try:
+    # ---- Officer stats ----
+    pending_officers_qs = Officer.objects.filter(
+        is_approved=False
+    ).select_related("user").order_by("-created_at")
 
-        officer = request.user.officer_profile
+    pending_requests_count = pending_officers_qs.count()
+    approved_officers_count = Officer.objects.filter(is_approved=True).count()
 
-    except Officer.DoesNotExist:
+    pending_officer_requests = []
+    for officer in pending_officers_qs[:4]:
+        name_parts = officer.full_name.strip().split()
+        if len(name_parts) >= 2:
+            initials = (name_parts[0][0] + name_parts[1][0]).upper()
+        elif name_parts:
+            initials = name_parts[0][0].upper()
+        else:
+            initials = "?"
 
-        logout(request)
+        pending_officer_requests.append({
+            "id": officer.id,
+            "initials": initials,
+            "full_name": officer.full_name,
+            "employee_id": officer.employee_id,
+            "email": officer.user.email,
+            "phone": officer.phone,
+            "department": officer.get_department_display(),
+            "created_at": officer.created_at,
+        })
 
-        return redirect("/officer/login/")
+    # ---- Complaint stats ----
+    total_complaints_count = Complaint.objects.count()
+    reported_count = Complaint.objects.filter(status="reported").count()
+    in_progress_count = Complaint.objects.filter(status="in_progress").count()
+    resolved_count = Complaint.objects.filter(status="resolved").count()
+    unassigned_count = Complaint.objects.filter(
+        assigned_officer__isnull=True
+    ).count()
 
-    # Officer must be approved
-    if not officer.is_approved:
+    # ---- Department-wise approved officer counts ----
+    department_descriptions = {
+        "road": "Road and public infrastructure",
+        "sanitation": "Waste and cleanliness",
+        "streetlight": "Streetlight related issues",
+        "water": "Water leakage and supply",
+        "property": "Damaged public property",
+        "other": "Other civic issues",
+    }
 
-        logout(request)
+    department_stats = []
+    for code, label in Officer.DEPARTMENT_CHOICES:
+        department_stats.append({
+            "label": label,
+            "description": department_descriptions.get(code, ""),
+            "count": Officer.objects.filter(
+                department=code,
+                is_approved=True
+            ).count(),
+        })
 
-        return redirect("/officer/login/")
+    # ---- Recent activity ----
+    activity_items = []
+    for officer in Officer.objects.order_by("-created_at")[:5]:
+        if officer.is_approved:
+            activity_items.append({
+                "icon": "✓",
+                "title": "Officer approved",
+                "description": f"{officer.full_name} ({officer.get_department_display()})",
+                "timestamp": officer.created_at,
+            })
+        else:
+            activity_items.append({
+                "icon": "!",
+                "title": "Officer registration request received",
+                "description": f"{officer.full_name} submitted a registration request.",
+                "timestamp": officer.created_at,
+            })
 
-    # Generate initials
-    name_parts = officer.full_name.strip().split()
+    for complaint in Complaint.objects.order_by("-created_at")[:5]:
+        activity_items.append({
+            "icon": "↑",
+            "title": "Complaint received",
+            "description": f"{complaint.complaint_id} — {complaint.title}",
+            "timestamp": complaint.created_at,
+        })
+
+    for complaint in Complaint.objects.filter(
+        status="resolved"
+    ).order_by("-updated_at")[:5]:
+        activity_items.append({
+            "icon": "✓",
+            "title": "Complaint resolved",
+            "description": f"{complaint.complaint_id} marked as resolved.",
+            "timestamp": complaint.updated_at,
+        })
+
+    activity_items.sort(key=lambda item: item["timestamp"], reverse=True)
+    recent_activity = activity_items[:5]
+
+    # ---- Admin display info ----
+    admin_name = request.user.get_full_name() or request.user.username
+    name_parts = admin_name.strip().split()
 
     if len(name_parts) >= 2:
-        initials = (
-            name_parts[0][0] +
-            name_parts[1][0]
-        )
+        admin_initials = (name_parts[0][0] + name_parts[1][0]).upper()
     else:
-        initials = name_parts[0][0]
+        admin_initials = name_parts[0][0].upper()
 
     return render(
         request,
-        "officer_dashboard.html",
+        "admin_dashboard.html",
         {
-            "officer": officer,
-            "initials": initials.upper(),
+            "admin_name": admin_name,
+            "admin_initials": admin_initials,
+            "pending_requests_count": pending_requests_count,
+            "approved_officers_count": approved_officers_count,
+            "total_complaints_count": total_complaints_count,
+            "unassigned_count": unassigned_count,
+            "pending_officer_requests": pending_officer_requests,
+            "department_stats": department_stats,
+            "reported_count": reported_count,
+            "in_progress_count": in_progress_count,
+            "resolved_count": resolved_count,
+            "recent_activity": recent_activity,
         }
     )
 
 
 # =====================================================
-# OFFICER LOGOUT
+# ADMIN OFFICER VERIFICATION
 # =====================================================
 
-def officer_logout(request):
+def admin_officer_verification(request):
+    if not request.user.is_authenticated:
+        return redirect("/admin-login/")
 
+    if request.user.role != "admin":
+        return redirect("/admin-login/")
+
+    pending_officers_qs = Officer.objects.filter(
+        is_approved=False
+    ).select_related("user").order_by("-created_at")
+
+    pending_officers = []
+    for officer in pending_officers_qs:
+        name_parts = officer.full_name.strip().split()
+        if len(name_parts) >= 2:
+            initials = (name_parts[0][0] + name_parts[1][0]).upper()
+        elif name_parts:
+            initials = name_parts[0][0].upper()
+        else:
+            initials = "?"
+
+        pending_officers.append({
+            "id": officer.id,
+            "initials": initials,
+            "full_name": officer.full_name,
+            "employee_id": officer.employee_id,
+            "email": officer.user.email,
+            "phone": officer.phone,
+            "department": officer.get_department_display(),
+            "created_at": officer.created_at,
+        })
+
+    admin_name = request.user.get_full_name() or request.user.username
+    admin_name_parts = admin_name.strip().split()
+
+    if len(admin_name_parts) >= 2:
+        admin_initials = (admin_name_parts[0][0] + admin_name_parts[1][0]).upper()
+    else:
+        admin_initials = admin_name_parts[0][0].upper()
+
+    return render(
+        request,
+        "admin_officer_verification.html",
+        {
+            "pending_officers": pending_officers,
+            "pending_count": len(pending_officers),
+            "admin_name": admin_name,
+            "admin_initials": admin_initials,
+        }
+    )
+
+
+# =====================================================
+# ADMIN APPROVE OFFICER
+# =====================================================
+
+@require_POST
+def approve_officer(request, officer_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({
+            "success": False,
+            "message": "Authentication required."
+        }, status=401)
+
+    if request.user.role != "admin":
+        return JsonResponse({
+            "success": False,
+            "message": "Unauthorized access."
+        }, status=403)
+
+    try:
+        officer = Officer.objects.get(id=officer_id)
+    except Officer.DoesNotExist:
+        return JsonResponse({
+            "success": False,
+            "message": "Officer not found."
+        }, status=404)
+
+    officer.is_approved = True
+    officer.save(update_fields=["is_approved"])
+
+    return JsonResponse({
+        "success": True,
+        "message": "Officer approved successfully."
+    })
+
+
+# =====================================================
+# ADMIN REJECT OFFICER
+# =====================================================
+
+@require_POST
+def reject_officer(request, officer_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({
+            "success": False,
+            "message": "Authentication required."
+        }, status=401)
+
+    if request.user.role != "admin":
+        return JsonResponse({
+            "success": False,
+            "message": "Unauthorized access."
+        }, status=403)
+
+    try:
+        officer = Officer.objects.select_related("user").get(id=officer_id)
+    except Officer.DoesNotExist:
+        return JsonResponse({
+            "success": False,
+            "message": "Officer not found."
+        }, status=404)
+
+    user = officer.user
+
+    # Delete Officer and its User account after rejection
+    officer.delete()
+    user.delete()
+
+    return JsonResponse({
+        "success": True,
+        "message": "Officer registration rejected."
+    })
+
+
+# =====================================================
+# ADMIN LOGOUT
+# =====================================================
+
+def admin_logout(request):
     logout(request)
-
-    return redirect("/officer/login/")
-
+    return redirect("/admin-login/")

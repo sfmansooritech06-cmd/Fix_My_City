@@ -1,546 +1,964 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "base.html" %}
 
-    <title>Report an Issue | FixMyCity</title>
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
+{% block title %}
+Report an Issue | FixMyCity
+{% endblock %}
 
-<body class="dashboard-page">
 
-    <!-- ================= NAVBAR ================= -->
+{% block body_class %}
+dashboard-page
+{% endblock %}
 
-    <header class="dashboard-navbar">
 
-        <div class="dashboard-logo">
-            <a href="{% url 'home' %}">FixMyCity</a>
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+>
+
+<style>
+    /* Self-contained so it works even if style.css wasn't updated */
+
+    #leafletMap {
+        width: 100%;
+        height: 100%;
+    }
+
+    .map-hint {
+        margin-top: 10px;
+        color: #5f7083;
+        font-size: 10px;
+    }
+
+    .leaflet-control-zoom a {
+        background: #0c1722 !important;
+        color: #9eb0c2 !important;
+        border-color: #2a3c4f !important;
+    }
+
+    .leaflet-control-zoom a:hover {
+        color: #4da3ff !important;
+    }
+
+    .leaflet-control-attribution {
+        background: rgba(5, 12, 19, 0.75) !important;
+        color: #5f7083 !important;
+    }
+
+    .leaflet-control-attribution a {
+        color: #7ea4c7 !important;
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- ================= NAVBAR ================= -->
+
+<header class="dashboard-navbar">
+
+    <div class="dashboard-logo">
+
+        <a href="{% url 'home' %}">
+            FixMyCity
+        </a>
+
+    </div>
+
+
+    <nav class="dashboard-nav">
+
+        <a href="{% url 'citizen_dashboard' %}">
+            Dashboard
+        </a>
+
+        <a href="{% url 'report_issue' %}" class="active">
+            Report Issue
+        </a>
+
+        <a href="{% url 'my_complaints' %}">
+            My Complaints
+        </a>
+
+    </nav>
+
+
+    <div class="dashboard-user">
+
+        <div class="user-avatar">
+            {{ initials }}
         </div>
 
-        <nav class="dashboard-nav">
 
-            <a href="{% url 'citizen_dashboard' %}">
-                Dashboard
-            </a>
+        <div class="user-info">
 
-            <a href="{% url 'report_issue' %}" class="active">
-                Report Issue
-            </a>
+            <strong>
+                {{ citizen.full_name }}
+            </strong>
 
-            <a href="my_complaints.html">
-                My Complaints
-            </a>
-
-        </nav>
-
-        <div class="dashboard-user">
-
-            <div class="user-avatar">
-                 {{ initials }}
-                
-            </div>
-
-            <div class="user-info">
-                <strong>{{ citizen.full_name }}</strong>
-                <span>Citizen</span>
-            </div>
-
-            <button class="logout-btn">
-                Logout
-            </button>
+            <span>
+                Citizen
+            </span>
 
         </div>
 
-    </header>
+
+        <a href="{% url 'citizen_logout' %}" class="logout-btn">
+            Logout
+        </a>
+
+    </div>
+
+</header>
 
 
-    <!-- ================= MAIN ================= -->
 
-    <main class="report-container">
+<!-- ================= MAIN ================= -->
 
-        <!-- Page Heading -->
+<main class="report-container">
 
-        <section class="report-heading">
 
-            <div>
+    <!-- PAGE HEADING -->
 
-                <p class="welcome-label">
-                    CIVIC ISSUE REPORTING
-                </p>
+    <section class="report-heading">
 
-                <h1>
-                    Report an Issue
-                </h1>
+        <div>
 
-                <p>
-                    Help improve your city by reporting a civic problem.
-                </p>
+            <p class="welcome-label">
+                CIVIC ISSUE REPORTING
+            </p>
+
+
+            <h1>
+                Report an Issue
+            </h1>
+
+
+            <p>
+                Help improve your city by reporting a civic problem.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{% url 'citizen_dashboard' %}"
+            class="back-dashboard"
+        >
+            ← Dashboard
+        </a>
+
+    </section>
+
+
+
+    <!-- ================= REPORT FORM ================= -->
+
+    <form
+        class="report-form"
+        method="POST"
+        enctype="multipart/form-data"
+        action="{% url 'submit_complaint' %}"
+    >
+
+        {% csrf_token %}
+
+
+
+        <!-- ================= ISSUE INFORMATION ================= -->
+
+        <section class="report-card">
+
+            <div class="report-card-heading">
+
+                <div class="step-number">
+                    01
+                </div>
+
+
+                <div>
+
+                    <h2>
+                        Issue Information
+                    </h2>
+
+                    <p>
+                        Tell us about the civic problem you want to report.
+                    </p>
+
+                </div>
 
             </div>
 
-            <a href="citizen_dashboard.html" class="back-dashboard">
-                ← Dashboard
-            </a>
+
+
+            <!-- CATEGORY -->
+
+            <div class="form-group">
+
+                <label for="category">
+
+                    Issue Category
+
+                    <span>*</span>
+
+                </label>
+
+
+                <select
+                    id="category"
+                    name="category"
+                    required
+                >
+
+                    <option
+                        value=""
+                        disabled
+                        selected
+                    >
+                        Select issue category
+                    </option>
+
+
+                    <option value="pothole">
+                        Pothole
+                    </option>
+
+
+                    <option value="garbage">
+                        Garbage
+                    </option>
+
+
+                    <option value="streetlight">
+                        Streetlight / Electricity
+                    </option>
+
+
+                    <option value="water">
+                        Water Supply / Leakage
+                    </option>
+
+
+                    <option value="property">
+                        Damaged Public Property
+                    </option>
+
+
+                    <option value="other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- TITLE -->
+
+            <div class="form-group">
+
+                <label for="issue_title">
+
+                    Issue Title
+
+                    <span>*</span>
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="issue_title"
+                    name="issue_title"
+                    placeholder="Example: Large pothole near main road"
+                    maxlength="100"
+                    required
+                >
+
+
+                <small>
+                    Keep the title short and specific.
+                </small>
+
+            </div>
+
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="form-group">
+
+                <label for="description">
+
+                    Issue Description
+
+                    <span>*</span>
+
+                </label>
+
+
+                <textarea
+                    id="description"
+                    name="description"
+                    rows="6"
+                    maxlength="1000"
+                    placeholder="Describe the issue in detail..."
+                    required
+                ></textarea>
+
+
+                <small>
+                    Maximum 1000 characters.
+                </small>
+
+            </div>
 
         </section>
 
 
-        <!-- ================= REPORT FORM ================= -->
 
-        <form
-            class="report-form"
-            method="POST"
-            enctype="multipart/form-data"
-            action="{% url 'submit_complaint' %}"
-        >
-         {% csrf_token %}
+        <!-- ================= PHOTO ================= -->
 
+        <section class="report-card">
 
-            <!-- ================= ISSUE INFORMATION ================= -->
+            <div class="report-card-heading">
 
-            <section class="report-card">
-
-                <div class="report-card-heading">
-
-                    <div class="step-number">
-                        01
-                    </div>
-
-                    <div>
-                        <h2>Issue Information</h2>
-
-                        <p>
-                            Tell us about the civic problem you want to report.
-                        </p>
-                    </div>
-
+                <div class="step-number">
+                    02
                 </div>
 
 
-                <!-- Category -->
+                <div>
 
-                <div class="form-group">
+                    <h2>
+                        Issue Photo
+                    </h2>
 
-                    <label for="category">
-                        Issue Category
-                        <span>*</span>
-                    </label>
-
-                    <select id="category" name="category" required>
-
-                        <option value="" disabled selected>
-                            Select issue category
-                        </option>
-
-                        <option value="road">
-                            Road & Infrastructure
-                        </option>
-
-                        <option value="sanitation">
-                            Sanitation / Garbage
-                        </option>
-
-                       <option value="pothole">
-                            Pothole
-                        </option>
-
-                        <option value="garbage">
-                            Garbage
-                        </option>
-
-                        <option value="streetlight">
-                            Streetlight / Electricity
-                        </option>
-
-                        <option value="water">
-                            Water Supply / Leakage
-                        </option>
-
-                        <option value="property">
-                            Damaged Public Property
-                        </option>
-
-                        <option value="other">
-                            Other
-                        </option>
-
-                    </select>
+                    <p>
+                        Upload a clear photo of the reported issue.
+                    </p>
 
                 </div>
 
-
-                <!-- Title -->
-
-                <div class="form-group">
-
-                    <label for="issue_title">
-                        Issue Title
-                        <span>*</span>
-                    </label>
-
-                    <input
-                        type="text"
-                        id="issue_title"
-                        name="issue_title"
-                        placeholder="Example: Large pothole near main road"
-                        maxlength="100"
-                        required
-                    >
-
-                    <small>
-                        Keep the title short and specific.
-                    </small>
-
-                </div>
+            </div>
 
 
-                <!-- Description -->
 
-                <div class="form-group">
+            <div class="photo-upload">
 
-                    <label for="description">
-                        Issue Description
-                        <span>*</span>
-                    </label>
-
-                    <textarea
-                        id="description"
-                        name="description"
-                        rows="6"
-                        maxlength="1000"
-                        placeholder="Describe the issue in detail..."
-                        required
-                    ></textarea>
-
-                    <small>
-                        Maximum 1000 characters.
-                    </small>
-
-                </div>
-
-            </section>
+                <input
+                    type="file"
+                    id="issue_photo"
+                    name="issue_photo"
+                    accept="image/png, image/jpeg, image/jpg"
+                    hidden
+                >
 
 
-            <!-- ================= PHOTO ================= -->
+                <label
+                    for="issue_photo"
+                    class="upload-box"
+                    id="uploadBox"
+                >
 
-            <section class="report-card">
-
-                <div class="report-card-heading">
-
-                    <div class="step-number">
-                        02
+                    <div class="upload-icon">
+                        ↑
                     </div>
 
-                    <div>
 
-                        <h2>Issue Photo</h2>
-
-                        <p>
-                            Upload a clear photo of the reported issue.
-                        </p>
-
-                    </div>
-
-                </div>
+                    <h3>
+                        Upload Issue Photo
+                    </h3>
 
 
-                <div class="photo-upload">
+                    <p>
+                        Click to browse or select an image
+                    </p>
 
-                    <input
-                        type="file"
-                        id="issue_photo"
-                        name="issue_photo"
-                        accept="image/png, image/jpeg, image/jpg"
-                        hidden
-                    >
-
-                    <label
-                        for="issue_photo"
-                        class="upload-box"
-                    >
-
-                        <div class="upload-icon">
-                            ↑
-                        </div>
-
-                        <h3>
-                            Upload Issue Photo
-                        </h3>
-
-                        <p>
-                            Click to browse or select an image
-                        </p>
-
-                        <span>
-                            JPG, JPEG or PNG • Max 5 MB
-                        </span>
-
-                    </label>
-
-                </div>
-
-            </section>
-
-
-            <!-- ================= LOCATION ================= -->
-
-            <section class="report-card">
-
-                <div class="report-card-heading">
-
-                    <div class="step-number">
-                        03
-                    </div>
-
-                    <div>
-
-                        <h2>Issue Location</h2>
-
-                        <p>
-                            Provide the exact location of the issue.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Address -->
-
-                <div class="form-group">
-
-                    <label for="location">
-                        Location / Address
-                        <span>*</span>
-                    </label>
-
-                    <input
-                        type="text"
-                        id="location"
-                        name="location"
-                        placeholder="Enter area, street or landmark"
-                        required
-                    >
-
-                </div>
-
-
-                <!-- Map -->
-
-                <div class="location-map">
-
-                    <div class="map-grid"></div>
-
-                    <div class="map-road road-one"></div>
-                    <div class="map-road road-two"></div>
-                    <div class="map-road road-three"></div>
-
-                    <div class="map-marker">
-
-                        <div class="marker-pulse"></div>
-
-                        <div class="marker-pin">
-                            ●
-                        </div>
-
-                    </div>
-
-                    <div class="map-label">
-                        Selected Location
-                    </div>
-
-                    <div class="map-controls">
-
-                        <button type="button">
-                            +
-                        </button>
-
-                        <button type="button">
-                            −
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <div class="location-actions">
-
-                    <button
-                        type="button"
-                        class="location-btn"
-                    >
-                        ◎ Use Current Location
-                    </button>
 
                     <span>
-                        Pin the location as accurately as possible.
-                    </span>
-
-                </div>
-
-
-                <!-- Coordinates -->
-
-                <div class="coordinates-row">
-
-                    <div class="coordinates-row">
-
-                    <div class="coordinate-box">
-
-                        <span>Latitude</span>
-
-                        <strong id="latitude-display">
-                            --.--------
-                        </strong>
-
-                    </div>
-
-                    <div class="coordinate-box">
-
-                        <span>Longitude</span>
-
-                        <strong id="longitude-display">
-                            --.--------
-                        </strong>
-
-                    </div>
-
-                </div>
-
-                    <input
-                        type="hidden"
-                        id="latitude"
-                        name="latitude"
-                        value=""
-                    >
-
-                    <input
-                        type="hidden"
-                        id="longitude"
-                        name="longitude"
-                        value=""
-                    >
-                    <div class="coordinate-box">
-
-                        <span>Longitude</span>
-
-                        <strong>
-                            --.--------
-                        </strong>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- ================= REVIEW ================= -->
-
-            <section class="report-card review-card">
-
-                <div class="report-card-heading">
-
-                    <div class="step-number">
-                        04
-                    </div>
-
-                    <div>
-
-                        <h2>Review & Submit</h2>
-
-                        <p>
-                            Please verify your information before submitting.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div class="report-notice">
-
-                    <div class="notice-icon">
-                        ⓘ
-                    </div>
-
-                    <div>
-
-                        <strong>
-                            Before you submit
-                        </strong>
-
-                        <p>
-                            Make sure the issue has not already been reported
-                            nearby. Existing complaints can be upvoted instead
-                            of creating duplicate reports.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <label class="agreement">
-
-                    <input
-                        type="checkbox"
-                        id="confirm"
-                        required
-                    >
-
-                    <span>
-                        I confirm that the information provided is accurate
-                        and the issue has been reported in good faith.
+                        JPG, JPEG or PNG • Max 5 MB
                     </span>
 
                 </label>
 
 
-                <div class="form-actions">
-
-                    <a
-                        href="citizen_dashboard.html"
-                        class="cancel-btn"
+                <div
+                    class="photo-preview"
+                    id="photoPreview"
+                >
+                    <img
+                        id="photoPreviewImg"
+                        src=""
+                        alt="Selected issue photo"
                     >
-                        Cancel
-                    </a>
 
                     <button
-                        type="submit"
-                        class="submit-report-btn"
+                        type="button"
+                        id="removePhotoBtn"
+                        class="remove-photo-btn"
                     >
-                        Submit Complaint
-                        <span>→</span>
+                        ✕ Remove Photo
                     </button>
+                </div>
+
+
+                <p
+                    class="photo-error"
+                    id="photoError"
+                ></p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= LOCATION ================= -->
+
+        <section class="report-card">
+
+            <div class="report-card-heading">
+
+                <div class="step-number">
+                    03
+                </div>
+
+
+                <div>
+
+                    <h2>
+                        Issue Location
+                    </h2>
+
+                    <p>
+                        Provide the exact location of the issue.
+                    </p>
 
                 </div>
 
-            </section>
+            </div>
 
 
-        </form>
 
-    </main>
+            <!-- ADDRESS -->
+
+            <div class="form-group">
+
+                <label for="location">
+
+                    Location / Address
+
+                    <span>*</span>
+
+                </label>
 
 
-    <!-- ================= FOOTER ================= -->
+                <input
+                    type="text"
+                    id="location"
+                    name="location"
+                    placeholder="Enter area, street or landmark"
+                    required
+                >
 
-    <footer class="dashboard-footer">
+            </div>
 
-        <span>
-            © 2026 FixMyCity
-        </span>
 
-        <span>
-            Civic Issue Reporting Platform
-        </span>
 
-    </footer>
+            <!-- MAP -->
 
-</body>
-</html>
+            <div class="location-map">
+
+                <div id="leafletMap" style="width: 100%; height: 100%;"></div>
+
+            </div>
+
+
+            <p class="map-hint" id="mapHint">
+                Click anywhere on the map to place the marker, or drag it once placed.
+            </p>
+
+
+
+            <!-- LOCATION BUTTON -->
+
+            <div class="location-actions">
+
+                <button
+                    type="button"
+                    class="location-btn"
+                    id="useLocationBtn"
+                >
+                    ◎ Use Current Location
+                </button>
+
+
+                <span id="locationStatus">
+                    Pin the location as accurately as possible.
+                </span>
+
+            </div>
+
+
+
+            <!-- COORDINATES -->
+
+            <div class="coordinates-row">
+
+
+                <div class="coordinate-box">
+
+                    <span>
+                        Latitude
+                    </span>
+
+
+                    <strong id="latitude-display">
+                        --.--------
+                    </strong>
+
+                </div>
+
+
+
+                <div class="coordinate-box">
+
+                    <span>
+                        Longitude
+                    </span>
+
+
+                    <strong id="longitude-display">
+                        --.--------
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- HIDDEN COORDINATES -->
+
+            <input
+                type="hidden"
+                id="latitude"
+                name="latitude"
+                value=""
+            >
+
+
+            <input
+                type="hidden"
+                id="longitude"
+                name="longitude"
+                value=""
+            >
+
+        </section>
+
+
+
+        <!-- ================= REVIEW ================= -->
+
+        <section class="report-card review-card">
+
+
+            <div class="report-card-heading">
+
+                <div class="step-number">
+                    04
+                </div>
+
+
+                <div>
+
+                    <h2>
+                        Review & Submit
+                    </h2>
+
+
+                    <p>
+                        Please verify your information before submitting.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- NOTICE -->
+
+            <div class="report-notice">
+
+                <div class="notice-icon">
+                    ⓘ
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        Before you submit
+                    </strong>
+
+
+                    <p>
+                        Make sure the issue has not already been reported
+                        nearby. Existing complaints can be upvoted instead
+                        of creating duplicate reports.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- AGREEMENT -->
+
+            <label class="agreement">
+
+                <input
+                    type="checkbox"
+                    id="confirm"
+                    name="confirm"
+                    required
+                >
+
+
+                <span>
+                    I confirm that the information provided is accurate
+                    and the issue has been reported in good faith.
+                </span>
+
+            </label>
+
+
+
+            <!-- FORM ACTIONS -->
+
+            <div class="form-actions">
+
+
+                <a
+                    href="{% url 'citizen_dashboard' %}"
+                    class="cancel-btn"
+                >
+                    Cancel
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="submit-report-btn"
+                >
+
+                    Submit Complaint
+
+                    <span>
+                        →
+                    </span>
+
+                </button>
+
+            </div>
+
+
+        </section>
+
+
+    </form>
+
+</main>
+
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="dashboard-footer">
+
+    <span>
+        © 2026 FixMyCity
+    </span>
+
+
+    <span>
+        Civic Issue Reporting Platform
+    </span>
+
+</footer>
+
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+(function () {
+
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+    const ALLOWED_MIME_TYPES = ["image/jpeg", "image/jpg", "image/png"];
+    const ALLOWED_EXTENSIONS = ["jpg", "jpeg", "png"];
+
+    const reportForm = document.querySelector(".report-form");
+    const photoInput = document.getElementById("issue_photo");
+    const uploadBox = document.getElementById("uploadBox");
+    const photoPreview = document.getElementById("photoPreview");
+    const photoPreviewImg = document.getElementById("photoPreviewImg");
+    const removePhotoBtn = document.getElementById("removePhotoBtn");
+    const photoError = document.getElementById("photoError");
+
+    function showError(message) {
+        photoError.textContent = message;
+        photoError.classList.add("show");
+    }
+
+    function clearError() {
+        photoError.textContent = "";
+        photoError.classList.remove("show");
+    }
+
+    function resetPhotoInput() {
+        photoInput.value = "";
+        photoPreview.classList.remove("show");
+        photoPreviewImg.src = "";
+        uploadBox.style.display = "flex";
+    }
+
+    photoInput.addEventListener("change", function () {
+
+        clearError();
+
+        const file = photoInput.files[0];
+
+        if (!file) {
+            resetPhotoInput();
+            return;
+        }
+
+        const extension = file.name.split(".").pop().toLowerCase();
+
+        if (!ALLOWED_MIME_TYPES.includes(file.type) || !ALLOWED_EXTENSIONS.includes(extension)) {
+            showError("Only JPG, JPEG or PNG images are allowed.");
+            resetPhotoInput();
+            return;
+        }
+
+        if (file.size > MAX_FILE_SIZE) {
+            showError("Image size must not exceed 5 MB.");
+            resetPhotoInput();
+            return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+            photoPreviewImg.src = event.target.result;
+            photoPreview.classList.add("show");
+            uploadBox.style.display = "none";
+        };
+
+        reader.readAsDataURL(file);
+    });
+
+    removePhotoBtn.addEventListener("click", function () {
+        clearError();
+        resetPhotoInput();
+    });
+
+    reportForm.addEventListener("submit", function (event) {
+        if (!photoInput.files || photoInput.files.length === 0) {
+            event.preventDefault();
+            showError("Please upload a photo of the issue before submitting.");
+            uploadBox.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+    });
+
+})();
+</script>
+
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+></script>
+
+<script>
+(function () {
+
+    if (typeof L === "undefined") {
+        console.error(
+            "Leaflet failed to load from the CDN. Check your internet " +
+            "connection, or that unpkg.com is not blocked on this network."
+        );
+        return;
+    }
+
+    // Fallback starting view: roughly the center of India, zoomed out.
+    // Only used before the user picks a location — never submitted as-is.
+    const DEFAULT_LAT = 22.9734;
+    const DEFAULT_LNG = 78.6569;
+    const DEFAULT_ZOOM = 5;
+    const SELECTED_ZOOM = 16;
+
+    const locationStatus = document.getElementById("locationStatus");
+    const useLocationBtn = document.getElementById("useLocationBtn");
+    const latitudeDisplay = document.getElementById("latitude-display");
+    const longitudeDisplay = document.getElementById("longitude-display");
+    const latitudeInput = document.getElementById("latitude");
+    const longitudeInput = document.getElementById("longitude");
+    const addressInput = document.getElementById("location");
+
+    const map = L.map("leafletMap").setView([DEFAULT_LAT, DEFAULT_LNG], DEFAULT_ZOOM);
+
+    // Stadia Maps' dark theme tiles. Works without a key on localhost, but
+    // the api_key is added anyway so this keeps working if you deploy later
+    // without adding domain-based auth. Replace YOUR_API_KEY below with the
+    // key from your Stadia Maps dashboard.
+    L.tileLayer("https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png?api_key= 75b33f7f-a195-427b-846e-f30d02d0de0f", {
+        maxZoom: 20,
+        attribution:
+            '&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> ' +
+            '&copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> ' +
+            '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    let marker = null;
+
+    function placeMarker(lat, lng) {
+        if (marker) {
+            marker.setLatLng([lat, lng]);
+        } else {
+            marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+
+            marker.on("dragend", function () {
+                const pos = marker.getLatLng();
+                updateCoordinateFields(pos.lat, pos.lng);
+                reverseGeocode(pos.lat, pos.lng);
+            });
+        }
+
+        map.setView([lat, lng], SELECTED_ZOOM);
+    }
+
+    function updateCoordinateFields(lat, lng) {
+        const latFixed = lat.toFixed(7);
+        const lngFixed = lng.toFixed(7);
+
+        latitudeDisplay.textContent = latFixed;
+        longitudeDisplay.textContent = lngFixed;
+
+        latitudeInput.value = latFixed;
+        longitudeInput.value = lngFixed;
+    }
+
+    function reverseGeocode(lat, lng) {
+        locationStatus.textContent = "Looking up address...";
+
+        fetch(
+            "https://nominatim.openstreetmap.org/reverse?format=json&lat=" +
+            encodeURIComponent(lat) + "&lon=" + encodeURIComponent(lng) +
+            "&zoom=18&addressdetails=1",
+            {
+                headers: {
+                    "Accept-Language": "en"
+                }
+            }
+        )
+            .then(function (response) {
+                if (!response.ok) {
+                    throw new Error("Geocoding request failed");
+                }
+                return response.json();
+            })
+            .then(function (data) {
+                if (data && data.display_name) {
+                    addressInput.value = data.display_name;
+                    locationStatus.textContent =
+                        "Location set. Drag the marker or edit the address if needed.";
+                } else {
+                    locationStatus.textContent =
+                        "Address not found automatically — please type it manually.";
+                }
+            })
+            .catch(function () {
+                locationStatus.textContent =
+                    "Could not fetch the address automatically — please type it manually.";
+            });
+    }
+
+    // Manual adjustment: click anywhere on the map to (re)place the marker
+    map.on("click", function (event) {
+        const lat = event.latlng.lat;
+        const lng = event.latlng.lng;
+
+        placeMarker(lat, lng);
+        updateCoordinateFields(lat, lng);
+        reverseGeocode(lat, lng);
+    });
+
+    // "Use My Current Location" button
+    useLocationBtn.addEventListener("click", function () {
+
+        if (!navigator.geolocation) {
+            locationStatus.textContent =
+                "Geolocation is not supported by your browser. Please select the location on the map manually.";
+            return;
+        }
+
+        locationStatus.textContent = "Detecting your location...";
+
+        navigator.geolocation.getCurrentPosition(
+            function (position) {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+
+                placeMarker(lat, lng);
+                updateCoordinateFields(lat, lng);
+                reverseGeocode(lat, lng);
+            },
+            function (error) {
+                let message =
+                    "Unable to detect your location. Please select it manually on the map.";
+
+                if (error.code === error.PERMISSION_DENIED) {
+                    message =
+                        "Location permission denied. Please select your location manually on the map.";
+                } else if (error.code === error.POSITION_UNAVAILABLE) {
+                    message =
+                        "Location information is unavailable right now. Please select it manually on the map.";
+                } else if (error.code === error.TIMEOUT) {
+                    message =
+                        "Location request timed out. Please select it manually on the map.";
+                }
+
+                locationStatus.textContent = message;
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            }
+        );
+    });
+
+    // The map is created inside a normally-flowing container (not display:none),
+    // but forcing a resize check after layout settles avoids grey/broken tiles
+    // in some browsers.
+    window.addEventListener("load", function () {
+        setTimeout(function () {
+            map.invalidateSize();
+        }, 150);
+    });
+
+})();
+</script>
+{% endblock %}

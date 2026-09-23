@@ -43,6 +43,10 @@ class Citizen(models.Model):
         max_length=15
     )
 
+    is_approved = models.BooleanField(
+        default=False
+    )
+
     def __str__(self):
         return f"{self.full_name} ({self.citizen_id})"
 
@@ -95,6 +99,7 @@ class Officer(models.Model):
 
 
 class Complaint(models.Model):
+
     CATEGORY_CHOICES = (
         ('pothole', 'Pothole'),
         ('garbage', 'Garbage'),
@@ -119,6 +124,14 @@ class Complaint(models.Model):
         Citizen,
         on_delete=models.CASCADE,
         related_name='complaints'
+    )
+
+    assigned_officer = models.ForeignKey(
+        Officer,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='assigned_complaints'
     )
 
     category = models.CharField(

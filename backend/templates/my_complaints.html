@@ -1,600 +1,566 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "base.html" %}
 
-    <title>My Complaints | FixMyCity</title>
+{% block title %}
+My Complaints | FixMyCity
+{% endblock %}
 
-    <link rel="stylesheet" href="./css/style.css">
-</head>
+{% block body_class %}
+dashboard-page
+{% endblock %}
 
-<body class="dashboard-page">
+{% block content %}
 
-    <!-- ================= NAVBAR ================= -->
+<!-- ================= NAVBAR ================= -->
 
-    <header class="dashboard-navbar">
+<header class="dashboard-navbar">
 
-        <div class="dashboard-logo">
-            <a href="index.html">FixMyCity</a>
+    <div class="dashboard-logo">
+        <a href="{% url 'home' %}">FixMyCity</a>
+    </div>
+
+    <nav class="dashboard-nav">
+
+        <a href="{% url 'citizen_dashboard' %}">
+            Dashboard
+        </a>
+
+        <a href="{% url 'report_issue' %}">
+            Report Issue
+        </a>
+
+        <a href="{% url 'my_complaints' %}" class="active">
+            My Complaints
+        </a>
+
+    </nav>
+
+    <div class="dashboard-user">
+
+        <div class="user-avatar">
+            {{ initials }}
         </div>
 
-        <nav class="dashboard-nav">
+        <div class="user-info">
+            <strong>{{ citizen.full_name }}</strong>
+            <span>Citizen</span>
+        </div>
 
-            <a href="citizen_dashboard.html">
-                Dashboard
-            </a>
+        <a href="{% url 'citizen_logout' %}" class="logout-btn">
+            Logout
+        </a>
 
-            <a href="report_issue.html">
-                Report Issue
-            </a>
+    </div>
 
-            <a href="my_complaints.html" class="active">
+</header>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="complaints-container">
+
+    <!-- ================= PAGE HEADING ================= -->
+
+    <section class="complaints-heading">
+
+        <div>
+
+            <p class="welcome-label">
+                COMPLAINT MANAGEMENT
+            </p>
+
+            <h1>
                 My Complaints
-            </a>
+            </h1>
 
-        </nav>
+            <p>
+                View and track all the civic issues you have reported.
+            </p>
 
-        <div class="dashboard-user">
+        </div>
 
-            <div class="user-avatar">
-                SF
-            </div>
+        <a
+            href="{% url 'report_issue' %}"
+            class="primary-dashboard-btn"
+        >
+            + Report an Issue
+        </a>
 
-            <div class="user-info">
-                <strong>Sadaf Fatima</strong>
-                <span>Citizen</span>
-            </div>
+    </section>
 
-            <button class="logout-btn">
-                Logout
+
+    <!-- ================= SUMMARY ================= -->
+
+    <section class="complaint-summary">
+
+        <div class="summary-card">
+
+            <span>Total Complaints</span>
+
+            <strong>
+                {{ total_complaints }}
+            </strong>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <span>Reported</span>
+
+            <strong>
+                {{ reported_count }}
+            </strong>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <span>In Progress</span>
+
+            <strong>
+                {{ in_progress_count }}
+            </strong>
+
+        </div>
+
+
+        <div class="summary-card">
+
+            <span>Resolved</span>
+
+            <strong>
+                {{ resolved_count }}
+            </strong>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= FILTER ================= -->
+
+    <section class="complaints-toolbar">
+
+        <div class="filter-tabs">
+
+            <button
+                type="button"
+                class="filter-tab active"
+                data-filter="all"
+            >
+                All
+            </button>
+
+            <button
+                type="button"
+                class="filter-tab"
+                data-filter="reported"
+            >
+                Reported
+            </button>
+
+            <button
+                type="button"
+                class="filter-tab"
+                data-filter="in_progress"
+            >
+                In Progress
+            </button>
+
+            <button
+                type="button"
+                class="filter-tab"
+                data-filter="resolved"
+            >
+                Resolved
             </button>
 
         </div>
 
-    </header>
 
+        <div class="complaint-search">
 
-    <!-- ================= MAIN ================= -->
+            <span>⌕</span>
 
-    <main class="complaints-container">
-
-        <!-- Page Heading -->
-
-        <section class="complaints-heading">
-
-            <div>
-
-                <p class="welcome-label">
-                    COMPLAINT MANAGEMENT
-                </p>
-
-                <h1>
-                    My Complaints
-                </h1>
-
-                <p>
-                    View and track all the civic issues you have reported.
-                </p>
-
-            </div>
-
-            <a
-                href="report_issue.html"
-                class="primary-dashboard-btn"
+            <input
+                type="text"
+                id="complaintSearch"
+                placeholder="Search complaints..."
             >
-                + Report an Issue
-            </a>
 
-        </section>
+        </div>
 
+    </section>
 
-        <!-- ================= SUMMARY ================= -->
 
-        <section class="complaint-summary">
+    <!-- ================= COMPLAINT LIST ================= -->
 
-            <div class="summary-card">
+    <section class="complaints-list" id="complaintsList">
 
-                <span>Total Complaints</span>
+        {% for complaint in complaints %}
 
-                <strong>12</strong>
+        <article
+            class="complaint-full-card"
+            data-status="{{ complaint.status }}"
+            data-search="
+                {{ complaint.complaint_id }}
+                {{ complaint.title }}
+                {{ complaint.description }}
+                {{ complaint.get_category_display }}
+                {{ complaint.address }}
+            "
+        >
 
-            </div>
+            <div class="complaint-card-top">
 
+                <!-- ================= IMAGE / CATEGORY ================= -->
 
-            <div class="summary-card">
+                <div class="complaint-card-image">
 
-                <span>Reported</span>
+                    {% if complaint.photo %}
 
-                <strong>1</strong>
+                        <img
+                            src="{{ complaint.photo.url }}"
+                            alt="{{ complaint.title }}"
+                            style="
+                                width:100%;
+                                height:100%;
+                                object-fit:cover;
+                                border-radius:inherit;
+                            "
+                        >
 
-            </div>
+                    {% else %}
 
+                        {{ complaint.get_category_display|upper }}
 
-            <div class="summary-card">
-
-                <span>In Progress</span>
-
-                <strong>4</strong>
-
-            </div>
-
-
-            <div class="summary-card">
-
-                <span>Resolved</span>
-
-                <strong>7</strong>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================= FILTER ================= -->
-
-        <section class="complaints-toolbar">
-
-            <div class="filter-tabs">
-
-                <button class="filter-tab active">
-                    All
-                </button>
-
-                <button class="filter-tab">
-                    Reported
-                </button>
-
-                <button class="filter-tab">
-                    In Progress
-                </button>
-
-                <button class="filter-tab">
-                    Resolved
-                </button>
-
-            </div>
-
-
-            <div class="complaint-search">
-
-                <span>⌕</span>
-
-                <input
-                    type="text"
-                    placeholder="Search complaints..."
-                >
-
-            </div>
-
-        </section>
-
-
-        <!-- ================= COMPLAINT LIST ================= -->
-
-        <section class="complaints-list">
-
-
-            <!-- Complaint 1 -->
-
-            <article class="complaint-full-card">
-
-                <div class="complaint-card-top">
-
-                    <div class="complaint-card-image road-image">
-                        ROAD
-                    </div>
-
-                    <div class="complaint-card-content">
-
-                        <div class="complaint-heading-row">
-
-                            <div>
-
-                                <span class="category-label road-label">
-                                    ROAD & INFRASTRUCTURE
-                                </span>
-
-                                <h2>
-                                    Large Pothole on Main Road
-                                </h2>
-
-                            </div>
-
-                            <span class="status-badge progress">
-                                In Progress
-                            </span>
-
-                        </div>
-
-
-                        <p class="complaint-description">
-                            Large pothole causing difficulty for vehicles
-                            and creating a safety risk for commuters.
-                        </p>
-
-
-                        <div class="complaint-details">
-
-                            <span>
-                                #FMC-000124
-                            </span>
-
-                            <span>
-                                📍 Vijay Nagar Square
-                            </span>
-
-                            <span>
-                                📅 02 Sep 2026
-                            </span>
-
-                            <span>
-                                ↑ 8 Upvotes
-                            </span>
-
-                        </div>
-
-                    </div>
+                    {% endif %}
 
                 </div>
 
 
-                <div class="complaint-card-footer">
+                <!-- ================= CONTENT ================= -->
 
-                    <div class="mini-progress">
+                <div class="complaint-card-content">
 
-                        <div class="mini-progress-label">
-                            <span>Resolution Progress</span>
-                            <strong>50%</strong>
-                        </div>
+                    <div class="complaint-heading-row">
 
-                        <div class="progress-track">
-                            <div
-                                class="progress-fill"
-                                style="width: 50%;"
-                            ></div>
-                        </div>
+                        <div>
 
-                    </div>
+                            <span class="category-label">
 
-                    <a
-                        href="complaint_details.html"
-                        class="view-complaint-btn"
-                    >
-                        View Details →
-                    </a>
+                                {{ complaint.get_category_display|upper }}
 
-                </div>
-
-            </article>
-
-
-            <!-- Complaint 2 -->
-
-            <article class="complaint-full-card">
-
-                <div class="complaint-card-top">
-
-                    <div class="complaint-card-image garbage-image">
-                        SANITATION
-                    </div>
-
-                    <div class="complaint-card-content">
-
-                        <div class="complaint-heading-row">
-
-                            <div>
-
-                                <span class="category-label sanitation-label">
-                                    SANITATION
-                                </span>
-
-                                <h2>
-                                    Garbage Overflow Near Park
-                                </h2>
-
-                            </div>
-
-                            <span class="status-badge resolved">
-                                Resolved
                             </span>
 
-                        </div>
-
-
-                        <p class="complaint-description">
-                            Garbage was overflowing near the public park
-                            and had not been collected for several days.
-                        </p>
-
-
-                        <div class="complaint-details">
-
-                            <span>
-                                #FMC-000119
-                            </span>
-
-                            <span>
-                                📍 Scheme No. 54
-                            </span>
-
-                            <span>
-                                📅 28 Aug 2026
-                            </span>
-
-                            <span>
-                                ↑ 5 Upvotes
-                            </span>
+                            <h2>
+                                {{ complaint.title }}
+                            </h2>
 
                         </div>
 
-                    </div>
 
-                </div>
+                        <!-- ================= STATUS ================= -->
 
-
-                <div class="complaint-card-footer">
-
-                    <div class="mini-progress">
-
-                        <div class="mini-progress-label">
-                            <span>Resolution Progress</span>
-                            <strong>100%</strong>
-                        </div>
-
-                        <div class="progress-track">
-                            <div
-                                class="progress-fill resolved-progress"
-                                style="width: 100%;"
-                            ></div>
-                        </div>
-
-                    </div>
-
-                    <a
-                        href="complaint_details.html"
-                        class="view-complaint-btn"
-                    >
-                        View Details →
-                    </a>
-
-                </div>
-
-            </article>
-
-
-            <!-- Complaint 3 -->
-
-            <article class="complaint-full-card">
-
-                <div class="complaint-card-top">
-
-                    <div class="complaint-card-image light-image">
-                        STREETLIGHT
-                    </div>
-
-                    <div class="complaint-card-content">
-
-                        <div class="complaint-heading-row">
-
-                            <div>
-
-                                <span class="category-label light-label">
-                                    STREETLIGHT / ELECTRICITY
-                                </span>
-
-                                <h2>
-                                    Streetlight Not Working
-                                </h2>
-
-                            </div>
+                        {% if complaint.status == "reported" %}
 
                             <span class="status-badge reported">
                                 Reported
                             </span>
 
-                        </div>
-
-
-                        <p class="complaint-description">
-                            Streetlight near the main road has stopped
-                            working, making the area poorly lit at night.
-                        </p>
-
-
-                        <div class="complaint-details">
-
-                            <span>
-                                #FMC-000117
-                            </span>
-
-                            <span>
-                                📍 Bengali Square
-                            </span>
-
-                            <span>
-                                📅 26 Aug 2026
-                            </span>
-
-                            <span>
-                                ↑ 3 Upvotes
-                            </span>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="complaint-card-footer">
-
-                    <div class="mini-progress">
-
-                        <div class="mini-progress-label">
-                            <span>Resolution Progress</span>
-                            <strong>0%</strong>
-                        </div>
-
-                        <div class="progress-track">
-                            <div
-                                class="progress-fill"
-                                style="width: 0%;"
-                            ></div>
-                        </div>
-
-                    </div>
-
-                    <a
-                        href="complaint_details.html"
-                        class="view-complaint-btn"
-                    >
-                        View Details →
-                    </a>
-
-                </div>
-
-            </article>
-
-
-            <!-- Complaint 4 -->
-
-            <article class="complaint-full-card">
-
-                <div class="complaint-card-top">
-
-                    <div class="complaint-card-image water-image">
-                        WATER
-                    </div>
-
-                    <div class="complaint-card-content">
-
-                        <div class="complaint-heading-row">
-
-                            <div>
-
-                                <span class="category-label water-label">
-                                    WATER SUPPLY
-                                </span>
-
-                                <h2>
-                                    Water Leakage Near Road
-                                </h2>
-
-                            </div>
+                        {% elif complaint.status == "in_progress" %}
 
                             <span class="status-badge progress">
                                 In Progress
                             </span>
 
-                        </div>
+                        {% elif complaint.status == "resolved" %}
 
-
-                        <p class="complaint-description">
-                            Continuous water leakage is causing water
-                            wastage and making the nearby road wet.
-                        </p>
-
-
-                        <div class="complaint-details">
-
-                            <span>
-                                #FMC-000115
+                            <span class="status-badge resolved">
+                                Resolved
                             </span>
 
-                            <span>
-                                📍 Palasia
-                            </span>
+                        {% endif %}
 
-                            <span>
-                                📅 24 Aug 2026
-                            </span>
+                    </div>
 
-                            <span>
-                                ↑ 7 Upvotes
-                            </span>
 
-                        </div>
+                    <!-- ================= DESCRIPTION ================= -->
+
+                    <p class="complaint-description">
+
+                        {{ complaint.description }}
+
+                    </p>
+
+
+                    <!-- ================= DETAILS ================= -->
+
+                    <div class="complaint-details">
+
+                        <span>
+                            #{{ complaint.complaint_id }}
+                        </span>
+
+                        <span>
+                            📍 {{ complaint.address }}
+                        </span>
+
+                        <span>
+                            📅 {{ complaint.created_at|date:"d M Y" }}
+                        </span>
+
+                        <span>
+                            ↑ {{ complaint.upvotes }} Upvotes
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= FOOTER ================= -->
+
+            <div class="complaint-card-footer">
+
+                <div class="mini-progress">
+
+                    <div class="mini-progress-label">
+
+                        <span>
+                            Resolution Progress
+                        </span>
+
+
+                        <strong>
+
+                            {% if complaint.status == "reported" %}
+                                0%
+                            {% elif complaint.status == "in_progress" %}
+                                50%
+                            {% elif complaint.status == "resolved" %}
+                                100%
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="progress-track">
+
+                        <div
+                            class="progress-fill
+                            {% if complaint.status == 'resolved' %}
+                                resolved-progress
+                            {% endif %}"
+                            style="
+                                width:
+                                {% if complaint.status == 'reported' %}
+                                    0%
+                                {% elif complaint.status == 'in_progress' %}
+                                    50%
+                                {% elif complaint.status == 'resolved' %}
+                                    100%
+                                {% endif %};
+                            "
+                        ></div>
 
                     </div>
 
                 </div>
 
 
-                <div class="complaint-card-footer">
+                <!-- TEMPORARILY DISABLED -->
+                <!--
+                Complaint Details ko next step mein dynamic banayenge.
+                -->
 
-                    <div class="mini-progress">
+                <a
+                    href="#"
+                    class="view-complaint-btn"
+                    data-complaint-id="{{ complaint.complaint_id }}"
+                >
+                    View Details →
+                </a>
 
-                        <div class="mini-progress-label">
-                            <span>Resolution Progress</span>
-                            <strong>50%</strong>
-                        </div>
+            </div>
 
-                        <div class="progress-track">
-                            <div
-                                class="progress-fill"
-                                style="width: 50%;"
-                            ></div>
-                        </div>
-
-                    </div>
-
-                    <a
-                        href="complaint_details.html"
-                        class="view-complaint-btn"
-                    >
-                        View Details →
-                    </a>
-
-                </div>
-
-            </article>
-
-        </section>
+        </article>
 
 
-        <!-- ================= PAGINATION ================= -->
+        {% empty %}
 
-        <div class="complaints-pagination">
+        <!-- ================= NO COMPLAINTS ================= -->
 
-            <button class="page-btn">
-                ←
-            </button>
+        <div class="empty-complaints">
 
-            <button class="page-btn active">
-                1
-            </button>
+            <h3>
+                No complaints yet
+            </h3>
 
-            <button class="page-btn">
-                2
-            </button>
+            <p>
+                You have not reported any civic issue yet.
+            </p>
 
-            <button class="page-btn">
-                3
-            </button>
-
-            <button class="page-btn">
-                →
-            </button>
+            <a
+                href="{% url 'report_issue' %}"
+                class="primary-dashboard-btn"
+            >
+                + Report an Issue
+            </a>
 
         </div>
 
-    </main>
+        {% endfor %}
+
+    </section>
 
 
-    <!-- ================= FOOTER ================= -->
+    <!-- ================= PAGINATION ================= -->
 
-    <footer class="dashboard-footer">
+    {% if complaints %}
 
-        <span>
-            © 2026 FixMyCity
-        </span>
+    <div class="complaints-pagination">
 
-        <span>
-            Civic Issue Reporting Platform
-        </span>
+        <button
+            type="button"
+            class="page-btn"
+            disabled
+        >
+            ←
+        </button>
 
-    </footer>
+        <button
+            type="button"
+            class="page-btn active"
+        >
+            1
+        </button>
 
-</body>
-</html>
+        <button
+            type="button"
+            class="page-btn"
+            disabled
+        >
+            →
+        </button>
+
+    </div>
+
+    {% endif %}
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="dashboard-footer">
+
+    <span>
+        © 2026 FixMyCity
+    </span>
+
+    <span>
+        Civic Issue Reporting Platform
+    </span>
+
+</footer>
+
+
+<!-- ================= FILTER + SEARCH ================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const filterButtons =
+        document.querySelectorAll(".filter-tab");
+
+    const complaintCards =
+        document.querySelectorAll(".complaint-full-card");
+
+    const searchInput =
+        document.getElementById("complaintSearch");
+
+
+    let currentFilter = "all";
+
+
+    function filterComplaints() {
+
+        const searchText =
+            searchInput.value.toLowerCase().trim();
+
+
+        complaintCards.forEach(function (card) {
+
+            const status =
+                card.dataset.status;
+
+            const searchData =
+                card.dataset.search.toLowerCase();
+
+
+            const matchesFilter =
+                currentFilter === "all" ||
+                status === currentFilter;
+
+
+            const matchesSearch =
+                searchData.includes(searchText);
+
+
+            if (matchesFilter && matchesSearch) {
+
+                card.style.display = "";
+
+            } else {
+
+                card.style.display = "none";
+
+            }
+
+        });
+
+    }
+
+
+    filterButtons.forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+            filterButtons.forEach(function (btn) {
+
+                btn.classList.remove("active");
+
+            });
+
+
+            this.classList.add("active");
+
+
+            currentFilter =
+                this.dataset.filter;
+
+
+            filterComplaints();
+
+        });
+
+    });
+
+
+    searchInput.addEventListener(
+        "input",
+        filterComplaints
+    );
+
+});
+
+</script>
+
+{% endblock %}

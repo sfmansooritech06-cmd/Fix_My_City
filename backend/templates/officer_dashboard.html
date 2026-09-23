@@ -1,37 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
+{% block title %}
+Officer Dashboard | FixMyCity
+{% endblock %}
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block body_class %}
+dashboard-page
+{% endblock %}
 
-    <title>Officer Dashboard | FixMyCity</title>
-
-    <link rel="stylesheet" href="./css/style.css">
-
-</head>
-
-
-<body class="dashboard-page">
-
+{% block content %}
 
 <!-- ================= NAVBAR ================= -->
 
 <header class="dashboard-navbar">
 
     <div class="dashboard-logo">
-        <a href="index.html">FixMyCity</a>
+        <a href="{% url 'home' %}">
+            FixMyCity
+        </a>
     </div>
 
 
     <nav class="dashboard-nav">
 
-        <a href="officer_dashboard.html" class="active">
+        <a
+            href="{% url 'officer_dashboard' %}"
+            class="active"
+        >
             Dashboard
         </a>
 
-        <a href="officer_complaints.html">
+        <a href="{% url 'officer_complaints' %}">
             Complaints
         </a>
 
@@ -46,20 +45,26 @@
 
         <div class="user-info">
 
-            <strong>Rahul Sharma</strong>
+            <strong>
+                Rahul Sharma
+            </strong>
 
-            <span>Road & Infrastructure</span>
+            <span>
+                Road & Infrastructure
+            </span>
 
         </div>
 
-        <button class="logout-btn">
+        <a
+            href="{% url 'officer_login' %}"
+            class="logout-btn"
+        >
             Logout
-        </button>
+        </a>
 
     </div>
 
 </header>
-
 
 
 <!-- ================= MAIN CONTENT ================= -->
@@ -88,15 +93,14 @@
         </div>
 
 
-        <a href="officer_complaints.html"
-           class="primary-dashboard-btn">
-
+        <a
+            href="{% url 'officer_complaints' %}"
+            class="primary-dashboard-btn"
+        >
             View Complaints →
-
         </a>
 
     </section>
-
 
 
     <!-- ================= STATS ================= -->
@@ -114,9 +118,13 @@
 
             <div>
 
-                <span>Assigned Complaints</span>
+                <span>
+                    Assigned Complaints
+                </span>
 
-                <h2>18</h2>
+                <h2>
+                    18
+                </h2>
 
             </div>
 
@@ -133,9 +141,13 @@
 
             <div>
 
-                <span>Pending Verification</span>
+                <span>
+                    Pending Verification
+                </span>
 
-                <h2>5</h2>
+                <h2>
+                    5
+                </h2>
 
             </div>
 
@@ -152,9 +164,13 @@
 
             <div>
 
-                <span>In Progress</span>
+                <span>
+                    In Progress
+                </span>
 
-                <h2>7</h2>
+                <h2>
+                    7
+                </h2>
 
             </div>
 
@@ -171,16 +187,19 @@
 
             <div>
 
-                <span>Resolved</span>
+                <span>
+                    Resolved
+                </span>
 
-                <h2>6</h2>
+                <h2>
+                    6
+                </h2>
 
             </div>
 
         </div>
 
     </section>
-
 
 
     <!-- ================= DASHBOARD GRID ================= -->
@@ -208,18 +227,16 @@
                 </div>
 
 
-                <a href="officer_complaints.html">
+                <a href="{% url 'officer_complaints' %}">
                     View All →
                 </a>
 
             </div>
 
 
-
-            <!-- COMPLAINT 1 -->
+            <!-- ================= COMPLAINT 1 ================= -->
 
             <div class="complaint-item">
-
 
                 <div class="complaint-image road-image">
 
@@ -231,7 +248,6 @@
 
 
                 <div class="complaint-info">
-
 
                     <div class="complaint-title-row">
 
@@ -272,11 +288,9 @@
             </div>
 
 
-
-            <!-- COMPLAINT 2 -->
+            <!-- ================= COMPLAINT 2 ================= -->
 
             <div class="complaint-item">
-
 
                 <div class="complaint-image road-image">
 
@@ -288,7 +302,6 @@
 
 
                 <div class="complaint-info">
-
 
                     <div class="complaint-title-row">
 
@@ -329,11 +342,9 @@
             </div>
 
 
-
-            <!-- COMPLAINT 3 -->
+            <!-- ================= COMPLAINT 3 ================= -->
 
             <div class="complaint-item">
-
 
                 <div class="complaint-image road-image">
 
@@ -345,7 +356,6 @@
 
 
                 <div class="complaint-info">
-
 
                     <div class="complaint-title-row">
 
@@ -389,7 +399,6 @@
         </div>
 
 
-
         <!-- ================= PRIORITY PANEL ================= -->
 
         <div class="dashboard-card quick-actions-card">
@@ -412,12 +421,12 @@
             </div>
 
 
-
             <!-- PRIORITY 1 -->
 
-            <a href="officer_complaint_details.html"
-               class="quick-action">
-
+            <a
+                href="{% url 'officer_complaint_details' %}"
+                class="quick-action"
+            >
 
                 <div class="priority-number high">
                     01
@@ -444,12 +453,12 @@
             </a>
 
 
-
             <!-- PRIORITY 2 -->
 
-            <a href="officer_complaint_details.html"
-               class="quick-action">
-
+            <a
+                href="{% url 'officer_complaint_details' %}"
+                class="quick-action"
+            >
 
                 <div class="priority-number medium">
                     02
@@ -476,12 +485,12 @@
             </a>
 
 
-
             <!-- PRIORITY 3 -->
 
-            <a href="officer_complaint_details.html"
-               class="quick-action">
-
+            <a
+                href="{% url 'officer_complaint_details' %}"
+                class="quick-action"
+            >
 
                 <div class="priority-number medium">
                     03
@@ -513,7 +522,6 @@
     </section>
 
 
-
     <!-- ================= DEPARTMENT OVERVIEW ================= -->
 
     <section class="dashboard-card nearby-section">
@@ -538,15 +546,14 @@
             </div>
 
 
-            <a href="officer_complaints.html"
-               class="secondary-btn">
-
+            <a
+                href="{% url 'officer_complaints' %}"
+                class="secondary-btn"
+            >
                 Manage Complaints
-
             </a>
 
         </div>
-
 
 
         <div class="officer-overview-grid">
@@ -622,7 +629,6 @@
         </div>
 
     </section>
-
 
 
     <!-- ================= WORKFLOW ================= -->
@@ -756,7 +762,6 @@
 </main>
 
 
-
 <!-- ================= FOOTER ================= -->
 
 <footer class="dashboard-footer">
@@ -771,7 +776,4 @@
 
 </footer>
 
-
-</body>
-
-</html>
+{% endblock %}
