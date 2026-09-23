@@ -1001,3 +1001,4 @@ def reject_officer(request, officer_id):
 def admin_logout(request):
     logout(request)
     return redirect("/admin-login/")
+

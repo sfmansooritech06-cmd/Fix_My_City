@@ -73,10 +73,10 @@ urlpatterns = [
     # =====================================================
     # OFFICER REGISTRATION & LOGIN
     # =====================================================
-    path("officer-register/", officer_register_page, name="officer_register"),
-    path("officer-register/submit/", officer_register, name="officer_register_submit"),
-    path("officer-login/", officer_login_page, name="officer_login"),
-    path("officer-login/submit/", officer_login, name="officer_login_submit"),
+    path("officer-register/",officer_register_page, name="officer_register"),
+    path("officer-register/submit/",officer_register, name="officer_register_submit"),
+    path("officer-login/",officer_login_page, name="officer_login"),
+    path("officer-login/submit/",officer_login, name="officer_login_submit"),
 
 
     # =====================================================
@@ -84,7 +84,7 @@ urlpatterns = [
     # =====================================================
     path("officer-dashboard/", officer_dashboard, name="officer_dashboard"),
     path("officer-logout/", officer_logout, name="officer_logout"),
-
+  
 
     # =====================================================
     # ADMIN: VERIFICATION
@@ -101,5 +101,7 @@ urlpatterns = [
     path("admin-login/submit/", admin_login, name="admin_login_submit"),
     path("admin-dashboard/", admin_dashboard, name="admin_dashboard"),
     path("admin-logout/", admin_logout, name="admin_logout"),
+    
+    
 
 ]
