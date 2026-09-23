@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 from django.conf.global_settings import STATICFILES_DIRS
 
@@ -132,3 +133,9 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.User'
+
+# The URL path where users can view the images
+MEDIA_URL = '/media/'
+
+# The physical folder on your computer where images are saved
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
