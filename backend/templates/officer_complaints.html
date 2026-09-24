@@ -38,23 +38,23 @@ complaints-page
         <div class="nav-user">
 
             <div class="user-avatar">
-                RS
+                {{ initials }}
             </div>
 
             <div class="user-info">
 
                 <strong>
-                    Rahul Sharma
+                    {{ officer.full_name }}
                 </strong>
 
                 <span>
-                    Road & Infrastructure
+                    {{ officer.get_department_display }}
                 </span>
 
             </div>
 
             <a
-                href="{% url 'officer_login' %}"
+                href="{% url 'officer_logout' %}"
                 class="logout-btn"
             >
                 Logout
@@ -114,7 +114,7 @@ complaints-page
             </span>
 
             <strong>
-                18
+                {{ total_count }}
             </strong>
 
             <small>
@@ -131,7 +131,7 @@ complaints-page
             </span>
 
             <strong>
-                5
+                {{ reported_count }}
             </strong>
 
             <small>
@@ -148,7 +148,7 @@ complaints-page
             </span>
 
             <strong>
-                7
+                {{ in_progress_count }}
             </strong>
 
             <small>
@@ -165,7 +165,7 @@ complaints-page
             </span>
 
             <strong>
-                6
+                {{ resolved_count }}
             </strong>
 
             <small>
@@ -189,6 +189,7 @@ complaints-page
 
             <input
                 type="text"
+                id="complaintSearch"
                 placeholder="Search by complaint ID, title or location..."
             >
 
@@ -197,73 +198,61 @@ complaints-page
 
         <div class="filter-row">
 
-            <select>
+            <select id="statusFilter">
 
-                <option>
+                <option value="all">
                     All Status
                 </option>
 
-                <option>
+                <option value="reported">
                     Reported
                 </option>
 
-                <option>
+                <option value="in_progress">
                     In Progress
                 </option>
 
-                <option>
+                <option value="resolved">
                     Resolved
                 </option>
 
             </select>
 
 
-            <select>
+            <select id="priorityFilter">
 
-                <option>
+                <option value="all">
                     All Priority
                 </option>
 
-                <option>
+                <option value="high">
                     High
                 </option>
 
-                <option>
+                <option value="medium">
                     Medium
                 </option>
 
-                <option>
+                <option value="low">
                     Low
                 </option>
 
             </select>
 
 
-            <select>
+            <select id="categoryFilter">
 
-                <option>
+                <option value="all">
                     All Categories
                 </option>
 
-                <option>
-                    Road & Infrastructure
+                {% for category_value, category_label in category_choices %}
+
+                <option value="{{ category_value }}">
+                    {{ category_label }}
                 </option>
 
-                <option>
-                    Sanitation
-                </option>
-
-                <option>
-                    Streetlight / Electricity
-                </option>
-
-                <option>
-                    Water Supply
-                </option>
-
-                <option>
-                    Public Property
-                </option>
+                {% endfor %}
 
             </select>
 
@@ -276,27 +265,40 @@ complaints-page
 
     <div class="complaint-tabs">
 
-        <button class="active">
+        <button
+            type="button"
+            class="active"
+            data-tab="all"
+        >
             All
-            <span>18</span>
+            <span>{{ total_count }}</span>
         </button>
 
 
-        <button>
+        <button
+            type="button"
+            data-tab="reported"
+        >
             Reported
-            <span>5</span>
+            <span>{{ reported_count }}</span>
         </button>
 
 
-        <button>
+        <button
+            type="button"
+            data-tab="in_progress"
+        >
             In Progress
-            <span>7</span>
+            <span>{{ in_progress_count }}</span>
         </button>
 
 
-        <button>
+        <button
+            type="button"
+            data-tab="resolved"
+        >
             Resolved
-            <span>6</span>
+            <span>{{ resolved_count }}</span>
         </button>
 
     </div>
@@ -307,24 +309,31 @@ complaints-page
     <section class="officer-complaints-list">
 
 
-        <!-- ================= COMPLAINT 1 ================= -->
+        {% for complaint in complaints %}
 
-        <article class="officer-complaint-card">
+        <article
+            class="officer-complaint-card"
+            data-status="{{ complaint.status }}"
+            data-category="{{ complaint.category }}"
+            data-upvotes="{{ complaint.upvotes }}"
+        >
+
+            <!-- ================= CARD TOP ================= -->
 
             <div class="complaint-card-top">
 
                 <div>
 
                     <div class="complaint-id">
-                        #FMC-000124
+                        #{{ complaint.complaint_id }}
                     </div>
 
                     <h2>
-                        Large Pothole on Main Road
+                        {{ complaint.title }}
                     </h2>
 
                     <span class="complaint-category">
-                        Road & Infrastructure
+                        {{ complaint.get_category_display }}
                     </span>
 
                 </div>
@@ -332,41 +341,84 @@ complaints-page
 
                 <div class="complaint-badges">
 
-                    <span class="priority-badge high">
-                        HIGH
-                    </span>
 
-                    <span class="status-badge in-progress">
-                        IN PROGRESS
-                    </span>
+                    <!-- Priority -->
+
+                    {% if complaint.upvotes >= 15 %}
+
+                        <span class="priority-badge high">
+                            HIGH
+                        </span>
+
+                    {% elif complaint.upvotes >= 5 %}
+
+                        <span class="priority-badge medium">
+                            MEDIUM
+                        </span>
+
+                    {% else %}
+
+                        <span class="priority-badge low">
+                            LOW
+                        </span>
+
+                    {% endif %}
+
+
+                    <!-- Status -->
+
+                    {% if complaint.status == "reported" %}
+
+                        <span class="status-badge reported">
+                            REPORTED
+                        </span>
+
+                    {% elif complaint.status == "in_progress" %}
+
+                        <span class="status-badge in-progress">
+                            IN PROGRESS
+                        </span>
+
+                    {% elif complaint.status == "resolved" %}
+
+                        <span class="status-badge resolved">
+                            RESOLVED
+                        </span>
+
+                    {% endif %}
 
                 </div>
 
             </div>
 
 
+            <!-- ================= DESCRIPTION ================= -->
+
             <p class="complaint-description">
-                A large pothole has developed near the main road
-                and is causing difficulty for vehicles and pedestrians.
+                {{ complaint.description }}
             </p>
 
+
+            <!-- ================= META ================= -->
 
             <div class="complaint-meta">
 
                 <span>
-                    ◎ Near Vijay Nagar Square, Indore
+                    ◎ {{ complaint.address }}
                 </span>
 
                 <span>
-                    ◷ 02 Sep 2026
+                    ◷ {{ complaint.created_at|date:"d M Y" }}
                 </span>
 
                 <span>
-                    ↑ 18 Upvotes
+                    ↑ {{ complaint.upvotes }} Upvotes
                 </span>
 
             </div>
 
+
+            <!-- ================= CARD BOTTOM ================= -->
 
             <div class="complaint-card-bottom">
 
@@ -376,9 +428,26 @@ complaints-page
                         Priority
                     </span>
 
-                    <strong class="high-text">
-                        HIGH
-                    </strong>
+
+                    {% if complaint.upvotes >= 15 %}
+
+                        <strong class="high-text">
+                            HIGH
+                        </strong>
+
+                    {% elif complaint.upvotes >= 5 %}
+
+                        <strong class="medium-text">
+                            MEDIUM
+                        </strong>
+
+                    {% else %}
+
+                        <strong class="low-text">
+                            LOW
+                        </strong>
+
+                    {% endif %}
 
                 </div>
 
@@ -395,7 +464,9 @@ complaints-page
         </article>
 
 
-        <!-- ================= COMPLAINT 2 ================= -->
+        {% empty %}
+
+        <!-- ================= EMPTY STATE ================= -->
 
         <article class="officer-complaint-card">
 
@@ -404,28 +475,15 @@ complaints-page
                 <div>
 
                     <div class="complaint-id">
-                        #FMC-000128
+                        NO COMPLAINTS
                     </div>
 
                     <h2>
-                        Damaged Road Near Market
+                        No complaints assigned yet
                     </h2>
 
                     <span class="complaint-category">
-                        Road & Infrastructure
-                    </span>
-
-                </div>
-
-
-                <div class="complaint-badges">
-
-                    <span class="priority-badge high">
-                        HIGH
-                    </span>
-
-                    <span class="status-badge reported">
-                        REPORTED
+                        {{ officer.get_department_display }}
                     </span>
 
                 </div>
@@ -434,265 +492,25 @@ complaints-page
 
 
             <p class="complaint-description">
-                Road surface is severely damaged with multiple
-                cracks and uneven patches near the market area.
+                There are currently no complaints assigned to you.
+                New complaints will appear here once they are assigned.
             </p>
-
-
-            <div class="complaint-meta">
-
-                <span>
-                    ◎ Scheme No. 54, Indore
-                </span>
-
-                <span>
-                    ◷ 03 Sep 2026
-                </span>
-
-                <span>
-                    ↑ 14 Upvotes
-                </span>
-
-            </div>
-
-
-            <div class="complaint-card-bottom">
-
-                <div class="priority-info">
-
-                    <span>
-                        Priority
-                    </span>
-
-                    <strong class="high-text">
-                        HIGH
-                    </strong>
-
-                </div>
-
-
-                <a
-                    href="{% url 'officer_complaint_details' %}"
-                    class="view-complaint-btn"
-                >
-                    View Details →
-                </a>
-
-            </div>
 
         </article>
 
-
-        <!-- ================= COMPLAINT 3 ================= -->
-
-        <article class="officer-complaint-card">
-
-            <div class="complaint-card-top">
-
-                <div>
-
-                    <div class="complaint-id">
-                        #FMC-000121
-                    </div>
-
-                    <h2>
-                        Road Crack Near Residential Area
-                    </h2>
-
-                    <span class="complaint-category">
-                        Road & Infrastructure
-                    </span>
-
-                </div>
-
-
-                <div class="complaint-badges">
-
-                    <span class="priority-badge medium">
-                        MEDIUM
-                    </span>
-
-                    <span class="status-badge resolved">
-                        RESOLVED
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            <p class="complaint-description">
-                A visible crack was reported on the road surface
-                near a residential area.
-            </p>
-
-
-            <div class="complaint-meta">
-
-                <span>
-                    ◎ Vijay Nagar, Indore
-                </span>
-
-                <span>
-                    ◷ 30 Aug 2026
-                </span>
-
-                <span>
-                    ↑ 11 Upvotes
-                </span>
-
-            </div>
-
-
-            <div class="complaint-card-bottom">
-
-                <div class="priority-info">
-
-                    <span>
-                        Priority
-                    </span>
-
-                    <strong class="medium-text">
-                        MEDIUM
-                    </strong>
-
-                </div>
-
-
-                <a
-                    href="{% url 'officer_complaint_details' %}"
-                    class="view-complaint-btn"
-                >
-                    View Details →
-                </a>
-
-            </div>
-
-        </article>
-
-
-        <!-- ================= COMPLAINT 4 ================= -->
-
-        <article class="officer-complaint-card">
-
-            <div class="complaint-card-top">
-
-                <div>
-
-                    <div class="complaint-id">
-                        #FMC-000130
-                    </div>
-
-                    <h2>
-                        Broken Footpath
-                    </h2>
-
-                    <span class="complaint-category">
-                        Road & Infrastructure
-                    </span>
-
-                </div>
-
-
-                <div class="complaint-badges">
-
-                    <span class="priority-badge low">
-                        LOW
-                    </span>
-
-                    <span class="status-badge reported">
-                        REPORTED
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            <p class="complaint-description">
-                Several footpath tiles are broken and need repair
-                for safe pedestrian movement.
-            </p>
-
-
-            <div class="complaint-meta">
-
-                <span>
-                    ◎ Palasia, Indore
-                </span>
-
-                <span>
-                    ◷ 04 Sep 2026
-                </span>
-
-                <span>
-                    ↑ 4 Upvotes
-                </span>
-
-            </div>
-
-
-            <div class="complaint-card-bottom">
-
-                <div class="priority-info">
-
-                    <span>
-                        Priority
-                    </span>
-
-                    <strong class="low-text">
-                        LOW
-                    </strong>
-
-                </div>
-
-
-                <a
-                    href="{% url 'officer_complaint_details' %}"
-                    class="view-complaint-btn"
-                >
-                    View Details →
-                </a>
-
-            </div>
-
-        </article>
+        {% endfor %}
 
 
     </section>
 
 
-    <!-- ================= PAGINATION ================= -->
+    <!-- ================= FOOTER ================= -->
 
     <div class="pagination">
 
-        <button disabled>
-            ←
-        </button>
-
-        <button class="active">
-            1
-        </button>
-
-        <button>
-            2
-        </button>
-
-        <button>
-            3
-        </button>
-
         <span>
-            ...
+            Showing {{ total_count }} assigned complaint{{ total_count|pluralize }}
         </span>
-
-        <button>
-            5
-        </button>
-
-        <button>
-            →
-        </button>
 
     </div>
 
@@ -724,5 +542,182 @@ complaints-page
     </div>
 
 </footer>
+
+
+<!-- ================= FILTER SCRIPT ================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const searchInput =
+        document.getElementById("complaintSearch");
+
+    const statusFilter =
+        document.getElementById("statusFilter");
+
+    const priorityFilter =
+        document.getElementById("priorityFilter");
+
+    const categoryFilter =
+        document.getElementById("categoryFilter");
+
+    const cards =
+        document.querySelectorAll(".officer-complaint-card");
+
+
+    function filterComplaints() {
+
+        const search =
+            searchInput.value.toLowerCase().trim();
+
+        const status =
+            statusFilter.value;
+
+        const priority =
+            priorityFilter.value;
+
+        const category =
+            categoryFilter.value;
+
+
+        cards.forEach(function (card) {
+
+            const text =
+                card.innerText.toLowerCase();
+
+            const cardStatus =
+                card.dataset.status;
+
+            const cardCategory =
+                card.dataset.category;
+
+            const upvotes =
+                parseInt(card.dataset.upvotes || "0");
+
+
+            let cardPriority = "low";
+
+
+            if (upvotes >= 15) {
+
+                cardPriority = "high";
+
+            } else if (upvotes >= 5) {
+
+                cardPriority = "medium";
+
+            }
+
+
+            const matchesSearch =
+                text.includes(search);
+
+            const matchesStatus =
+                status === "all" ||
+                cardStatus === status;
+
+            const matchesPriority =
+                priority === "all" ||
+                cardPriority === priority;
+
+            const matchesCategory =
+                category === "all" ||
+                cardCategory === category;
+
+
+            if (
+                matchesSearch &&
+                matchesStatus &&
+                matchesPriority &&
+                matchesCategory
+            ) {
+
+                card.style.display = "";
+
+            } else {
+
+                card.style.display = "none";
+
+            }
+
+        });
+
+    }
+
+
+    searchInput.addEventListener(
+        "input",
+        filterComplaints
+    );
+
+
+    statusFilter.addEventListener(
+        "change",
+        filterComplaints
+    );
+
+
+    priorityFilter.addEventListener(
+        "change",
+        filterComplaints
+    );
+
+
+    categoryFilter.addEventListener(
+        "change",
+        filterComplaints
+    );
+
+
+    /* ================= TABS ================= */
+
+    const tabs =
+        document.querySelectorAll(
+            ".complaint-tabs button"
+        );
+
+
+    tabs.forEach(function (tab) {
+
+        tab.addEventListener(
+            "click",
+            function () {
+
+                tabs.forEach(function (item) {
+
+                    item.classList.remove("active");
+
+                });
+
+
+                tab.classList.add("active");
+
+
+                const selectedTab =
+                    tab.dataset.tab;
+
+
+                statusFilter.value =
+                    selectedTab;
+
+
+                if (selectedTab === "all") {
+
+                    statusFilter.value = "all";
+
+                }
+
+
+                filterComplaints();
+
+            }
+        );
+
+    });
+
+});
+
+</script>
 
 {% endblock %}

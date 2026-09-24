@@ -6493,496 +6493,1103 @@ section {
    OFFICER COMPLAINTS PAGE
    ========================================================= */
 
-.officer-complaints-page {
-    padding-top: 42px;
+body.complaints-page {
+    background:
+        radial-gradient(circle at 15% 20%, rgba(37, 99, 235, 0.08), transparent 28%),
+        radial-gradient(circle at 85% 10%, rgba(59, 130, 246, 0.05), transparent 25%),
+        #070b10;
+    color: #f1f5f9;
+    min-height: 100vh;
 }
 
 
-/* PAGE HEADER */
+/* =========================================================
+   NAVBAR
+   ========================================================= */
 
-.complaints-page-header {
+body.complaints-page .navbar {
+    width: 100%;
+    background: rgba(7, 11, 16, 0.94);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+    backdrop-filter: blur(14px);
+    position: relative;
+    z-index: 20;
+}
+
+body.complaints-page .nav-container {
+    width: min(1400px, calc(100% - 80px));
+    min-height: 76px;
+    margin: 0 auto;
+
     display: flex;
-
-    justify-content: space-between;
-
-    align-items: flex-end;
-
-    gap: 25px;
-
-    margin-bottom: 30px;
-}
-
-.complaints-page-header h1 {
-    margin: 10px 0 8px;
-
-    color: #ffffff;
-
-    font-size: 32px;
-}
-
-.complaints-page-header > div > p:last-child {
-    color: #7e8999;
-
-    font-size: 14px;
-}
-
-
-/* FILTER CARD */
-
-.complaints-filter-card {
-    margin-top: 25px;
-
-    padding: 0;
-
-    overflow: hidden;
-}
-
-
-/* SEARCH ROW */
-
-.complaints-search-row {
-    display: grid;
-
-    grid-template-columns: minmax(250px, 1fr) 150px 150px 170px;
-
-    gap: 12px;
-
-    padding: 20px;
-
-    border-bottom: 1px solid #252c38;
-}
-
-
-.complaints-search {
-    display: flex;
-
     align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+}
 
+
+/* LOGO */
+
+body.complaints-page .logo {
+    display: flex;
+    align-items: center;
     gap: 10px;
 
-    padding: 0 13px;
+    color: #f8fafc;
+    text-decoration: none;
 
-    background: #0c1016;
+    font-size: 21px;
+    font-weight: 750;
+    letter-spacing: -0.4px;
 
-    border: 1px solid #29313d;
-
-    border-radius: 8px;
+    white-space: nowrap;
 }
 
+body.complaints-page .logo-mark {
+    width: 30px;
+    height: 30px;
 
-.complaints-search span {
-    color: #697585;
-
-    font-size: 18px;
-}
-
-
-.complaints-search input {
-    width: 100%;
-
-    border: none;
-
-    outline: none;
-
-    background: transparent;
-
-    color: #dce2eb;
-
-    font-size: 13px;
-}
-
-
-.complaints-search input::placeholder {
-    color: #687383;
-}
-
-
-.complaints-select {
-    padding: 11px 10px;
-
-    background: #0c1016;
-
-    border: 1px solid #29313d;
-
-    border-radius: 8px;
-
-    color: #aeb7c5;
-
-    font-size: 12px;
-
-    outline: none;
-
-    cursor: pointer;
-}
-
-
-/* FILTER TABS */
-
-.officer-filter-tabs {
     display: flex;
+    align-items: center;
+    justify-content: center;
 
-    gap: 0;
+    border-radius: 9px;
 
-    padding: 0 20px;
-}
-
-
-.officer-filter-tab {
-    padding: 15px 18px;
-
-    border: none;
-
-    border-bottom: 2px solid transparent;
-
-    background: transparent;
-
-    color: #737e8e;
-
-    font-size: 12px;
-
-    cursor: pointer;
-}
-
-
-.officer-filter-tab span {
-    margin-left: 5px;
-
-    color: #566171;
-}
-
-
-.officer-filter-tab:hover {
+    background: #2563eb;
     color: #ffffff;
-}
 
-
-.officer-filter-tab.active {
-    color: #45a5ff;
-
-    border-bottom-color: #3c99ec;
-}
-
-
-.officer-filter-tab.active span {
-    color: #45a5ff;
-}
-
-
-/* COMPLAINT LIST */
-
-.officer-complaint-list {
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 15px;
-
-    margin-top: 20px;
-}
-
-
-/* COMPLAINT CARD */
-
-.officer-complaint-card {
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 25px;
-
-    padding: 20px;
-
-    background: #11151c;
-
-    border: 1px solid #252c38;
-
-    border-radius: 14px;
-
-    transition: 0.2s;
-}
-
-
-.officer-complaint-card:hover {
-    border-color: #31506b;
-
-    transform: translateY(-1px);
-}
-
-
-/* MAIN */
-
-.officer-complaint-main {
-    display: flex;
-
-    align-items: center;
-
-    gap: 18px;
-
-    min-width: 0;
-
-    flex: 1;
-}
-
-
-.officer-complaint-content {
-    min-width: 0;
-}
-
-
-/* TITLE */
-
-.officer-complaint-title {
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: flex-start;
-
-    gap: 20px;
-}
-
-
-.officer-complaint-title h2 {
-    margin: 7px 0 6px;
-
-    color: #eef2f7;
-
-    font-size: 16px;
-}
-
-
-.priority-badge {
-    display: inline-block;
-
-    padding: 4px 8px;
-
-    border-radius: 5px;
-
-    font-size: 9px;
-
+    font-size: 22px;
     font-weight: 700;
 
-    letter-spacing: 0.5px;
+    box-shadow: 0 0 22px rgba(37, 99, 235, 0.35);
 }
 
 
-.priority-badge.high {
-    background: rgba(238, 81, 81, 0.11);
+/* NAV LINKS */
 
-    color: #ff7774;
+body.complaints-page .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+body.complaints-page .nav-links a {
+    position: relative;
+
+    padding: 10px 16px;
+
+    color: #94a3b8;
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    border-radius: 8px;
+
+    transition:
+        color 0.2s ease,
+        background 0.2s ease;
+}
+
+body.complaints-page .nav-links a:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+body.complaints-page .nav-links a.active {
+    color: #ffffff;
+    background: rgba(37, 99, 235, 0.12);
+}
+
+body.complaints-page .nav-links a.active::after {
+    content: "";
+
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: -23px;
+
+    height: 2px;
+
+    background: #3b82f6;
+    border-radius: 2px;
+
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.65);
 }
 
 
-.priority-badge.medium {
-    background: rgba(255, 175, 65, 0.11);
+/* USER AREA */
 
-    color: #ffb65a;
+body.complaints-page .nav-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+body.complaints-page .user-avatar {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: linear-gradient(
+        135deg,
+        #2563eb,
+        #1d4ed8
+    );
+
+    color: #ffffff;
+
+    font-size: 13px;
+    font-weight: 750;
+
+    box-shadow: 0 0 18px rgba(37, 99, 235, 0.25);
+}
+
+body.complaints-page .user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    min-width: 130px;
+}
+
+body.complaints-page .user-info strong {
+    color: #f8fafc;
+    font-size: 14px;
+    font-weight: 650;
+}
+
+body.complaints-page .user-info span {
+    color: #64748b;
+    font-size: 11px;
 }
 
 
-.priority-badge.low {
-    background: rgba(73, 166, 255, 0.10);
+/* LOGOUT */
 
-    color: #55aaff;
+body.complaints-page .logout-btn {
+    margin-left: 8px;
+
+    padding: 9px 15px;
+
+    color: #cbd5e1;
+    text-decoration: none;
+
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 8px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    transition: all 0.2s ease;
+}
+
+body.complaints-page .logout-btn:hover {
+    color: #ffffff;
+    border-color: rgba(59, 130, 246, 0.55);
+    background: rgba(37, 99, 235, 0.10);
 }
 
 
-/* DESCRIPTION */
+/* =========================================================
+   MAIN CONTAINER
+   ========================================================= */
 
-.officer-description {
-    margin: 0 0 12px;
+body.complaints-page main.complaints-page {
+    width: min(1400px, calc(100% - 80px));
+    margin: 0 auto;
 
-    color: #7e8999;
+    padding: 60px 0 80px;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+body.complaints-page .page-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 30px;
+
+    margin-bottom: 38px;
+}
+
+body.complaints-page .section-label {
+    display: inline-block;
+
+    margin-bottom: 12px;
+
+    color: #3b82f6;
 
     font-size: 12px;
+    font-weight: 750;
+    letter-spacing: 1.7px;
+    text-transform: uppercase;
+}
 
-    line-height: 1.5;
+body.complaints-page .page-header h1 {
+    margin: 0;
 
-    max-width: 720px;
+    color: #f8fafc;
+
+    font-size: clamp(32px, 4vw, 52px);
+    line-height: 1.05;
+
+    letter-spacing: -1.8px;
+    font-weight: 750;
+}
+
+body.complaints-page .page-header h1 span {
+    color: #3b82f6;
+}
+
+body.complaints-page .page-header p {
+    max-width: 650px;
+
+    margin: 15px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+body.complaints-page .back-link {
+    flex-shrink: 0;
+
+    color: #60a5fa;
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    transition: color 0.2s ease;
+}
+
+body.complaints-page .back-link:hover {
+    color: #93c5fd;
 }
 
 
-/* META */
+/* =========================================================
+   STATS
+   ========================================================= */
 
-.officer-complaint-meta {
-    display: flex;
+body.complaints-page .complaint-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
 
-    flex-wrap: wrap;
-
-    gap: 15px;
+    margin-bottom: 24px;
 }
 
+body.complaints-page .complaint-stat-card {
+    padding: 24px;
 
-.officer-complaint-meta span {
-    color: #687485;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(15, 23, 42, 0.94),
+            rgba(9, 14, 22, 0.94)
+        );
+
+    border: 1px solid rgba(148, 163, 184, 0.13);
+    border-radius: 14px;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease;
+}
+
+body.complaints-page .complaint-stat-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(59, 130, 246, 0.35);
+}
+
+body.complaints-page .complaint-stat-card span {
+    display: block;
+
+    color: #94a3b8;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+body.complaints-page .complaint-stat-card strong {
+    display: block;
+
+    margin-top: 8px;
+
+    color: #f8fafc;
+
+    font-size: 32px;
+    line-height: 1;
+
+    font-weight: 750;
+}
+
+body.complaints-page .complaint-stat-card small {
+    display: block;
+
+    margin-top: 9px;
+
+    color: #64748b;
 
     font-size: 11px;
 }
 
 
-/* ACTION */
+/* =========================================================
+   FILTER CARD
+   ========================================================= */
 
-.officer-complaint-action {
-    flex-shrink: 0;
-}
-
-
-.view-complaint-btn {
-    display: inline-block;
-
-    padding: 10px 14px;
-
-    background: #151c25;
-
-    border: 1px solid #303b49;
-
-    border-radius: 8px;
-
-    color: #4ca8ff;
-
-    text-decoration: none;
-
-    font-size: 12px;
-
-    transition: 0.2s;
-}
-
-
-.view-complaint-btn:hover {
-    background: rgba(55, 151, 239, 0.10);
-
-    border-color: #397eaf;
-
-    color: #ffffff;
-}
-
-
-/* PAGINATION */
-
-.officer-pagination {
+body.complaints-page .complaints-filter-card {
     display: flex;
-
-    justify-content: center;
-
     align-items: center;
+    justify-content: space-between;
+    gap: 18px;
 
-    gap: 7px;
+    padding: 18px;
 
-    margin-top: 30px;
+    margin-bottom: 24px;
+
+    background: rgba(12, 18, 27, 0.88);
+
+    border: 1px solid rgba(148, 163, 184, 0.13);
+    border-radius: 14px;
+}
+
+body.complaints-page .search-box {
+    position: relative;
+    flex: 1;
+    min-width: 250px;
+}
+
+body.complaints-page .search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: #64748b;
+
+    font-size: 21px;
+}
+
+body.complaints-page .search-box input {
+    width: 100%;
+    height: 46px;
+
+    padding: 0 15px 0 43px;
+
+    background: #080d14;
+
+    color: #f8fafc;
+
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    border-radius: 9px;
+
+    outline: none;
+
+    font-size: 13px;
+
+    box-sizing: border-box;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+body.complaints-page .search-box input::placeholder {
+    color: #475569;
+}
+
+body.complaints-page .search-box input:focus {
+    border-color: rgba(59, 130, 246, 0.7);
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.10);
 }
 
 
-.officer-pagination button {
-    min-width: 34px;
+/* FILTER SELECTS */
 
-    height: 34px;
+body.complaints-page .filter-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-    padding: 0 10px;
+body.complaints-page .filter-row select {
+    height: 46px;
 
-    border: 1px solid #2a333f;
+    min-width: 150px;
 
-    border-radius: 7px;
+    padding: 0 34px 0 13px;
 
-    background: #11151c;
+    background: #080d14;
+    color: #cbd5e1;
 
-    color: #7e8999;
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    border-radius: 9px;
+
+    outline: none;
+
+    font-size: 13px;
 
     cursor: pointer;
 }
 
+body.complaints-page .filter-row select:focus {
+    border-color: rgba(59, 130, 246, 0.65);
+}
 
-.officer-pagination button:hover:not(:disabled) {
-    border-color: #3d8bc8;
 
+/* =========================================================
+   TABS
+   ========================================================= */
+
+body.complaints-page .complaint-tabs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    margin-bottom: 20px;
+
+    border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+body.complaints-page .complaint-tabs button {
+    position: relative;
+
+    padding: 13px 17px;
+
+    background: transparent;
+    color: #64748b;
+
+    border: 0;
+
+    font-size: 13px;
+    font-weight: 650;
+
+    cursor: pointer;
+}
+
+body.complaints-page .complaint-tabs button span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 22px;
+    height: 20px;
+
+    margin-left: 6px;
+    padding: 0 6px;
+
+    background: rgba(148, 163, 184, 0.10);
+
+    color: #94a3b8;
+
+    border-radius: 20px;
+
+    font-size: 10px;
+}
+
+body.complaints-page .complaint-tabs button:hover {
+    color: #cbd5e1;
+}
+
+body.complaints-page .complaint-tabs button.active {
+    color: #60a5fa;
+}
+
+body.complaints-page .complaint-tabs button.active::after {
+    content: "";
+
+    position: absolute;
+
+    left: 12px;
+    right: 12px;
+    bottom: -1px;
+
+    height: 2px;
+
+    background: #3b82f6;
+
+    border-radius: 2px;
+}
+
+
+/* =========================================================
+   COMPLAINT LIST
+   ========================================================= */
+
+body.complaints-page .officer-complaints-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+body.complaints-page .officer-complaint-card {
+    padding: 25px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(15, 23, 42, 0.92),
+            rgba(8, 13, 20, 0.96)
+        );
+
+    border: 1px solid rgba(148, 163, 184, 0.13);
+    border-radius: 15px;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+body.complaints-page .officer-complaint-card:hover {
+    transform: translateY(-2px);
+
+    border-color: rgba(59, 130, 246, 0.35);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(17, 27, 45, 0.95),
+            rgba(8, 13, 20, 0.98)
+        );
+}
+
+
+/* CARD TOP */
+
+body.complaints-page .complaint-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    gap: 25px;
+}
+
+body.complaints-page .complaint-id {
+    margin-bottom: 8px;
+
+    color: #3b82f6;
+
+    font-size: 11px;
+    font-weight: 750;
+
+    letter-spacing: 1px;
+}
+
+body.complaints-page .complaint-card-top h2 {
+    margin: 0;
+
+    color: #f8fafc;
+
+    font-size: 20px;
+    line-height: 1.3;
+
+    font-weight: 700;
+}
+
+body.complaints-page .complaint-category {
+    display: inline-block;
+
+    margin-top: 9px;
+
+    color: #64748b;
+
+    font-size: 12px;
+    font-weight: 550;
+}
+
+
+/* BADGES */
+
+body.complaints-page .complaint-badges {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    flex-shrink: 0;
+}
+
+body.complaints-page .priority-badge,
+body.complaints-page .status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 27px;
+
+    padding: 0 10px;
+
+    border-radius: 6px;
+
+    font-size: 10px;
+    font-weight: 750;
+
+    letter-spacing: 0.6px;
+}
+
+
+/* PRIORITY */
+
+body.complaints-page .priority-badge.high {
+    background: rgba(239, 68, 68, 0.12);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.18);
+}
+
+body.complaints-page .priority-badge.medium {
+    background: rgba(245, 158, 11, 0.12);
+    color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.18);
+}
+
+body.complaints-page .priority-badge.low {
+    background: rgba(34, 197, 94, 0.10);
+    color: #4ade80;
+    border: 1px solid rgba(34, 197, 94, 0.17);
+}
+
+
+/* STATUS */
+
+body.complaints-page .status-badge.reported {
+    background: rgba(59, 130, 246, 0.11);
+    color: #60a5fa;
+    border: 1px solid rgba(59, 130, 246, 0.18);
+}
+
+body.complaints-page .status-badge.in-progress {
+    background: rgba(168, 85, 247, 0.11);
+    color: #c084fc;
+    border: 1px solid rgba(168, 85, 247, 0.18);
+}
+
+body.complaints-page .status-badge.resolved {
+    background: rgba(34, 197, 94, 0.10);
+    color: #4ade80;
+    border: 1px solid rgba(34, 197, 94, 0.17);
+}
+
+
+/* =========================================================
+   DESCRIPTION
+   ========================================================= */
+
+body.complaints-page .complaint-description {
+    max-width: 900px;
+
+    margin: 20px 0 17px;
+
+    color: #94a3b8;
+
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+
+/* =========================================================
+   META
+   ========================================================= */
+
+body.complaints-page .complaint-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+
+    padding: 14px 0;
+
+    border-top: 1px solid rgba(148, 163, 184, 0.09);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.09);
+}
+
+body.complaints-page .complaint-meta span {
+    color: #64748b;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   CARD BOTTOM
+   ========================================================= */
+
+body.complaints-page .complaint-card-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-top: 17px;
+}
+
+body.complaints-page .priority-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+body.complaints-page .priority-info span {
+    color: #64748b;
+
+    font-size: 11px;
+}
+
+body.complaints-page .priority-info strong {
+    font-size: 11px;
+    letter-spacing: 0.5px;
+}
+
+body.complaints-page .high-text {
+    color: #f87171;
+}
+
+body.complaints-page .medium-text {
+    color: #fbbf24;
+}
+
+body.complaints-page .low-text {
+    color: #4ade80;
+}
+
+
+/* VIEW BUTTON */
+
+body.complaints-page .view-complaint-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px 17px;
+
+    background: rgba(37, 99, 235, 0.10);
+
+    color: #60a5fa;
+
+    border: 1px solid rgba(59, 130, 246, 0.22);
+    border-radius: 8px;
+
+    text-decoration: none;
+
+    font-size: 12px;
+    font-weight: 650;
+
+    transition: all 0.2s ease;
+}
+
+body.complaints-page .view-complaint-btn:hover {
+    background: #2563eb;
     color: #ffffff;
+
+    border-color: #2563eb;
+
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.20);
 }
 
 
-.officer-pagination button.active {
-    background: rgba(49, 143, 233, 0.12);
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
 
-    border-color: #378dd0;
-
-    color: #49a6ff;
+body.complaints-page .officer-complaint-card h2 {
+    color: #f8fafc;
 }
 
 
-.officer-pagination button:disabled {
-    opacity: 0.4;
+/* =========================================================
+   PAGINATION / RESULT COUNT
+   ========================================================= */
 
-    cursor: not-allowed;
+body.complaints-page .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-top: 28px;
+
+    color: #64748b;
+
+    font-size: 12px;
 }
 
 
-/* RESPONSIVE */
+/* =========================================================
+   FOOTER
+   ========================================================= */
 
-@media (max-width: 950px) {
+body.complaints-page .footer {
+    margin-top: 30px;
 
-    .complaints-search-row {
-        grid-template-columns: 1fr 1fr;
+    border-top: 1px solid rgba(148, 163, 184, 0.10);
+
+    background: rgba(5, 8, 12, 0.8);
+}
+
+body.complaints-page .footer-content {
+    width: min(1400px, calc(100% - 80px));
+
+    min-height: 100px;
+
+    margin: 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 25px;
+}
+
+body.complaints-page .footer strong {
+    color: #f8fafc;
+    font-size: 14px;
+}
+
+body.complaints-page .footer p {
+    margin: 5px 0 0;
+
+    color: #64748b;
+
+    font-size: 11px;
+}
+
+body.complaints-page .footer span {
+    color: #475569;
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   RESPONSIVE — TABLET
+   ========================================================= */
+
+@media (max-width: 1000px) {
+
+    body.complaints-page .nav-container,
+    body.complaints-page main.complaints-page,
+    body.complaints-page .footer-content {
+        width: min(100% - 40px, 900px);
     }
 
-    .complaints-search {
-        grid-column: 1 / -1;
+
+    body.complaints-page .complaint-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+
+    body.complaints-page .complaints-filter-card {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+
+    body.complaints-page .filter-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+
+    body.complaints-page .filter-row select {
+        width: 100%;
+        min-width: 0;
+    }
+
+
+    body.complaints-page .nav-user .user-info {
+        display: none;
     }
 
 }
 
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+   ========================================================= */
 
 @media (max-width: 700px) {
 
-    .complaints-page-header {
-        flex-direction: column;
-
-        align-items: flex-start;
+    body.complaints-page .nav-container,
+    body.complaints-page main.complaints-page,
+    body.complaints-page .footer-content {
+        width: calc(100% - 28px);
     }
 
-    .complaints-search-row {
+
+    body.complaints-page .nav-container {
+        min-height: 68px;
+
+        gap: 10px;
+    }
+
+
+    body.complaints-page .nav-links {
+        gap: 2px;
+    }
+
+
+    body.complaints-page .nav-links a {
+        padding: 8px 9px;
+
+        font-size: 12px;
+    }
+
+
+    body.complaints-page .nav-links a.active::after {
+        left: 8px;
+        right: 8px;
+        bottom: -20px;
+    }
+
+
+    body.complaints-page .logout-btn {
+        display: none;
+    }
+
+
+    body.complaints-page main.complaints-page {
+        padding-top: 40px;
+    }
+
+
+    body.complaints-page .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+
+        margin-bottom: 28px;
+    }
+
+
+    body.complaints-page .page-header h1 {
+        font-size: 34px;
+    }
+
+
+    body.complaints-page .complaint-stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+
+    body.complaints-page .complaint-stat-card {
+        padding: 18px;
+    }
+
+
+    body.complaints-page .complaint-stat-card strong {
+        font-size: 27px;
+    }
+
+
+    body.complaints-page .filter-row {
         grid-template-columns: 1fr;
     }
 
-    .complaints-search {
-        grid-column: auto;
-    }
 
-    .officer-filter-tabs {
+    body.complaints-page .complaint-tabs {
         overflow-x: auto;
     }
 
-    .officer-filter-tab {
+
+    body.complaints-page .complaint-tabs button {
         white-space: nowrap;
     }
 
-    .officer-complaint-card {
-        align-items: flex-start;
 
+    body.complaints-page .officer-complaint-card {
+        padding: 18px;
+    }
+
+
+    body.complaints-page .complaint-card-top {
+        flex-direction: column;
+        gap: 14px;
+    }
+
+
+    body.complaints-page .complaint-badges {
+        flex-wrap: wrap;
+    }
+
+
+    body.complaints-page .complaint-card-top h2 {
+        font-size: 17px;
+    }
+
+
+    body.complaints-page .complaint-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+
+    body.complaints-page .complaint-card-bottom {
+        align-items: flex-start;
         flex-direction: column;
     }
 
-    .officer-complaint-main {
-        align-items: flex-start;
+
+    body.complaints-page .view-complaint-btn {
+        width: 100%;
     }
 
-    .officer-complaint-title {
+
+    body.complaints-page .footer-content {
+        padding: 20px 0;
+
         flex-direction: column;
-    }
-
-    .officer-complaint-action {
-        width: 100%;
-    }
-
-    .view-complaint-btn {
-        width: 100%;
-
-        box-sizing: border-box;
-
-        text-align: center;
+        align-items: flex-start;
     }
 
 }
 
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 430px) {
+
+    body.complaints-page .complaint-stats {
+        grid-template-columns: 1fr;
+    }
+
+
+    body.complaints-page .logo {
+        font-size: 17px;
+    }
+
+
+    body.complaints-page .logo-mark {
+        width: 27px;
+        height: 27px;
+
+        font-size: 19px;
+    }
+
+
+    body.complaints-page .nav-links a {
+        padding: 7px 6px;
+
+        font-size: 11px;
+    }
+
+}
 /* =========================================================
    OFFICER COMPLAINT DETAILS
    ========================================================= */

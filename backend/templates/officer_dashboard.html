@@ -39,24 +39,24 @@ dashboard-page
 
     <div class="dashboard-user">
 
-        <div class="user-avatar officer-avatar">
-            OF
-        </div>
-
         <div class="user-info">
 
             <strong>
-                Rahul Sharma
+                {{ officer.full_name }}
             </strong>
 
             <span>
-                Road & Infrastructure
+                {{ officer.get_department_display }}
             </span>
 
         </div>
 
+        <div class="user-avatar officer-avatar">
+            {{ initials }}
+        </div>
+
         <a
-            href="{% url 'officer_login' %}"
+            href="{% url 'officer_logout' %}"
             class="logout-btn"
         >
             Logout
@@ -83,7 +83,7 @@ dashboard-page
             </p>
 
             <h1>
-                Welcome back, Rahul 👋
+                Welcome back, {{ officer.full_name }} 👋
             </h1>
 
             <p>
@@ -123,7 +123,7 @@ dashboard-page
                 </span>
 
                 <h2>
-                    18
+                    {{ total_assigned }}
                 </h2>
 
             </div>
@@ -146,7 +146,7 @@ dashboard-page
                 </span>
 
                 <h2>
-                    5
+                    {{ pending_count }}
                 </h2>
 
             </div>
@@ -169,7 +169,7 @@ dashboard-page
                 </span>
 
                 <h2>
-                    7
+                    {{ in_progress_count }}
                 </h2>
 
             </div>
@@ -192,7 +192,7 @@ dashboard-page
                 </span>
 
                 <h2>
-                    6
+                    {{ resolved_count }}
                 </h2>
 
             </div>
@@ -234,14 +234,14 @@ dashboard-page
             </div>
 
 
-            <!-- ================= COMPLAINT 1 ================= -->
+            {% for complaint in recent_complaints %}
 
             <div class="complaint-item">
 
                 <div class="complaint-image road-image">
 
                     <span>
-                        ROAD
+                        {{ complaint.get_category_display }}
                     </span>
 
                 </div>
@@ -252,33 +252,50 @@ dashboard-page
                     <div class="complaint-title-row">
 
                         <h3>
-                            Large Pothole on Main Road
+                            {{ complaint.title }}
                         </h3>
 
-                        <span class="status-badge progress">
-                            In Progress
-                        </span>
+
+                        {% if complaint.status == "reported" %}
+
+                            <span class="status-badge reported">
+                                Reported
+                            </span>
+
+                        {% elif complaint.status == "in_progress" %}
+
+                            <span class="status-badge progress">
+                                In Progress
+                            </span>
+
+                        {% elif complaint.status == "resolved" %}
+
+                            <span class="status-badge resolved">
+                                Resolved
+                            </span>
+
+                        {% endif %}
 
                     </div>
 
 
                     <p>
-                        Near Vijay Nagar Square, Indore
+                        {{ complaint.address }}
                     </p>
 
 
                     <div class="complaint-meta">
 
                         <span>
-                            #FMC-000124
+                            #{{ complaint.complaint_id }}
                         </span>
 
                         <span>
-                            📅 02 Sep 2026
+                            📅 {{ complaint.created_at|date:"d M Y" }}
                         </span>
 
                         <span>
-                            ↑ 18 Upvotes
+                            ↑ {{ complaint.upvotes }} Upvotes
                         </span>
 
                     </div>
@@ -287,113 +304,25 @@ dashboard-page
 
             </div>
 
-
-            <!-- ================= COMPLAINT 2 ================= -->
+            {% empty %}
 
             <div class="complaint-item">
 
-                <div class="complaint-image road-image">
-
-                    <span>
-                        ROAD
-                    </span>
-
-                </div>
-
-
                 <div class="complaint-info">
 
-                    <div class="complaint-title-row">
-
-                        <h3>
-                            Damaged Road Near Square
-                        </h3>
-
-                        <span class="status-badge reported">
-                            Reported
-                        </span>
-
-                    </div>
-
+                    <h3>
+                        No complaints assigned yet
+                    </h3>
 
                     <p>
-                        Palasia Square, Indore
+                        Complaints assigned to you will appear here.
                     </p>
-
-
-                    <div class="complaint-meta">
-
-                        <span>
-                            #FMC-000128
-                        </span>
-
-                        <span>
-                            📅 04 Sep 2026
-                        </span>
-
-                        <span>
-                            ↑ 14 Upvotes
-                        </span>
-
-                    </div>
 
                 </div>
 
             </div>
 
-
-            <!-- ================= COMPLAINT 3 ================= -->
-
-            <div class="complaint-item">
-
-                <div class="complaint-image road-image">
-
-                    <span>
-                        ROAD
-                    </span>
-
-                </div>
-
-
-                <div class="complaint-info">
-
-                    <div class="complaint-title-row">
-
-                        <h3>
-                            Road Crack Near Bus Stop
-                        </h3>
-
-                        <span class="status-badge resolved">
-                            Resolved
-                        </span>
-
-                    </div>
-
-
-                    <p>
-                        Bhanwarkuan Main Road, Indore
-                    </p>
-
-
-                    <div class="complaint-meta">
-
-                        <span>
-                            #FMC-000121
-                        </span>
-
-                        <span>
-                            📅 30 Aug 2026
-                        </span>
-
-                        <span>
-                            ↑ 11 Upvotes
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </div>
+            {% endfor %}
 
 
         </div>
@@ -421,26 +350,30 @@ dashboard-page
             </div>
 
 
-            <!-- PRIORITY 1 -->
+            {% for complaint in priority_complaints %}
 
             <a
                 href="{% url 'officer_complaint_details' %}"
                 class="quick-action"
             >
 
-                <div class="priority-number high">
-                    01
+                <div class="priority-number {% if forloop.first %}high{% else %}medium{% endif %}">
+                    {% if forloop.counter < 10 %}
+                        0{{ forloop.counter }}
+                    {% else %}
+                        {{ forloop.counter }}
+                    {% endif %}
                 </div>
 
 
                 <div>
 
                     <h3>
-                        Large Pothole
+                        {{ complaint.title }}
                     </h3>
 
                     <p>
-                        18 community upvotes
+                        {{ complaint.upvotes }} community upvotes
                     </p>
 
                 </div>
@@ -452,69 +385,25 @@ dashboard-page
 
             </a>
 
+            {% empty %}
 
-            <!-- PRIORITY 2 -->
-
-            <a
-                href="{% url 'officer_complaint_details' %}"
-                class="quick-action"
-            >
-
-                <div class="priority-number medium">
-                    02
-                </div>
-
+            <div class="quick-action">
 
                 <div>
 
                     <h3>
-                        Damaged Road
+                        No priority issues
                     </h3>
 
                     <p>
-                        14 community upvotes
+                        No complaints are currently assigned.
                     </p>
 
                 </div>
 
+            </div>
 
-                <span>
-                    →
-                </span>
-
-            </a>
-
-
-            <!-- PRIORITY 3 -->
-
-            <a
-                href="{% url 'officer_complaint_details' %}"
-                class="quick-action"
-            >
-
-                <div class="priority-number medium">
-                    03
-                </div>
-
-
-                <div>
-
-                    <h3>
-                        Road Crack
-                    </h3>
-
-                    <p>
-                        11 community upvotes
-                    </p>
-
-                </div>
-
-
-                <span>
-                    →
-                </span>
-
-            </a>
+            {% endfor %}
 
 
         </div>
@@ -536,7 +425,7 @@ dashboard-page
                 </p>
 
                 <h2>
-                    Road & Infrastructure
+                    {{ officer.get_department_display }}
                 </h2>
 
                 <p class="section-description">
@@ -566,7 +455,7 @@ dashboard-page
                 </span>
 
                 <strong>
-                    18
+                    {{ total_assigned }}
                 </strong>
 
                 <small>
@@ -583,7 +472,7 @@ dashboard-page
                 </span>
 
                 <strong>
-                    5
+                    {{ pending_count }}
                 </strong>
 
                 <small>
@@ -600,7 +489,7 @@ dashboard-page
                 </span>
 
                 <strong>
-                    7
+                    {{ in_progress_count }}
                 </strong>
 
                 <small>
@@ -617,7 +506,7 @@ dashboard-page
                 </span>
 
                 <strong>
-                    6
+                    {{ resolved_count }}
                 </strong>
 
                 <small>
@@ -625,6 +514,7 @@ dashboard-page
                 </small>
 
             </div>
+
 
         </div>
 
@@ -753,6 +643,7 @@ dashboard-page
                 </div>
 
             </div>
+
 
         </div>
 

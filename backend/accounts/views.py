@@ -469,11 +469,7 @@ def officer_login(request):
     # Successful login
     login(request, user)
 
-    return JsonResponse({
-        "success": True,
-        "message": "Officer login successful.",
-        "redirect": "/officer-dashboard/"
-    })
+    return redirect("/officer-dashboard/")
 
 
 # =====================================================
@@ -481,15 +477,16 @@ def officer_login(request):
 # =====================================================
 
 def officer_dashboard(request):
+
     # User must be logged in
     if not request.user.is_authenticated:
         return redirect("/officer-login/")
 
-    # Only officers can access this dashboard
+    # Only officer can access
     if request.user.role != "officer":
         return redirect("/officer-login/")
 
-    # Get Officer profile
+    # Get officer profile
     try:
         officer = request.user.officer_profile
     except Officer.DoesNotExist:
@@ -501,25 +498,86 @@ def officer_dashboard(request):
         logout(request)
         return redirect("/officer-login/")
 
-    # Generate initials
+    # =================================================
+    # GET ASSIGNED COMPLAINTS
+    # =================================================
+
+    complaints = Complaint.objects.filter(
+        assigned_officer=officer
+    ).order_by("-created_at")
+
+    # =================================================
+    # DASHBOARD COUNTS
+    # =================================================
+
+    total_assigned = complaints.count()
+
+    pending_count = complaints.filter(
+        status="reported"
+    ).count()
+
+    in_progress_count = complaints.filter(
+        status="in_progress"
+    ).count()
+
+    resolved_count = complaints.filter(
+        status="resolved"
+    ).count()
+
+    # =================================================
+    # RECENT COMPLAINTS
+    # =================================================
+
+    recent_complaints = complaints[:3]
+
+    # =================================================
+    # PRIORITY COMPLAINTS
+    # Highest upvotes first
+    # =================================================
+
+    priority_complaints = complaints.order_by(
+        "-upvotes",
+        "-created_at"
+    )[:3]
+
+    # =================================================
+    # OFFICER INITIALS
+    # =================================================
+
     name_parts = officer.full_name.strip().split()
+
     if len(name_parts) >= 2:
-        initials = name_parts[0][0] + name_parts[1][0]
-    else:
+        initials = (
+            name_parts[0][0] +
+            name_parts[-1][0]
+        )
+    elif len(name_parts) == 1:
         initials = name_parts[0][0]
+    else:
+        initials = "O"
+
+    initials = initials.upper()
+
+    # =================================================
+    # SEND DATA TO TEMPLATE
+    # =================================================
 
     return render(
         request,
         "officer_dashboard.html",
         {
             "officer": officer,
-            "initials": initials.upper(),
+            "initials": initials,
+
+            "total_assigned": total_assigned,
+            "pending_count": pending_count,
+            "in_progress_count": in_progress_count,
+            "resolved_count": resolved_count,
+
+            "recent_complaints": recent_complaints,
+            "priority_complaints": priority_complaints,
         }
     )
-
-# =====================================================
-# OFFICER COMPLAINTS
-# =====================================================
 
 def officer_complaints(request):
     if not request.user.is_authenticated:
@@ -542,16 +600,54 @@ def officer_complaints(request):
         assigned_officer=officer
     ).order_by("-created_at")
 
+    total_count = complaints.count()
+
+    reported_count = complaints.filter(
+        status="reported"
+    ).count()
+
+    in_progress_count = complaints.filter(
+        status="in_progress"
+    ).count()
+
+    resolved_count = complaints.filter(
+        status="resolved"
+    ).count()
+
+    # Officer initials
+    name_parts = officer.full_name.strip().split()
+
+    if len(name_parts) >= 2:
+        initials = (
+            name_parts[0][0] +
+            name_parts[-1][0]
+        )
+
+    elif len(name_parts) == 1:
+        initials = name_parts[0][0]
+
+    else:
+        initials = "O"
+
+    initials = initials.upper()
+
     return render(
         request,
         "officer_complaints.html",
         {
             "officer": officer,
+            "initials": initials,
+
             "complaints": complaints,
+
+            "total_count": total_count,
+            "reported_count": reported_count,
+            "in_progress_count": in_progress_count,
+            "resolved_count": resolved_count,
+
+            "category_choices": Complaint.CATEGORY_CHOICES,
         }
     )
-
-
 # =====================================================
 # OFFICER COMPLAINT DETAILS
 # =====================================================
