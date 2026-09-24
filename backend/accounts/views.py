@@ -517,6 +517,77 @@ def officer_dashboard(request):
         }
     )
 
+# =====================================================
+# OFFICER COMPLAINTS
+# =====================================================
+
+def officer_complaints(request):
+    if not request.user.is_authenticated:
+        return redirect("/officer-login/")
+
+    if request.user.role != "officer":
+        return redirect("/officer-login/")
+
+    try:
+        officer = request.user.officer_profile
+    except Officer.DoesNotExist:
+        logout(request)
+        return redirect("/officer-login/")
+
+    if not officer.is_approved:
+        logout(request)
+        return redirect("/officer-login/")
+
+    complaints = Complaint.objects.filter(
+        assigned_officer=officer
+    ).order_by("-created_at")
+
+    return render(
+        request,
+        "officer_complaints.html",
+        {
+            "officer": officer,
+            "complaints": complaints,
+        }
+    )
+
+
+# =====================================================
+# OFFICER COMPLAINT DETAILS
+# =====================================================
+
+def officer_complaint_details(request):
+    if not request.user.is_authenticated:
+        return redirect("/officer-login/")
+
+    if request.user.role != "officer":
+        return redirect("/officer-login/")
+
+    try:
+        officer = request.user.officer_profile
+    except Officer.DoesNotExist:
+        logout(request)
+        return redirect("/officer-login/")
+
+    if not officer.is_approved:
+        logout(request)
+        return redirect("/officer-login/")
+
+    complaint = Complaint.objects.filter(
+        assigned_officer=officer
+    ).order_by("-created_at").first()
+
+    if not complaint:
+        return redirect("/officer-complaints/")
+
+    return render(
+        request,
+        "officer_complaint_details.html",
+        {
+            "officer": officer,
+            "complaint": complaint,
+        }
+    )
 
 # =====================================================
 # OFFICER LOGOUT
