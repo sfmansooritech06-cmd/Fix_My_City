@@ -112,12 +112,20 @@ auth-page
             </div>
 
 
-            <!-- MESSAGE -->
+            <!-- SERVER ERROR MESSAGE -->
 
-            <div
-                id="adminLoginMessage"
-                style="display: none;"
-            ></div>
+            {% if error %}
+                <div
+                    id="adminLoginMessage"
+                    style="
+                        display: block;
+                        color: #ef4444;
+                        margin-bottom: 15px;
+                    "
+                >
+                    {{ error }}
+                </div>
+            {% endif %}
 
 
             <!-- LOGIN BUTTON -->
@@ -147,77 +155,4 @@ auth-page
 
 {% endblock %}
 
-
-{% block extra_js %}
-
-<script>
-
-const adminLoginForm =
-    document.getElementById("adminLoginForm");
-
-const adminLoginMessage =
-    document.getElementById("adminLoginMessage");
-
-
-adminLoginForm.addEventListener("submit", async function(event) {
-
-    event.preventDefault();
-
-    const formData = new FormData(adminLoginForm);
-
-    try {
-
-        const response = await fetch(
-            adminLoginForm.action,
-            {
-                method: "POST",
-                body: formData,
-                headers: {
-                    "X-Requested-With": "XMLHttpRequest"
-                }
-            }
-        );
-
-        const data = await response.json();
-
-        adminLoginMessage.style.display = "block";
-
-        adminLoginMessage.textContent =
-            data.message;
-
-
-        if (data.success) {
-
-            adminLoginMessage.style.color =
-                "#22c55e";
-
-            window.location.href =
-                data.redirect;
-
-        } else {
-
-            adminLoginMessage.style.color =
-                "#ef4444";
-
-        }
-
-    } catch (error) {
-
-        adminLoginMessage.style.display =
-            "block";
-
-        adminLoginMessage.style.color =
-            "#ef4444";
-
-        adminLoginMessage.textContent =
-            "Something went wrong. Please try again.";
-
-        console.error(error);
-
-    }
-
-});
-
-</script>
-
-{% endblock %}
+# jykjkja

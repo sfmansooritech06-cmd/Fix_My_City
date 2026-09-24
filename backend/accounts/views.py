@@ -1005,16 +1005,274 @@ def admin_officer_verification(request):
             "admin_initials": admin_initials,
         }
     )
+
+
 # =====================================================
 # ADMIN DASHBOARD
 # =====================================================
 
 def admin_dashboard(request):
+
+    # -------------------------------------------------
+    # ADMIN LOGIN CHECK
+    # -------------------------------------------------
+
     if not request.user.is_authenticated:
         return redirect("/admin-login/")
 
     if request.user.role != "admin":
         return redirect("/admin-login/")
+
+
+    # =================================================
+    # ADMIN INFORMATION
+    # =================================================
+
+    admin_name = request.user.username
+
+    if request.user.first_name:
+        admin_name = request.user.first_name
+
+    admin_initials = request.user.username[:2].upper()
+
+
+    # =================================================
+    # OFFICER DATA
+    # =================================================
+
+    # Pending officer registration requests
+    pending_officer_requests = (
+        Officer.objects
+        .select_related("user")
+        .filter(is_approved=False)
+        .order_by("-created_at")
+    )
+
+    pending_requests_count = pending_officer_requests.count()
+
+
+    # Approved officers
+    approved_officers = (
+        Officer.objects
+        .select_related("user")
+        .filter(is_approved=True)
+        .order_by("full_name")
+    )
+
+    approved_officers_count = approved_officers.count()
+
+
+    # =================================================
+    # DEPARTMENT STATISTICS
+    # =================================================
+
+    department_stats = []
+
+    departments = Officer.DEPARTMENT_CHOICES
+
+    for department_code, department_name in departments:
+
+        count = Officer.objects.filter(
+            department=department_code,
+            is_approved=True
+        ).count()
+
+        department_stats.append({
+            "name": department_name,
+            "code": department_code,
+            "count": count
+        })
+
+
+    # =================================================
+    # COMPLAINT DATA
+    # =================================================
+
+    total_complaints_count = Complaint.objects.count()
+
+    reported_count = Complaint.objects.filter(
+        status="reported"
+    ).count()
+
+    in_progress_count = Complaint.objects.filter(
+        status="in_progress"
+    ).count()
+
+    resolved_count = Complaint.objects.filter(
+        status="resolved"
+    ).count()
+
+    unassigned_count = Complaint.objects.filter(
+        assigned_officer__isnull=True
+    ).count()
+
+
+    # =================================================
+    # REGISTERED CITIZENS
+    # =================================================
+
+    citizens = (
+        Citizen.objects
+        .select_related("user")
+        .prefetch_related("complaints")
+        .order_by("-id")
+    )
+
+    citizen_list = []
+
+    for citizen in citizens:
+
+        complaints = list(
+            citizen.complaints.all()
+        )
+
+        categories = []
+
+        for complaint in complaints:
+
+            category = complaint.get_category_display()
+
+            if category not in categories:
+                categories.append(category)
+
+        citizen_list.append({
+
+            "id": citizen.id,
+
+            "full_name": citizen.full_name,
+
+            "citizen_id": citizen.citizen_id,
+
+            "email": citizen.user.email,
+
+            "phone": citizen.phone,
+
+            "categories": categories,
+
+            "complaint_count": len(complaints),
+
+            "created_at": citizen.user.date_joined,
+        })
+
+
+    total_citizens_count = len(citizen_list)
+
+
+    # =================================================
+    # RECENT COMPLAINTS
+    # =================================================
+
+    recent_complaints = (
+        Complaint.objects
+        .select_related(
+            "citizen",
+            "assigned_officer"
+        )
+        .order_by("-created_at")[:10]
+    )
+
+
+    # =================================================
+    # RECENT ACTIVITY
+    # =================================================
+
+    recent_activity = []
+
+    for complaint in recent_complaints:
+
+        citizen_name = complaint.citizen.full_name
+
+        recent_activity.append({
+
+            "type": "complaint",
+
+            "title": f"New complaint reported by {citizen_name}",
+
+            "description": complaint.title,
+
+            "complaint_id": complaint.complaint_id,
+
+            "status": complaint.get_status_display(),
+
+            "created_at": complaint.created_at,
+        })
+
+
+    # =================================================
+    # DASHBOARD CONTEXT---------
+    # =================================================
+
+
+
+    context = {
+
+        # Admin
+        "admin_name": admin_name,
+        "admin_initials": admin_initials,
+
+
+        # Officer
+        "pending_requests_count":
+            pending_requests_count,
+
+        "approved_officers_count":
+            approved_officers_count,
+
+        "pending_officer_requests":
+            pending_officer_requests,
+
+        "approved_officers":
+            approved_officers,
+
+
+        # Departments
+        "department_stats":
+            department_stats,
+
+
+        # Complaints
+        "total_complaints_count":
+            total_complaints_count,
+
+        "reported_count":
+            reported_count,
+
+        "in_progress_count":
+            in_progress_count,
+
+        "resolved_count":
+            resolved_count,
+
+        "unassigned_count":
+            unassigned_count,
+
+        "recent_complaints":
+            recent_complaints,
+
+
+        # Citizens
+        "citizens":
+            citizen_list,
+
+        "total_citizens_count":
+            total_citizens_count,
+
+
+        # Activity
+        "recent_activity":
+            recent_activity,
+    }
+
+
+    # =================================================
+    # RENDER ADMIN DASHBOARD
+    # =================================================
+
+    return render(
+        request,
+        "admin_dashboard.html",
+        context
+    )
 
     # =================================================
     # OFFICER STATS
