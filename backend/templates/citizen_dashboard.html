@@ -676,6 +676,112 @@ Citizen Dashboard | FixMyCity
 
 
     </main>
+    <div class="citizen-progress">
+
+    <div class="citizen-progress-header">
+
+        <span>
+            Complaint Progress
+        </span>
+
+        <strong>
+            {{ complaint.progress }}%
+        </strong>
+
+    </div>
+
+    <div class="citizen-progress-track">
+
+        <div
+            class="citizen-progress-fill"
+            style="width: {{ complaint.progress }}%;"
+        ></div>
+
+    </div>
+
+
+    <div class="citizen-progress-status">
+
+        {% if complaint.progress == 0 %}
+
+            Complaint Reported
+
+        {% elif complaint.progress < 100 %}
+
+            Complaint is being processed
+
+        {% else %}
+
+            Complaint Resolved
+
+        {% endif %}
+
+    </div>
+
+
+    {% if complaint.progress_note %}
+
+        <p class="progress-note">
+
+            <strong>Latest Update:</strong>
+
+            {{ complaint.progress_note }}
+
+        </p>
+
+    {% endif %}
+
+</div>
+<div class="citizen-timeline">
+
+    <div class="
+        timeline-step
+        {% if complaint.progress >= 0 %}active{% endif %}
+    ">
+        <span>✓</span>
+        <div>
+            <strong>Complaint Reported</strong>
+            <small>Complaint submitted successfully</small>
+        </div>
+    </div>
+
+
+    <div class="
+        timeline-step
+        {% if complaint.progress >= 25 %}active{% endif %}
+    ">
+        <span>✓</span>
+        <div>
+            <strong>Complaint Verified</strong>
+            <small>Officer has verified the complaint</small>
+        </div>
+    </div>
+
+
+    <div class="
+        timeline-step
+        {% if complaint.progress >= 50 %}active{% endif %}
+    ">
+        <span>✓</span>
+        <div>
+            <strong>Work In Progress</strong>
+            <small>Department is working on the issue</small>
+        </div>
+    </div>
+
+
+    <div class="
+        timeline-step
+        {% if complaint.progress >= 100 %}active{% endif %}
+    ">
+        <span>✓</span>
+        <div>
+            <strong>Resolved</strong>
+            <small>Complaint has been resolved</small>
+        </div>
+    </div>
+
+</div>
 
 
     <!-- ================= FOOTER ================= -->

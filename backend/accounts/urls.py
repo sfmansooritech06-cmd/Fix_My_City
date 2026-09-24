@@ -1,6 +1,7 @@
 from django.urls import path
 from . import views
 
+
 from .views import (
     home,
 
@@ -130,5 +131,11 @@ urlpatterns = [
     path("admin-login/submit/", admin_login, name="admin_login_submit"),
     path("admin-dashboard/", admin_dashboard, name="admin_dashboard"),
     path("admin-logout/", admin_logout, name="admin_logout"),
+    
+    path(
+    'officer/complaint/<str:complaint_id>/progress/',
+    views.update_complaint_progress,
+    name='update_complaint_progress'
+),
 
 ]

@@ -9092,9 +9092,126 @@ body > .skiptranslate {
 .photo-error.show {
     display: block;
 }
+<<<<<<< HEAD
+
+/* ================= PROGRESS TRACKER ================= */
+
+.progress-tracker-card {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 28px;
+    margin-top: 25px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.progress-header h2 {
+    margin: 5px 0 0;
+}
+
+.progress-percentage {
+    font-size: 32px;
+    font-weight: 700;
+}
+
+
+/* PROGRESS BAR */
+
+.progress-bar-container {
+    width: 100%;
+    height: 14px;
+    background: #e9ecef;
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 20px 0;
+}
+
+.progress-bar {
+    height: 100%;
+    border-radius: 20px;
+    transition: width 0.4s ease;
+}
+
+
+/* STATUS */
+
+.progress-status {
+    margin-bottom: 25px;
+}
+
+.progress-status-badge {
+    display: inline-block;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+/* FORM */
+
+.progress-update-form {
+    margin-top: 25px;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 15px;
+    box-sizing: border-box;
+}
+
+.form-group textarea {
+    resize: vertical;
+}
+
+.mini-progress {
+    margin-top: 12px;
+}
+
+.mini-progress-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.mini-progress-track {
+    height: 7px;
+    background: #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.mini-progress-fill {
+    height: 100%;
+    border-radius: 10px;
+=======
 .icon-red {
     color: var(--red);
     background: var(--red-bg);
+<<<<<<< HEAD
+>>>>>>> 5b5a3397f64efee9ab418c22beca3919ff34809b
+=======
 }
 /* =====================================================
    REGISTERED CITIZENS
@@ -9161,6 +9278,7 @@ body > .skiptranslate {
 .status-active {
     background: var(--green-bg);
     color: var(--green);
+<<<<<<< HEAD
 }
 /* =====================================================
    FIX: DEPARTMENT OFFICER TEXT VISIBILITY
@@ -9184,4 +9302,7 @@ body > .skiptranslate {
     color: #171b26 !important;
     background: #eef0f4 !important;
     font-weight: 700 !important;
+=======
+>>>>>>> 966cde263af1cf93584fef56de1f5a8003a69fa6
+>>>>>>> ab35ae0f79d80f1ed7cb7647b7f775784b2d65f3
 }
