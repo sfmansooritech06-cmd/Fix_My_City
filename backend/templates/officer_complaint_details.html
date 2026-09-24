@@ -638,6 +638,149 @@ officer-details-page
 
     </div>
 
+    <!-- ================= PROGRESS TRACKER ================= -->
+
+<section class="progress-tracker-card">
+
+    <div class="progress-header">
+
+        <div>
+            <p class="card-label">
+                COMPLAINT PROGRESS
+            </p>
+
+            <h2>
+                Track Complaint Progress
+            </h2>
+        </div>
+
+        <div class="progress-percentage">
+            {{ complaint.progress }}%
+        </div>
+
+    </div>
+
+
+    <!-- PROGRESS BAR -->
+
+    <div class="progress-bar-container">
+
+        <div
+            class="progress-bar"
+            style="width: {{ complaint.progress }}%;"
+        ></div>
+
+    </div>
+
+
+    <!-- STATUS -->
+
+    <div class="progress-status">
+
+        {% if complaint.progress == 0 %}
+
+            <span class="progress-status-badge reported">
+                Reported
+            </span>
+
+        {% elif complaint.progress < 100 %}
+
+            <span class="progress-status-badge progress">
+                In Progress
+            </span>
+
+        {% else %}
+
+            <span class="progress-status-badge resolved">
+                Resolved
+            </span>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- UPDATE FORM -->
+
+    <form
+        method="POST"
+        action="{% url 'update_complaint_progress' complaint.complaint_id %}"
+        class="progress-update-form"
+    >
+
+        {% csrf_token %}
+
+        <div class="form-group">
+
+            <label for="progress">
+                Progress Percentage
+            </label>
+
+            <input
+                type="number"
+                id="progress"
+                name="progress"
+                min="0"
+                max="100"
+                value="{{ complaint.progress }}"
+                required
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="progress_note">
+                Progress Update
+            </label>
+
+            <textarea
+                id="progress_note"
+                name="progress_note"
+                rows="4"
+                placeholder="Enter progress update..."
+            >{{ complaint.progress_note|default:"" }}</textarea>
+
+        </div>
+
+
+        <button
+            type="submit"
+            class="primary-dashboard-btn"
+        >
+            Update Progress
+        </button>
+
+    </form>
+
+</section>
+
+<div class="mini-progress">
+
+    <div class="mini-progress-header">
+
+        <span>Progress</span>
+
+        <strong>
+            {{ complaint.progress }}%
+        </strong>
+
+    </div>
+
+    <div class="mini-progress-track">
+
+        <div
+            class="mini-progress-fill"
+            style="width: {{ complaint.progress }}%;"
+        ></div>
+
+    </div>
+
+</div>
+
+    
+
 </main>
 
 

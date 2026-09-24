@@ -187,3 +187,11 @@ class Complaint(models.Model):
 
     def __str__(self):
         return f"{self.complaint_id} - {self.title}"
+    
+progress = models.PositiveIntegerField(default=0)
+
+progress_note = models.TextField(blank=True, null=True)
+
+progress_updated_at = models.DateTimeField(
+    auto_now=True
+)

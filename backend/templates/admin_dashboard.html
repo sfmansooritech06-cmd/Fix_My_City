@@ -486,4 +486,35 @@ dashboard-page
 
 })();
 </script>
+
+<div class="admin-progress">
+
+    <div class="progress-header">
+
+        <span>Progress</span>
+
+        <strong>
+            {{ complaint.progress }}%
+        </strong>
+
+    </div>
+
+    <div class="progress-bar-container">
+
+        <div
+            class="progress-bar"
+            style="width: {{ complaint.progress }}%;"
+        ></div>
+
+    </div>
+
+    {% if complaint.progress_note %}
+
+        <p>
+            {{ complaint.progress_note }}
+        </p>
+
+    {% endif %}
+
+</div>
 {% endblock %}

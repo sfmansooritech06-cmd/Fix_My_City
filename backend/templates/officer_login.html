@@ -13,12 +13,21 @@ auth-page
 <!-- =====================================================
      AUTH NAVBAR
 ===================================================== -->
-
 <header class="auth-navbar">
 
     <a href="{% url 'home' %}" class="auth-logo">
         FixMyCity
     </a>
+
+     <div class="nav-actions">
+
+            <a href="{% url 'login' %}"
+               class="login-btn">
+
+                Who are you?
+
+            </a>
+        </div>
 
     <a href="{% url 'login' %}" class="back-home">
         ← Back to Role Selection
@@ -30,14 +39,11 @@ auth-page
 <!-- =====================================================
      OFFICER LOGIN
 ===================================================== -->
-
 <main class="auth-container">
 
     <div class="login-card">
 
-
         <!-- ================= HEADING ================= -->
-
         <div class="auth-heading">
 
             <div class="auth-icon">
@@ -56,7 +62,6 @@ auth-page
 
 
         <!-- ================= LOGIN FORM ================= -->
-
         <form
             class="login-form"
             id="officerLoginForm"
@@ -68,7 +73,6 @@ auth-page
 
 
             <!-- EMPLOYEE ID -->
-
             <div class="form-group">
 
                 <label for="employee_id">
@@ -83,6 +87,7 @@ auth-page
                     maxlength="10"
                     pattern="[A-Za-z0-9]{1,10}"
                     title="Employee ID must contain only letters and numbers and cannot exceed 10 characters"
+                    autocomplete="username"
                     required
                 >
 
@@ -94,7 +99,6 @@ auth-page
 
 
             <!-- PASSWORD -->
-
             <div class="form-group">
 
                 <div class="password-label">
@@ -114,49 +118,27 @@ auth-page
                     id="password"
                     name="password"
                     placeholder="Enter your password"
+                    autocomplete="current-password"
                     required
                 >
 
             </div>
 
 
-            <!-- =================================================
-                 ERROR / SUCCESS MESSAGE
-            ================================================= -->
-
-            <div
-                id="officerLoginMessage"
-                style="
-                    display: none;
-                    margin-bottom: 15px;
-                    padding: 10px 12px;
-                    border-radius: 8px;
-                    font-size: 14px;
-                "
-            ></div>
-
-
             <!-- LOGIN BUTTON -->
-
             <button
                 type="submit"
                 class="login-submit"
                 id="officerLoginButton"
             >
-
                 Sign In
-
-                <span>
-                    →
-                </span>
-
+                <span>→</span>
             </button>
 
         </form>
 
 
         <!-- ================= REGISTER ================= -->
-
         <div class="signup-text">
 
             <span>
@@ -171,7 +153,6 @@ auth-page
 
 
         <!-- ================= CITIZEN LOGIN ================= -->
-
         <div class="auth-back-link">
 
             <a href="{% url 'login' %}">
@@ -183,151 +164,5 @@ auth-page
     </div>
 
 </main>
-
-{% endblock %}
-
-
-<!-- =====================================================
-     OFFICER LOGIN JAVASCRIPT
-===================================================== -->
-
-{% block extra_js %}
-
-<script>
-
-(function () {
-
-    const form = document.getElementById("officerLoginForm");
-    const message = document.getElementById("officerLoginMessage");
-    const submitBtn = document.getElementById("officerLoginButton");
-
-
-    if (!form) {
-        return;
-    }
-
-
-    form.addEventListener("submit", async function (event) {
-
-        event.preventDefault();
-
-
-        // Hide previous message
-        message.style.display = "none";
-        message.textContent = "";
-
-
-        // Disable button
-        submitBtn.disabled = true;
-        submitBtn.style.opacity = "0.7";
-
-
-        const formData = new FormData(form);
-
-
-        try {
-
-            const response = await fetch(form.action, {
-
-                method: "POST",
-
-                body: formData,
-
-                headers: {
-                    "X-Requested-With": "XMLHttpRequest"
-                }
-
-            });
-
-
-            const data = await response.json();
-
-
-            // Show message
-            message.style.display = "block";
-            message.textContent = data.message || "Login failed.";
-
-
-            // =================================================
-            // LOGIN SUCCESS
-            // =================================================
-
-            if (data.success) {
-
-                message.style.color = "#22c55e";
-
-                message.style.backgroundColor =
-                    "rgba(34, 197, 94, 0.10)";
-
-                message.style.border =
-                    "1px solid rgba(34, 197, 94, 0.25)";
-
-
-                // Redirect to officer dashboard
-                setTimeout(function () {
-
-                    window.location.href = data.redirect;
-
-                }, 500);
-
-            }
-
-
-            // =================================================
-            // LOGIN FAILED
-            // =================================================
-
-            else {
-
-                message.style.color = "#ef4444";
-
-                message.style.backgroundColor =
-                    "rgba(239, 68, 68, 0.10)";
-
-                message.style.border =
-                    "1px solid rgba(239, 68, 68, 0.25)";
-
-
-                // Enable button again
-                submitBtn.disabled = false;
-                submitBtn.style.opacity = "1";
-
-
-                // Focus password field
-                document.getElementById("password").focus();
-
-            }
-
-
-        } catch (error) {
-
-            console.error("Officer login error:", error);
-
-
-            message.style.display = "block";
-
-            message.style.color = "#ef4444";
-
-            message.style.backgroundColor =
-                "rgba(239, 68, 68, 0.10)";
-
-            message.style.border =
-                "1px solid rgba(239, 68, 68, 0.25)";
-
-            message.textContent =
-                "Something went wrong. Please try again.";
-
-
-            // Enable button
-            submitBtn.disabled = false;
-            submitBtn.style.opacity = "1";
-
-        }
-
-    });
-
-})();
-
-</script>
 
 {% endblock %}

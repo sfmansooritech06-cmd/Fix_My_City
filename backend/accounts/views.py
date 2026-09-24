@@ -1,7 +1,8 @@
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.http import require_POST
+from django.contrib import messages
 
 from .models import User, Citizen, Officer, Complaint
 
@@ -1184,3 +1185,24 @@ def reject_officer(request, officer_id):
 def admin_logout(request):
     logout(request)
     return redirect("/admin-login/")
+
+#=====================================================
+#Progress Update for Complaint
+#=====================================================
+
+def update_complaint_progress(request, complaint_id):
+    complaint = get_object_or_404(Complaint, id=complaint_id)
+
+    if request.method == "POST":
+        progress = request.POST.get("progress")
+
+        if progress:
+            complaint.progress = int(progress)
+            complaint.save()
+
+            messages.success(
+                request,
+                "Complaint progress updated successfully."
+            )
+
+    return redirect("officer_dashboard")
