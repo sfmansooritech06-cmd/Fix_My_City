@@ -1541,6 +1541,177 @@ def admin_dashboard(request):
             "recent_activity": recent_activity,
         }
     )
+    # =========================================================
+# ADMIN - CATEGORY OFFICERS
+# =========================================================
+
+CATEGORY_DEPARTMENT_MAP = {
+    "pothole": "road",
+    "garbage": "sanitation",
+    "streetlight": "streetlight",
+    "water": "water",
+    "property": "property",
+    "other": "other",
+}
+
+
+def admin_category_view(request, department_code):
+
+    # Admin authentication
+    if not request.user.is_authenticated:
+        return redirect("/admin-login/")
+
+    if request.user.role != "admin":
+        return redirect("/admin-login/")
+
+    # Check valid department
+    department_dict = dict(Officer.DEPARTMENT_CHOICES)
+
+    if department_code not in department_dict:
+        return redirect("/admin-dashboard/")
+
+    department_name = department_dict[department_code]
+
+    # Approved officers of selected department
+    officers = (
+        Officer.objects
+        .select_related("user")
+        .filter(
+            department=department_code,
+            is_approved=True
+        )
+        .order_by("full_name")
+    )
+
+    # Find complaint categories belonging to this department
+    complaint_categories = [
+        category_code
+        for category_code, department in CATEGORY_DEPARTMENT_MAP.items()
+        if department == department_code
+    ]
+
+    # Unassigned complaints for this department/category
+    complaints = (
+        Complaint.objects
+        .select_related("citizen", "assigned_officer")
+        .filter(
+            category__in=complaint_categories,
+            assigned_officer__isnull=True
+        )
+        .order_by("-created_at")
+    )
+
+    # Already assigned complaints
+    assigned_complaints = (
+        Complaint.objects
+        .select_related("citizen", "assigned_officer")
+        .filter(
+            category__in=complaint_categories,
+            assigned_officer__isnull=False
+        )
+        .order_by("-updated_at")
+    )
+
+    context = {
+        "department_code": department_code,
+        "department_name": department_name,
+
+        "officers": officers,
+        "officer_count": officers.count(),
+
+        "complaints": complaints,
+        "complaint_count": complaints.count(),
+
+        "assigned_complaints": assigned_complaints,
+    }
+
+    return render(
+        request,
+        "admin_category.html",
+        context
+    )
+
+
+# =========================================================
+# ADMIN - ASSIGN COMPLAINT
+# =========================================================
+
+@require_POST
+def assign_complaint(request, complaint_id):
+
+    if not request.user.is_authenticated:
+        return JsonResponse({
+            "success": False,
+            "message": "Authentication required."
+        }, status=401)
+
+    if request.user.role != "admin":
+        return JsonResponse({
+            "success": False,
+            "message": "Unauthorized access."
+        }, status=403)
+
+    officer_id = request.POST.get("officer_id")
+
+    if not officer_id:
+        return JsonResponse({
+            "success": False,
+            "message": "Please select an officer."
+        }, status=400)
+
+    try:
+        complaint = Complaint.objects.get(
+            id=complaint_id
+        )
+    except Complaint.DoesNotExist:
+        return JsonResponse({
+            "success": False,
+            "message": "Complaint not found."
+        }, status=404)
+
+    try:
+        officer = Officer.objects.get(
+            id=officer_id,
+            is_approved=True
+        )
+    except Officer.DoesNotExist:
+        return JsonResponse({
+            "success": False,
+            "message": "Approved officer not found."
+        }, status=404)
+
+    # Category → Department validation
+    required_department = CATEGORY_DEPARTMENT_MAP.get(
+        complaint.category
+    )
+
+    if required_department != officer.department:
+        return JsonResponse({
+            "success": False,
+            "message": (
+                "This officer does not belong "
+                "to the required category."
+            )
+        }, status=400)
+
+    # Assign complaint
+    complaint.assigned_officer = officer
+
+    # When assigning a complaint, move it to in-progress
+    if complaint.status == "reported":
+        complaint.status = "in_progress"
+
+    complaint.save(
+        update_fields=[
+            "assigned_officer",
+            "status",
+            "updated_at"
+        ]
+    )
+
+    return redirect(
+        f"/admin-category/{officer.department}/"
+    )
 # =====================================================
 # ADMIN - APPROVE OFFICER
 # =====================================================
@@ -1626,6 +1797,67 @@ def reject_officer(request, officer_id):
         "message": "Officer registration rejected."
     })
 
+# =====================================================
+# ADMIN - ASSIGN COMPLAINT TO OFFICER
+# =====================================================
+
+@require_POST
+def assign_complaint(request, complaint_id):
+
+    if not request.user.is_authenticated:
+        return JsonResponse({
+            "success": False,
+            "message": "Authentication required."
+        }, status=401)
+
+    if request.user.role != "admin":
+        return JsonResponse({
+            "success": False,
+            "message": "Unauthorized access."
+        }, status=403)
+
+    try:
+        complaint = Complaint.objects.get(id=complaint_id)
+    except Complaint.DoesNotExist:
+        return JsonResponse({
+            "success": False,
+            "message": "Complaint not found."
+        }, status=404)
+
+    officer_id = request.POST.get("officer_id")
+
+    if not officer_id:
+        return JsonResponse({
+            "success": False,
+            "message": "Please select an officer."
+        }, status=400)
+
+    try:
+        officer = Officer.objects.get(
+            id=officer_id,
+            is_approved=True
+        )
+    except Officer.DoesNotExist:
+        return JsonResponse({
+            "success": False,
+            "message": "Approved officer not found."
+        }, status=404)
+
+    complaint.assigned_officer = officer
+    complaint.save(
+        update_fields=[
+            "assigned_officer",
+            "updated_at"
+        ]
+    )
+
+    return JsonResponse({
+        "success": True,
+        "message": (
+            f"Complaint {complaint.complaint_id} "
+            f"assigned to {officer.full_name}."
+        )
+    })
 
 # =====================================================
 # ADMIN LOGOUT

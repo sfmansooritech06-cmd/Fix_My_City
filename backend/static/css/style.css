@@ -9162,3 +9162,26 @@ body > .skiptranslate {
     background: var(--green-bg);
     color: var(--green);
 }
+/* =====================================================
+   FIX: DEPARTMENT OFFICER TEXT VISIBILITY
+   ===================================================== */
+
+.department-list .department-row .department-info strong {
+    color: #171b26 !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    opacity: 1 !important;
+}
+
+.department-list .department-row .department-info span {
+    color: #5f6675 !important;
+    font-size: 10px !important;
+    font-weight: 500 !important;
+    opacity: 1 !important;
+}
+
+.department-list .department-row .department-count {
+    color: #171b26 !important;
+    background: #eef0f4 !important;
+    font-weight: 700 !important;
+}

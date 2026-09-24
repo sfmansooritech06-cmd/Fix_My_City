@@ -11,848 +11,1217 @@ dashboard-page
 {% block content %}
 
 <style>
-    /* =====================================================
-       FIXMYCITY ADMIN DASHBOARD
-       Magnific / Modern Flat Dashboard Style
-       ===================================================== */
 
-    :root {
-        --admin-bg: #f5f7fb;
-        --sidebar: #171b26;
-        --sidebar-hover: #252b39;
-        --sidebar-text: #9da5b5;
-        --sidebar-active: #ffffff;
+/* =====================================================
+   FIXMYCITY ADMIN DASHBOARD
+   ===================================================== */
 
-        --primary: #5b5ce2;
-        --primary-light: #eeefff;
+:root {
+    --admin-bg: #f5f7fb;
+    --sidebar: #171b26;
+    --sidebar-hover: #252b39;
+    --sidebar-text: #9da5b5;
 
-        --text: #202432;
-        --muted: #8a91a2;
-        --border: #e8eaf0;
-        --white: #ffffff;
+    --primary: #5b5ce2;
+    --primary-light: #eeefff;
 
-        --green: #28a66f;
-        --green-bg: #eaf8f1;
+    --text: #202432;
+    --muted: #707889;
+    --border: #e8eaf0;
+    --white: #ffffff;
 
-        --orange: #f39b38;
-        --orange-bg: #fff5e8;
+    --green: #28a66f;
+    --green-bg: #eaf8f1;
 
-        --red: #e05252;
-        --red-bg: #fff0f0;
+    --orange: #f39b38;
+    --orange-bg: #fff5e8;
 
-        --blue: #4c8fe8;
-        --blue-bg: #edf5ff;
+    --red: #e05252;
+    --red-bg: #fff0f0;
 
-        --shadow: 0 4px 20px rgba(25, 32, 56, 0.05);
+    --blue: #4c8fe8;
+    --blue-bg: #edf5ff;
+
+    --shadow: 0 4px 20px rgba(25, 32, 56, 0.05);
+}
+
+
+/* =====================================================
+   MAIN WRAPPER
+   ===================================================== */
+
+.admin-dashboard-wrapper {
+    display: flex;
+    min-height: 100vh;
+    background: var(--admin-bg);
+    color: var(--text);
+}
+
+.admin-dashboard-wrapper * {
+    box-sizing: border-box;
+}
+
+
+/* =====================================================
+   SIDEBAR
+   ===================================================== */
+
+.admin-sidebar {
+    width: 245px;
+    min-height: 100vh;
+    background: var(--sidebar);
+    color: white;
+
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    z-index: 1000;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 26px 16px;
+}
+
+.admin-brand {
+    padding: 4px 12px 34px;
+}
+
+.admin-brand a {
+    text-decoration: none;
+    color: white;
+
+    font-size: 23px;
+    font-weight: 800;
+}
+
+.admin-brand span {
+    color: #7778ef;
+}
+
+.sidebar-label {
+    color: #626a7b;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+
+    padding: 0 13px 10px;
+    text-transform: uppercase;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+
+    padding: 12px 13px;
+
+    border-radius: 9px;
+
+    color: var(--sidebar-text);
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    transition: 0.2s ease;
+}
+
+.sidebar-nav a:hover {
+    background: var(--sidebar-hover);
+    color: white;
+}
+
+.sidebar-nav a.active {
+    background: var(--primary);
+    color: white;
+}
+
+.sidebar-icon {
+    width: 19px;
+    text-align: center;
+    font-size: 15px;
+}
+
+.sidebar-bottom {
+    margin-top: auto;
+}
+
+.sidebar-divider {
+    height: 1px;
+    background: #2a2f3c;
+    margin: 20px 5px;
+}
+
+.admin-mini-profile {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+    padding: 10px 8px;
+}
+
+.admin-avatar {
+    width: 37px;
+    height: 37px;
+
+    border-radius: 50%;
+
+    background: var(--primary);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: white;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    flex-shrink: 0;
+}
+
+.admin-mini-info strong {
+    display: block;
+
+    color: white;
+
+    font-size: 12px;
+}
+
+.admin-mini-info span {
+    color: #777f90;
+    font-size: 10px;
+}
+
+.sidebar-logout {
+    display: block;
+
+    text-align: center;
+
+    margin-top: 10px;
+
+    padding: 9px;
+
+    border-radius: 8px;
+
+    background: #222735;
+
+    color: #b4bac7;
+
+    text-decoration: none;
+
+    font-size: 12px;
+}
+
+.sidebar-logout:hover {
+    background: #303646;
+    color: white;
+}
+
+
+/* =====================================================
+   MAIN
+   ===================================================== */
+
+.admin-main {
+    margin-left: 245px;
+
+    width: calc(100% - 245px);
+
+    min-height: 100vh;
+}
+
+
+/* =====================================================
+   TOPBAR
+   ===================================================== */
+
+.admin-topbar {
+    height: 72px;
+
+    background: white;
+
+    border-bottom: 1px solid var(--border);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 34px;
+
+    position: sticky;
+    top: 0;
+
+    z-index: 900;
+}
+
+.admin-search {
+    width: 310px;
+    position: relative;
+}
+
+.admin-search input {
+    width: 100%;
+
+    height: 39px;
+
+    border: 1px solid var(--border);
+
+    background: #f8f9fc;
+
+    border-radius: 8px;
+
+    padding: 0 15px 0 39px;
+
+    outline: none;
+
+    font-size: 13px;
+}
+
+.search-icon {
+    position: absolute;
+
+    left: 14px;
+    top: 10px;
+
+    color: #9299aa;
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+
+    gap: 17px;
+}
+
+.topbar-icon {
+    width: 35px;
+    height: 35px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 8px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #707789;
+
+    background: white;
+}
+
+.topbar-admin {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+}
+
+.topbar-admin-text strong {
+    display: block;
+
+    font-size: 12px;
+}
+
+.topbar-admin-text span {
+    display: block;
+
+    color: var(--muted);
+
+    font-size: 10px;
+
+    margin-top: 2px;
+}
+
+
+/* =====================================================
+   CONTENT
+   ===================================================== */
+
+.admin-content {
+    padding: 30px 34px 45px;
+
+    max-width: 1600px;
+
+    margin: auto;
+}
+
+.page-heading {
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: space-between;
+
+    margin-bottom: 26px;
+}
+
+.page-heading h1 {
+    margin: 0;
+
+    font-size: 27px;
+
+    color: var(--text);
+}
+
+.page-heading p {
+    margin: 7px 0 0;
+
+    color: var(--muted);
+
+    font-size: 13px;
+}
+
+.page-date {
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   STAT CARDS
+   ===================================================== */
+
+.stats-grid {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 18px;
+
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: 11px;
+
+    padding: 20px;
+
+    box-shadow: var(--shadow);
+
+    display: flex;
+
+    justify-content: space-between;
+}
+
+.stat-content span {
+    display: block;
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+    margin-bottom: 9px;
+}
+
+.stat-content strong {
+    display: block;
+
+    font-size: 27px;
+
+    color: var(--text);
+
+    margin-bottom: 9px;
+}
+
+.stat-content small {
+    color: #a0a6b3;
+
+    font-size: 10px;
+}
+
+.stat-icon-box {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 9px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 17px;
+}
+
+.icon-purple {
+    color: var(--primary);
+    background: var(--primary-light);
+}
+
+.icon-orange {
+    color: var(--orange);
+    background: var(--orange-bg);
+}
+
+.icon-blue {
+    color: var(--blue);
+    background: var(--blue-bg);
+}
+
+.icon-green {
+    color: var(--green);
+    background: var(--green-bg);
+}
+
+.icon-red {
+    color: var(--red);
+    background: var(--red-bg);
+}
+
+
+/* =====================================================
+   DASHBOARD CARDS
+   ===================================================== */
+
+.dashboard-card {
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: 11px;
+
+    box-shadow: var(--shadow);
+
+    margin-bottom: 22px;
+
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 20px 22px;
+
+    border-bottom: 1px solid var(--border);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+.card-header h2 {
+    margin: 0;
+
+    font-size: 16px;
+
+    color: var(--text);
+}
+
+.card-header p {
+    margin: 5px 0 0;
+
+    color: var(--muted);
+
+    font-size: 11px;
+}
+
+.count-badge {
+    background: var(--primary-light);
+
+    color: var(--primary);
+
+    padding: 6px 10px;
+
+    border-radius: 6px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+.view-link {
+    color: var(--primary);
+
+    text-decoration: none;
+
+    font-size: 11px;
+
+    font-weight: 600;
+}
+
+
+/* =====================================================
+   TABLE
+   ===================================================== */
+
+.request-table {
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+.request-table th {
+    background: #fafbfc;
+
+    color: #9198a7;
+
+    text-align: left;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    padding: 12px 20px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.request-table td {
+    padding: 14px 20px;
+
+    border-bottom: 1px solid #f0f1f4;
+
+    color: #555c6d;
+
+    font-size: 12px;
+}
+
+.officer-cell {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.table-avatar {
+    width: 32px;
+    height: 32px;
+
+    border-radius: 8px;
+
+    background: var(--primary-light);
+
+    color: var(--primary);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 10px;
+
+    font-weight: 700;
+}
+
+.officer-cell strong {
+    display: block;
+
+    color: var(--text);
+
+    font-size: 12px;
+}
+
+.officer-cell span {
+    display: block;
+
+    color: var(--muted);
+
+    font-size: 10px;
+
+    margin-top: 2px;
+}
+
+.department-tag {
+    display: inline-block;
+
+    background: #f4f5f8;
+
+    color: #697080;
+
+    border-radius: 5px;
+
+    padding: 5px 8px;
+
+    font-size: 10px;
+}
+
+.request-actions {
+    display: flex;
+
+    gap: 6px;
+}
+
+.approve-btn,
+.reject-btn {
+    border: none;
+
+    border-radius: 6px;
+
+    padding: 7px 10px;
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.approve-btn {
+    background: var(--green-bg);
+
+    color: var(--green);
+}
+
+.reject-btn {
+    background: var(--red-bg);
+
+    color: var(--red);
+}
+
+.empty-row {
+    text-align: center !important;
+
+    padding: 28px !important;
+
+    color: var(--muted) !important;
+}
+
+
+/* =====================================================
+   TWO COLUMN
+   ===================================================== */
+
+.two-column {
+    display: grid;
+
+    grid-template-columns: 1.15fr 0.85fr;
+
+    gap: 22px;
+
+    margin-bottom: 22px;
+}
+
+
+/* =====================================================
+   DEPARTMENT LIST
+   ===================================================== */
+
+.department-list {
+    padding: 6px 20px;
+}
+
+.department-row {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 15px 0;
+
+    border-bottom: 1px solid #f0f1f4;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.department-row:hover {
+    background: #f7f7ff;
+
+    padding-left: 8px;
+    padding-right: 8px;
+
+    border-radius: 7px;
+}
+
+.department-row:last-child {
+    border-bottom: none;
+}
+
+.department-info strong {
+    display: block;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    color: #202432 !important;
+}
+
+.department-info span {
+    display: block;
+
+    font-size: 10px;
+
+    color: #6f7788 !important;
+
+    margin-top: 4px;
+}
+
+.department-count {
+    min-width: 38px;
+
+    height: 32px;
+
+    padding: 0 9px;
+
+    border-radius: 8px;
+
+    background: #f0f1f5;
+
+    color: #202432;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   OFFICER CATEGORY MODAL
+   ===================================================== */
+
+.officer-modal {
+    display: none;
+
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(15, 18, 27, 0.55);
+
+    z-index: 3000;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+}
+
+.officer-modal.show {
+    display: flex;
+}
+
+.officer-modal-box {
+    width: 100%;
+
+    max-width: 650px;
+
+    max-height: 80vh;
+
+    overflow-y: auto;
+
+    background: white;
+
+    border-radius: 14px;
+
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+
+.officer-modal-header {
+    padding: 20px 22px;
+
+    border-bottom: 1px solid var(--border);
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+.officer-modal-header h2 {
+    margin: 0;
+
+    font-size: 18px;
+
+    color: #202432;
+}
+
+.officer-modal-header p {
+    margin: 5px 0 0;
+
+    font-size: 11px;
+
+    color: var(--muted);
+}
+
+.close-modal {
+    border: none;
+
+    background: #f1f2f6;
+
+    width: 34px;
+    height: 34px;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-size: 16px;
+}
+
+.officer-modal-body {
+    padding: 20px;
+}
+
+.category-officer {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 14px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    margin-bottom: 10px;
+}
+
+.category-officer-left {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+.category-officer-avatar {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 10px;
+
+    background: var(--primary-light);
+
+    color: var(--primary);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 700;
+}
+
+.category-officer-name {
+    font-size: 13px;
+
+    font-weight: 700;
+
+    color: #202432;
+}
+
+.category-officer-info {
+    margin-top: 3px;
+
+    font-size: 10px;
+
+    color: #707889;
+}
+
+.assign-btn {
+    border: none;
+
+    background: var(--primary);
+
+    color: white;
+
+    padding: 8px 12px;
+
+    border-radius: 7px;
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.assign-btn:hover {
+    background: #494ad0;
+}
+
+.no-officer {
+    text-align: center;
+
+    padding: 30px 15px;
+
+    color: #707889;
+
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   COMPLAINT OVERVIEW
+   ===================================================== */
+
+.overview-list {
+    padding: 8px 20px;
+}
+
+.overview-row {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 15px 0;
+
+    border-bottom: 1px solid #f0f1f4;
+}
+
+.overview-row:last-child {
+    border-bottom: none;
+}
+
+.overview-label {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    color: #646b7a;
+
+    font-size: 12px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+}
+
+.dot-reported {
+    background: var(--orange);
+}
+
+.dot-progress {
+    background: var(--blue);
+}
+
+.dot-resolved {
+    background: var(--green);
+}
+
+.dot-unassigned {
+    background: var(--red);
+}
+
+.overview-row strong {
+    font-size: 14px;
+
+    color: var(--text);
+}
+
+
+/* =====================================================
+   RECENT ACTIVITY
+   ===================================================== */
+
+.activity-list {
+    padding: 4px 22px;
+}
+
+.activity-item {
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+
+    padding: 14px 0;
+
+    border-bottom: 1px solid #f0f1f4;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-icon {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 8px;
+
+    background: var(--primary-light);
+
+    color: var(--primary);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 13px;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-content strong {
+    display: block;
+
+    color: var(--text);
+
+    font-size: 12px;
+}
+
+.activity-content p {
+    margin: 3px 0 0;
+
+    color: var(--muted);
+
+    font-size: 10px;
+}
+
+.activity-time {
+    color: #a0a6b2;
+
+    font-size: 10px;
+}
+
+
+/* =====================================================
+   FOOTER
+   ===================================================== */
+
+.admin-footer {
+    padding: 20px 34px;
+
+    color: #9ba1ae;
+
+    font-size: 10px;
+
+    border-top: 1px solid var(--border);
+
+    background: white;
+
+    display: flex;
+
+    justify-content: space-between;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 1100px) {
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 
-    /* ---------- RESET ---------- */
-
-    .admin-dashboard-wrapper {
-        display: flex;
-        min-height: calc(100vh - 0px);
-        background: var(--admin-bg);
-        color: var(--text);
+    .two-column {
+        grid-template-columns: 1fr;
     }
+}
 
-    .admin-dashboard-wrapper * {
-        box-sizing: border-box;
-    }
-
-    /* ---------- SIDEBAR ---------- */
+@media (max-width: 800px) {
 
     .admin-sidebar {
-        width: 245px;
-        min-height: 100vh;
-        background: var(--sidebar);
-        color: white;
-        position: fixed;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        z-index: 1000;
-        display: flex;
-        flex-direction: column;
-        padding: 26px 16px;
-    }
+        width: 70px;
 
-    .admin-brand {
-        padding: 4px 12px 34px;
+        padding: 20px 9px;
     }
 
     .admin-brand a {
-        text-decoration: none;
-        color: white;
+        font-size: 0;
+    }
+
+    .admin-brand a::before {
+        content: "F";
+
         font-size: 23px;
-        font-weight: 800;
-        letter-spacing: -0.5px;
+
+        color: white;
     }
 
-    .admin-brand span {
-        color: #7778ef;
-    }
-
-    .sidebar-label {
-        color: #626a7b;
-        font-size: 10px;
-        font-weight: 700;
-        letter-spacing: 1.5px;
-        padding: 0 13px 10px;
-        text-transform: uppercase;
-    }
-
-    .sidebar-nav {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
+    .sidebar-label,
+    .sidebar-nav a span:not(.sidebar-icon),
+    .admin-mini-profile,
+    .sidebar-logout {
+        display: none;
     }
 
     .sidebar-nav a {
-        display: flex;
-        align-items: center;
-        gap: 13px;
-        padding: 12px 13px;
-        border-radius: 9px;
-        color: var(--sidebar-text);
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: 500;
-        transition: 0.2s ease;
-    }
-
-    .sidebar-nav a:hover {
-        background: var(--sidebar-hover);
-        color: white;
-    }
-
-    .sidebar-nav a.active {
-        background: var(--primary);
-        color: white;
-    }
-
-    .sidebar-icon {
-        width: 19px;
-        text-align: center;
-        font-size: 15px;
-    }
-
-    .sidebar-bottom {
-        margin-top: auto;
-    }
-
-    .sidebar-divider {
-        height: 1px;
-        background: #2a2f3c;
-        margin: 20px 5px;
-    }
-
-    .admin-mini-profile {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 10px 8px;
-    }
-
-    .admin-avatar {
-        width: 37px;
-        height: 37px;
-        border-radius: 50%;
-        background: var(--primary);
-        display: flex;
-        align-items: center;
         justify-content: center;
-        color: white;
-        font-size: 12px;
-        font-weight: 700;
-        flex-shrink: 0;
     }
-
-    .admin-mini-info {
-        min-width: 0;
-    }
-
-    .admin-mini-info strong {
-        display: block;
-        color: white;
-        font-size: 12px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .admin-mini-info span {
-        color: #777f90;
-        font-size: 10px;
-    }
-
-    .sidebar-logout {
-        display: block;
-        text-align: center;
-        margin-top: 10px;
-        padding: 9px;
-        border-radius: 8px;
-        background: #222735;
-        color: #b4bac7;
-        text-decoration: none;
-        font-size: 12px;
-        transition: 0.2s;
-    }
-
-    .sidebar-logout:hover {
-        background: #303646;
-        color: white;
-    }
-
-    /* ---------- MAIN AREA ---------- */
 
     .admin-main {
-        margin-left: 245px;
-        width: calc(100% - 245px);
-        min-height: 100vh;
+        margin-left: 70px;
+
+        width: calc(100% - 70px);
     }
-
-    /* ---------- TOPBAR ---------- */
-
-    .admin-topbar {
-        height: 72px;
-        background: white;
-        border-bottom: 1px solid var(--border);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 34px;
-        position: sticky;
-        top: 0;
-        z-index: 900;
-    }
-
-    .admin-search {
-        width: 310px;
-        position: relative;
-    }
-
-    .admin-search input {
-        width: 100%;
-        height: 39px;
-        border: 1px solid var(--border);
-        background: #f8f9fc;
-        border-radius: 8px;
-        padding: 0 15px 0 39px;
-        outline: none;
-        color: var(--text);
-        font-size: 13px;
-    }
-
-    .admin-search input:focus {
-        border-color: #b8b9f4;
-        background: white;
-    }
-
-    .search-icon {
-        position: absolute;
-        left: 14px;
-        top: 10px;
-        color: #9299aa;
-        font-size: 14px;
-    }
-
-    .topbar-right {
-        display: flex;
-        align-items: center;
-        gap: 17px;
-    }
-
-    .topbar-icon {
-        width: 35px;
-        height: 35px;
-        border: 1px solid var(--border);
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #707789;
-        background: white;
-        font-size: 14px;
-    }
-
-    .topbar-admin {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-        padding-left: 5px;
-    }
-
-    .topbar-admin-text strong {
-        display: block;
-        font-size: 12px;
-        color: var(--text);
-    }
-
-    .topbar-admin-text span {
-        display: block;
-        color: var(--muted);
-        font-size: 10px;
-        margin-top: 2px;
-    }
-
-    /* ---------- CONTENT ---------- */
 
     .admin-content {
-        padding: 30px 34px 45px;
-        max-width: 1600px;
-        margin: 0 auto;
+        padding: 24px 18px;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .stats-grid {
+        grid-template-columns: 1fr;
     }
 
     .page-heading {
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        margin-bottom: 26px;
-    }
+        flex-direction: column;
 
-    .page-heading h1 {
-        margin: 0;
-        font-size: 27px;
-        line-height: 1.2;
-        letter-spacing: -0.7px;
-        color: var(--text);
-    }
-
-    .page-heading p {
-        margin: 7px 0 0;
-        color: var(--muted);
-        font-size: 13px;
-    }
-
-    .page-date {
-        color: var(--muted);
-        font-size: 12px;
-    }
-
-    /* ---------- STAT CARDS ---------- */
-
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 18px;
-        margin-bottom: 24px;
-    }
-
-    .stat-card {
-        background: white;
-        border: 1px solid var(--border);
-        border-radius: 11px;
-        padding: 20px;
-        box-shadow: var(--shadow);
-        display: flex;
-        justify-content: space-between;
         align-items: flex-start;
+
+        gap: 8px;
     }
-
-    .stat-content span {
-        display: block;
-        color: var(--muted);
-        font-size: 12px;
-        font-weight: 500;
-        margin-bottom: 9px;
-    }
-
-    .stat-content strong {
-        display: block;
-        font-size: 27px;
-        color: var(--text);
-        line-height: 1;
-        margin-bottom: 9px;
-    }
-
-    .stat-content small {
-        color: #a0a6b3;
-        font-size: 10px;
-    }
-
-    .stat-icon-box {
-        width: 40px;
-        height: 40px;
-        border-radius: 9px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 17px;
-        font-weight: 700;
-    }
-
-    .icon-purple {
-        color: var(--primary);
-        background: var(--primary-light);
-    }
-
-    .icon-orange {
-        color: var(--orange);
-        background: var(--orange-bg);
-    }
-
-    .icon-blue {
-        color: var(--blue);
-        background: var(--blue-bg);
-    }
-
-    .icon-green {
-        color: var(--green);
-        background: var(--green-bg);
-    }
-
-    /* ---------- SECTION CARDS ---------- */
-
-    .dashboard-card {
-        background: white;
-        border: 1px solid var(--border);
-        border-radius: 11px;
-        box-shadow: var(--shadow);
-        margin-bottom: 22px;
-        overflow: hidden;
-    }
-
-    .card-header {
-        padding: 20px 22px;
-        border-bottom: 1px solid var(--border);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .card-header h2 {
-        margin: 0;
-        font-size: 16px;
-        color: var(--text);
-        letter-spacing: -0.2px;
-    }
-
-    .card-header p {
-        margin: 5px 0 0;
-        color: var(--muted);
-        font-size: 11px;
-    }
-
-    .card-header-right {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-    }
-
-    .count-badge {
-        background: var(--primary-light);
-        color: var(--primary);
-        padding: 6px 10px;
-        border-radius: 6px;
-        font-size: 11px;
-        font-weight: 700;
-    }
-
-    .view-link {
-        color: var(--primary);
-        text-decoration: none;
-        font-size: 11px;
-        font-weight: 600;
-    }
-
-    /* ---------- OFFICER REQUESTS ---------- */
 
     .request-table {
-        width: 100%;
-        border-collapse: collapse;
+        min-width: 750px;
     }
 
-    .request-table th {
-        background: #fafbfc;
-        color: #9198a7;
-        text-align: left;
-        font-size: 10px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.6px;
-        padding: 12px 20px;
-        border-bottom: 1px solid var(--border);
+    .dashboard-card {
+        overflow-x: auto;
     }
 
-    .request-table td {
-        padding: 14px 20px;
-        border-bottom: 1px solid #f0f1f4;
-        color: #555c6d;
-        font-size: 12px;
-        vertical-align: middle;
+    .officer-modal-box {
+        max-height: 90vh;
     }
+}
 
-    .request-table tr:last-child td {
-        border-bottom: none;
-    }
-
-    .officer-cell {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .table-avatar {
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
-        background: var(--primary-light);
-        color: var(--primary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 10px;
-        font-weight: 700;
-        flex-shrink: 0;
-    }
-
-    .officer-cell strong {
-        display: block;
-        color: var(--text);
-        font-size: 12px;
-    }
-
-    .officer-cell span {
-        display: block;
-        color: var(--muted);
-        font-size: 10px;
-        margin-top: 2px;
-    }
-
-    .department-tag {
-        display: inline-block;
-        background: #f4f5f8;
-        color: #697080;
-        border-radius: 5px;
-        padding: 5px 8px;
-        font-size: 10px;
-    }
-
-    .request-actions {
-        display: flex;
-        gap: 6px;
-    }
-
-    .approve-btn,
-    .reject-btn {
-        border: none;
-        border-radius: 6px;
-        padding: 7px 10px;
-        font-size: 10px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: 0.2s;
-    }
-
-    .approve-btn {
-        background: var(--green-bg);
-        color: var(--green);
-    }
-
-    .approve-btn:hover {
-        background: #d8f3e6;
-    }
-
-    .reject-btn {
-        background: var(--red-bg);
-        color: var(--red);
-    }
-
-    .reject-btn:hover {
-        background: #ffe0e0;
-    }
-
-    .empty-row {
-        text-align: center !important;
-        padding: 28px !important;
-        color: var(--muted) !important;
-    }
-
-    /* ---------- TWO COLUMN ---------- */
-
-    .two-column {
-        display: grid;
-        grid-template-columns: 1.15fr 0.85fr;
-        gap: 22px;
-        margin-bottom: 22px;
-    }
-
-    /* ---------- OFFICER DEPARTMENTS ---------- */
-
-    .department-list {
-        padding: 6px 20px;
-    }
-
-    .department-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 14px 0;
-        border-bottom: 1px solid #f0f1f4;
-    }
-
-    .department-row:last-child {
-        border-bottom: none;
-    }
-
-    .department-info strong {
-        display: block;
-        font-size: 12px;
-        color: var(--text);
-    }
-
-    .department-info span {
-        display: block;
-        font-size: 10px;
-        color: var(--muted);
-        margin-top: 4px;
-    }
-
-    .department-count {
-        min-width: 32px;
-        height: 28px;
-        padding: 0 8px;
-        border-radius: 7px;
-        background: #f2f3f7;
-        color: var(--text);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 11px;
-        font-weight: 700;
-    }
-
-    /* ---------- COMPLAINT OVERVIEW ---------- */
-
-    .overview-list {
-        padding: 8px 20px;
-    }
-
-    .overview-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px 0;
-        border-bottom: 1px solid #f0f1f4;
-    }
-
-    .overview-row:last-child {
-        border-bottom: none;
-    }
-
-    .overview-label {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-        color: #646b7a;
-        font-size: 12px;
-    }
-
-    .status-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        display: inline-block;
-    }
-
-    .dot-reported {
-        background: var(--orange);
-    }
-
-    .dot-progress {
-        background: var(--blue);
-    }
-
-    .dot-resolved {
-        background: var(--green);
-    }
-
-    .dot-unassigned {
-        background: var(--red);
-    }
-
-    .overview-row strong {
-        font-size: 14px;
-        color: var(--text);
-    }
-
-    /* ---------- RECENT ACTIVITY ---------- */
-
-    .activity-list {
-        padding: 4px 22px;
-    }
-
-    .activity-item {
-        display: flex;
-        align-items: center;
-        gap: 13px;
-        padding: 14px 0;
-        border-bottom: 1px solid #f0f1f4;
-    }
-
-    .activity-item:last-child {
-        border-bottom: none;
-    }
-
-    .activity-icon {
-        width: 34px;
-        height: 34px;
-        border-radius: 8px;
-        background: var(--primary-light);
-        color: var(--primary);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 13px;
-        flex-shrink: 0;
-    }
-
-    .activity-content {
-        flex: 1;
-        min-width: 0;
-    }
-
-    .activity-content strong {
-        display: block;
-        color: var(--text);
-        font-size: 12px;
-    }
-
-    .activity-content p {
-        margin: 3px 0 0;
-        color: var(--muted);
-        font-size: 10px;
-    }
-
-    .activity-time {
-        color: #a0a6b2;
-        font-size: 10px;
-        white-space: nowrap;
-    }
-
-    /* ---------- FOOTER ---------- */
-
-    .admin-footer {
-        padding: 20px 34px;
-        color: #9ba1ae;
-        font-size: 10px;
-        border-top: 1px solid var(--border);
-        background: white;
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .admin-footer strong {
-        color: #666d7d;
-    }
-
-    /* ---------- MOBILE ---------- */
-
-    @media (max-width: 1100px) {
-        .stats-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .two-column {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    @media (max-width: 800px) {
-        .admin-sidebar {
-            width: 70px;
-            padding: 20px 9px;
-        }
-
-        .admin-brand {
-            text-align: center;
-            padding: 4px 0 30px;
-        }
-
-        .admin-brand a {
-            font-size: 0;
-        }
-
-        .admin-brand a::before {
-            content: "F";
-            font-size: 23px;
-            color: white;
-        }
-
-        .sidebar-label,
-        .sidebar-nav a span:not(.sidebar-icon),
-        .admin-mini-profile,
-        .sidebar-logout {
-            display: none;
-        }
-
-        .sidebar-nav a {
-            justify-content: center;
-            padding: 13px 5px;
-        }
-
-        .admin-main {
-            margin-left: 70px;
-            width: calc(100% - 70px);
-        }
-
-        .admin-topbar {
-            padding: 0 18px;
-        }
-
-        .admin-search {
-            width: 220px;
-        }
-
-        .admin-content {
-            padding: 24px 18px;
-        }
-
-        .admin-footer {
-            padding: 18px;
-        }
-    }
-
-    @media (max-width: 600px) {
-        .stats-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .page-heading {
-            align-items: flex-start;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .admin-search {
-            width: 160px;
-        }
-
-        .topbar-admin-text {
-            display: none;
-        }
-
-        .request-table {
-            min-width: 750px;
-        }
-
-        .dashboard-card {
-            overflow-x: auto;
-        }
-
-        .card-header {
-            min-width: 500px;
-        }
-
-        .admin-footer {
-            flex-direction: column;
-            gap: 6px;
-        }
-    }
 </style>
 
 
+<!-- =====================================================
+     MAIN WRAPPER
+     ===================================================== -->
+
 <div class="admin-dashboard-wrapper">
+
 
     <!-- =====================================================
          SIDEBAR
@@ -861,35 +1230,51 @@ dashboard-page
     <aside class="admin-sidebar">
 
         <div class="admin-brand">
+
             <a href="{% url 'admin_dashboard' %}">
                 FixMy<span>City</span>
             </a>
+
         </div>
+
 
         <div class="sidebar-label">
             Main Menu
         </div>
 
+
         <nav class="sidebar-nav">
 
-            <a href="{% url 'admin_dashboard' %}" class="active">
+            <a
+                href="{% url 'admin_dashboard' %}"
+                class="active"
+            >
                 <span class="sidebar-icon">⌂</span>
                 <span>Dashboard</span>
             </a>
+
 
             <a href="{% url 'admin_officer_verification' %}">
                 <span class="sidebar-icon">◉</span>
                 <span>Officer Requests</span>
             </a>
 
+
             <a href="#officers">
                 <span class="sidebar-icon">♙</span>
                 <span>Officers</span>
             </a>
 
+
             <a href="#complaints">
                 <span class="sidebar-icon">▤</span>
                 <span>Complaints</span>
+            </a>
+
+
+            <a href="#citizens">
+                <span class="sidebar-icon">♙</span>
+                <span>Citizens</span>
             </a>
 
         </nav>
@@ -899,6 +1284,7 @@ dashboard-page
 
             <div class="sidebar-divider"></div>
 
+
             <div class="admin-mini-profile">
 
                 <div class="admin-avatar">
@@ -906,13 +1292,24 @@ dashboard-page
                 </div>
 
                 <div class="admin-mini-info">
-                    <strong>{{ admin_name }}</strong>
-                    <span>Administrator</span>
+
+                    <strong>
+                        {{ admin_name }}
+                    </strong>
+
+                    <span>
+                        Administrator
+                    </span>
+
                 </div>
 
             </div>
 
-            <a href="{% url 'admin_logout' %}" class="sidebar-logout">
+
+            <a
+                href="{% url 'admin_logout' %}"
+                class="sidebar-logout"
+            >
                 Logout
             </a>
 
@@ -921,11 +1318,13 @@ dashboard-page
     </aside>
 
 
+
     <!-- =====================================================
          MAIN
          ===================================================== -->
 
     <div class="admin-main">
+
 
         <!-- TOPBAR -->
 
@@ -933,7 +1332,9 @@ dashboard-page
 
             <div class="admin-search">
 
-                <span class="search-icon">⌕</span>
+                <span class="search-icon">
+                    ⌕
+                </span>
 
                 <input
                     type="text"
@@ -950,6 +1351,7 @@ dashboard-page
                     ♢
                 </div>
 
+
                 <div class="topbar-admin">
 
                     <div class="admin-avatar">
@@ -957,8 +1359,15 @@ dashboard-page
                     </div>
 
                     <div class="topbar-admin-text">
-                        <strong>{{ admin_name }}</strong>
-                        <span>System Administrator</span>
+
+                        <strong>
+                            {{ admin_name }}
+                        </strong>
+
+                        <span>
+                            System Administrator
+                        </span>
+
                     </div>
 
                 </div>
@@ -968,18 +1377,23 @@ dashboard-page
         </header>
 
 
-        <!-- CONTENT -->
+
+        <!-- =====================================================
+             CONTENT
+             ===================================================== -->
 
         <main class="admin-content">
 
 
-            <!-- PAGE HEADING -->
+            <!-- HEADING -->
 
             <section class="page-heading">
 
                 <div>
 
-                    <h1>Dashboard Overview</h1>
+                    <h1>
+                        Dashboard Overview
+                    </h1>
 
                     <p>
                         Monitor complaints, officers and FixMyCity operations.
@@ -994,6 +1408,7 @@ dashboard-page
             </section>
 
 
+
             <!-- =================================================
                  STATISTICS
                  ================================================= -->
@@ -1001,13 +1416,13 @@ dashboard-page
             <section class="stats-grid">
 
 
-                <!-- Pending Requests -->
-
                 <div class="stat-card">
 
                     <div class="stat-content">
 
-                        <span>Pending Requests</span>
+                        <span>
+                            Pending Requests
+                        </span>
 
                         <strong>
                             {{ pending_requests_count }}
@@ -1026,13 +1441,14 @@ dashboard-page
                 </div>
 
 
-                <!-- Approved Officers -->
 
                 <div class="stat-card">
 
                     <div class="stat-content">
 
-                        <span>Approved Officers</span>
+                        <span>
+                            Approved Officers
+                        </span>
 
                         <strong>
                             {{ approved_officers_count }}
@@ -1051,13 +1467,14 @@ dashboard-page
                 </div>
 
 
-                <!-- Total Complaints -->
 
                 <div class="stat-card">
 
                     <div class="stat-content">
 
-                        <span>Total Complaints</span>
+                        <span>
+                            Total Complaints
+                        </span>
 
                         <strong>
                             {{ total_complaints_count }}
@@ -1076,13 +1493,14 @@ dashboard-page
                 </div>
 
 
-                <!-- Unassigned -->
 
                 <div class="stat-card">
 
                     <div class="stat-content">
 
-                        <span>Unassigned</span>
+                        <span>
+                            Unassigned
+                        </span>
 
                         <strong>
                             {{ unassigned_count }}
@@ -1103,17 +1521,23 @@ dashboard-page
             </section>
 
 
+
             <!-- =================================================
                  PENDING OFFICER REQUESTS
                  ================================================= -->
 
-            <section class="dashboard-card" id="officer-requests">
+            <section
+                class="dashboard-card"
+                id="officer-requests"
+            >
 
                 <div class="card-header">
 
                     <div>
 
-                        <h2>Pending Officer Requests</h2>
+                        <h2>
+                            Pending Officer Requests
+                        </h2>
 
                         <p>
                             Review and approve newly registered officers.
@@ -1121,7 +1545,8 @@ dashboard-page
 
                     </div>
 
-                    <div class="card-header-right">
+
+                    <div>
 
                         <span class="count-badge">
                             {{ pending_requests_count }} Pending
@@ -1147,17 +1572,29 @@ dashboard-page
 
                             <tr>
 
-                                <th>Officer</th>
+                                <th>
+                                    Officer
+                                </th>
 
-                                <th>Employee ID</th>
+                                <th>
+                                    Employee ID
+                                </th>
 
-                                <th>Department</th>
+                                <th>
+                                    Department
+                                </th>
 
-                                <th>Contact</th>
+                                <th>
+                                    Contact
+                                </th>
 
-                                <th>Registered</th>
+                                <th>
+                                    Registered
+                                </th>
 
-                                <th>Action</th>
+                                <th>
+                                    Action
+                                </th>
 
                             </tr>
 
@@ -1178,7 +1615,9 @@ dashboard-page
                                     <div class="officer-cell">
 
                                         <div class="table-avatar">
-                                            {{ officer.initials }}
+
+                                            {{ officer.full_name|slice:":1"|upper }}
+
                                         </div>
 
                                         <div>
@@ -1206,7 +1645,9 @@ dashboard-page
                                 <td>
 
                                     <span class="department-tag">
-                                        {{ officer.department }}
+
+                                        {{ officer.get_department_display }}
+
                                     </span>
 
                                 </td>
@@ -1215,10 +1656,15 @@ dashboard-page
                                 <td>
 
                                     <div>
-                                        {{ officer.email }}
+                                        {{ officer.user.email }}
                                     </div>
 
-                                    <div style="margin-top:3px;color:#9aa0ad;">
+                                    <div
+                                        style="
+                                            margin-top:3px;
+                                            color:#9aa0ad;
+                                        "
+                                    >
                                         {{ officer.phone }}
                                     </div>
 
@@ -1237,13 +1683,16 @@ dashboard-page
                                         <button
                                             class="approve-btn"
                                             type="button"
+                                            onclick="approveOfficer({{ officer.id }})"
                                         >
                                             ✓ Approve
                                         </button>
 
+
                                         <button
                                             class="reject-btn"
                                             type="button"
+                                            onclick="rejectOfficer({{ officer.id }})"
                                         >
                                             ✕ Reject
                                         </button>
@@ -1278,6 +1727,7 @@ dashboard-page
             </section>
 
 
+
             <!-- =================================================
                  OFFICERS + COMPLAINT OVERVIEW
                  ================================================= -->
@@ -1296,13 +1746,16 @@ dashboard-page
 
                         <div>
 
-                            <h2>Department Officers</h2>
+                            <h2>
+                                Department Officers
+                            </h2>
 
                             <p>
-                                Active officer distribution.
+                                Click a category to view its approved officers.
                             </p>
 
                         </div>
+
 
                         <span class="count-badge">
                             {{ approved_officers_count }} Officers
@@ -1315,19 +1768,27 @@ dashboard-page
 
                         {% for dept in department_stats %}
 
-                        <div class="department-row">
+                        <div
+                            class="department-row"
+                            onclick="showCategoryOfficers(
+                                '{{ dept.code }}',
+                                '{{ dept.name|escapejs }}'
+                            )"
+                        >
 
                             <div class="department-info">
 
                                 <strong>
-                                    {{ dept.label }}
+                                    {{ dept.name }}
                                 </strong>
 
                                 <span>
-                                    {{ dept.description }}
+                                    {{ dept.count }}
+                                    active officer{{ dept.count|pluralize }}
                                 </span>
 
                             </div>
+
 
                             <div class="department-count">
                                 {{ dept.count }}
@@ -1337,14 +1798,7 @@ dashboard-page
 
                         {% empty %}
 
-                        <div
-                            style="
-                                padding:25px 0;
-                                text-align:center;
-                                color:#9299a7;
-                                font-size:12px;
-                            "
-                        >
+                        <div class="no-officer">
                             No officer data available.
                         </div>
 
@@ -1353,6 +1807,7 @@ dashboard-page
                     </div>
 
                 </div>
+
 
 
                 <!-- COMPLAINT OVERVIEW -->
@@ -1366,7 +1821,9 @@ dashboard-page
 
                         <div>
 
-                            <h2>Complaint Overview</h2>
+                            <h2>
+                                Complaint Overview
+                            </h2>
 
                             <p>
                                 Current complaint status.
@@ -1455,6 +1912,7 @@ dashboard-page
             </section>
 
 
+
             <!-- =================================================
                  RECENT ACTIVITY
                  ================================================= -->
@@ -1465,7 +1923,9 @@ dashboard-page
 
                     <div>
 
-                        <h2>Recent Activity</h2>
+                        <h2>
+                            Recent Activity
+                        </h2>
 
                         <p>
                             Latest activity in the FixMyCity system.
@@ -1483,7 +1943,7 @@ dashboard-page
                     <div class="activity-item">
 
                         <div class="activity-icon">
-                            {{ item.icon }}
+                            ⚡
                         </div>
 
 
@@ -1501,7 +1961,10 @@ dashboard-page
 
 
                         <span class="activity-time">
-                            {{ item.timestamp|timesince }} ago
+
+                            {{ item.created_at|timesince }}
+                            ago
+
                         </span>
 
                     </div>
@@ -1521,8 +1984,7 @@ dashboard-page
                             </strong>
 
                             <p>
-                                Activity will appear here as officers register
-                                and complaints come in.
+                                Activity will appear here as complaints come in.
                             </p>
 
                         </div>
@@ -1539,13 +2001,19 @@ dashboard-page
         </main>
 
 
+
         <!-- FOOTER -->
 
         <footer class="admin-footer">
 
             <div>
-                <strong>FixMyCity</strong>
+
+                <strong>
+                    FixMyCity
+                </strong>
+
                 — Making cities better, one complaint at a time.
+
             </div>
 
             <div>
@@ -1559,263 +2027,471 @@ dashboard-page
 </div>
 
 
+
+<!-- =====================================================
+     OFFICER CATEGORY MODAL
+     ===================================================== -->
+
+<div
+    class="officer-modal"
+    id="officerCategoryModal"
+>
+
+    <div class="officer-modal-box">
+
+
+        <div class="officer-modal-header">
+
+            <div>
+
+                <h2 id="modalCategoryName">
+                    Officers
+                </h2>
+
+                <p>
+                    Approved officers available for this category
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="close-modal"
+                onclick="closeOfficerModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div
+            class="officer-modal-body"
+            id="categoryOfficerList"
+        >
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
 {% endblock %}
 
 
+
 {% block extra_js %}
-
 <script>
-(function () {
-
-    /* =====================================================
-       CSRF TOKEN
-       ===================================================== */
-
-    function getCookie(name) {
-
-        let cookieValue = null;
-
-        if (document.cookie && document.cookie !== "") {
-
-            const cookies = document.cookie.split(";");
-
-            for (let i = 0; i < cookies.length; i++) {
-
-                const cookie = cookies[i].trim();
-
-                if (
-                    cookie.substring(
-                        0,
-                        name.length + 1
-                    ) === name + "="
-                ) {
-
-                    cookieValue = decodeURIComponent(
-                        cookie.substring(
-                            name.length + 1
-                        )
-                    );
-
-                    break;
-                }
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
             }
         }
+    }
+    return cookieValue;
+}
 
-        return cookieValue;
+const csrftoken = getCookie("csrftoken");
+
+function approveOfficer(officerId) {
+    fetch("/admin/approve-officer/" + officerId + "/", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": csrftoken,
+            "X-Requested-With": "XMLHttpRequest"
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.reload();
+        } else {
+            alert(data.message || "Unable to approve officer.");
+        }
+    })
+    .catch(() => alert("Unable to reach server."));
+}
+
+function rejectOfficer(officerId) {
+    if (!confirm("Reject this officer's registration? This cannot be undone.")) {
+        return;
     }
 
+    fetch("/admin/reject-officer/" + officerId + "/", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": csrftoken,
+            "X-Requested-With": "XMLHttpRequest"
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            window.location.reload();
+        } else {
+            alert(data.message || "Unable to reject officer.");
+        }
+    })
+    .catch(() => alert("Unable to reach server."));
+}
 
-    const csrftoken = getCookie("csrftoken");
+const approvedOfficers = [
+    {% for officer in approved_officers %}
+    {
+        id: "{{ officer.id }}",
+        name: "{{ officer.full_name|escapejs }}",
+        employeeId: "{{ officer.employee_id|escapejs }}",
+        department: "{{ officer.department|escapejs }}",
+        departmentName: "{{ officer.get_department_display|escapejs }}",
+        phone: "{{ officer.phone|escapejs }}",
+        email: "{{ officer.user.email|escapejs }}"
+    },
+    {% endfor %}
+];
 
+function showCategoryOfficers(departmentCode, departmentName) {
+    const modal = document.getElementById("officerCategoryModal");
+    const modalTitle = document.getElementById("modalCategoryName");
+    const officerList = document.getElementById("categoryOfficerList");
 
-    /* =====================================================
-       APPROVE / REJECT OFFICER
-       ===================================================== */
+    if (!modal || !modalTitle || !officerList) {
+        return;
+    }
 
-    function handleOfficerAction(
-        officerId,
-        action
-    ) {
+    modalTitle.textContent = departmentName;
 
-        const url =
-            action === "approve"
-                ? "/admin/approve-officer/" + officerId + "/"
-                : "/admin/reject-officer/" + officerId + "/";
+    const officers = approvedOfficers.filter(
+        officer => officer.department === departmentCode
+    );
 
+    officerList.innerHTML = "";
 
-        fetch(url, {
+    if (officers.length === 0) {
+        officerList.innerHTML = `
+            <div class="no-officer">
+                <strong>No approved officer available</strong>
+                <p>No officer is currently available for ${escapeHtml(departmentName)}.</p>
+            </div>
+        `;
+    } else {
+        officers.forEach(function(officer) {
+            const firstLetter = officer.name.charAt(0).toUpperCase();
 
-            method: "POST",
+            officerList.innerHTML += `
+                <div class="category-officer">
+                    <div class="category-officer-left">
+                        <div class="category-officer-avatar">
+                            ${escapeHtml(firstLetter)}
+                        </div>
+                        <div>
+                            <div class="category-officer-name">
+                                ${escapeHtml(officer.name)}
+                            </div>
+                            <div class="category-officer-info">
+                                Employee ID: ${escapeHtml(officer.employeeId)}
+                                <br>
+                                ${escapeHtml(officer.email)}
+                                <br>
+                                ${escapeHtml(officer.phone)}
+                            </div>
+                        </div>
+                    </div>
 
-            headers: {
-                "X-CSRFToken": csrftoken
-            }
-
-        })
-
-        .then(function (response) {
-
-            return response.json();
-
-        })
-
-        .then(function (data) {
-
-            if (data.success) {
-
-                /*
-                 * Reload dashboard so:
-                 * - stats
-                 * - pending count
-                 * - officer count
-                 * - department count
-                 *
-                 * stay synchronized with database.
-                 */
-
-                window.location.reload();
-
-            } else {
-
-                alert(
-                    data.message ||
-                    "Something went wrong. Please try again."
-                );
-
-            }
-
-        })
-
-        .catch(function () {
-
-            alert(
-                "Unable to reach the server. Please check your connection and try again."
-            );
-
+                    <button
+                        type="button"
+                        class="assign-btn"
+                        onclick="selectOfficerForAssignment(${officer.id})"
+                    >
+                        Assign Work
+                    </button>
+                </div>
+            `;
         });
-
     }
 
+    modal.classList.add("show");
+}
 
-    /* =====================================================
-       BUTTON EVENT HANDLER
-       ===================================================== */
+function closeOfficerModal() {
+    const modal = document.getElementById("officerCategoryModal");
+    if (modal) {
+        modal.classList.remove("show");
+    }
+}
 
-    const requestList =
-        document.getElementById(
-            "officerRequestList"
-        );
+/*
+ * Category officer modal is only for viewing approved officers.
+ * Actual complaint assignment is done from the Complaint Assignment table,
+ * where the complaint category automatically filters matching officers.
+ */
+function selectOfficerForAssignment(officerId) {
+    const officer = approvedOfficers.find(
+        item => String(item.id) === String(officerId)
+    );
 
+    closeOfficerModal();
 
-    if (requestList) {
-
-        requestList.addEventListener(
-            "click",
-            function (event) {
-
-                const approveBtn =
-                    event.target.closest(
-                        ".approve-btn"
-                    );
-
-                const rejectBtn =
-                    event.target.closest(
-                        ".reject-btn"
-                    );
-
-
-                if (
-                    !approveBtn &&
-                    !rejectBtn
-                ) {
-                    return;
-                }
-
-
-                const row =
-                    event.target.closest(
-                        ".officer-request"
-                    );
-
-
-                if (
-                    !row ||
-                    !row.dataset.officerId
-                ) {
-                    return;
-                }
-
-
-                const officerId =
-                    row.dataset.officerId;
-
-
-                if (approveBtn) {
-
-                    handleOfficerAction(
-                        officerId,
-                        "approve"
-                    );
-
-                }
-
-
-                else if (rejectBtn) {
-
-                    if (
-                        confirm(
-                            "Reject this officer's registration? This cannot be undone."
-                        )
-                    ) {
-
-                        handleOfficerAction(
-                            officerId,
-                            "reject"
-                        );
-
-                    }
-
-                }
-
-            }
-        );
-
+    if (!officer) {
+        alert("Officer information not found.");
+        return;
     }
 
+    const complaintManagement =
+        document.getElementById("complaint-management");
 
-    /* =====================================================
-       DASHBOARD SEARCH
-       ===================================================== */
-
-    const searchInput =
-        document.getElementById(
-            "dashboardSearch"
-        );
-
-
-    if (searchInput) {
-
-        searchInput.addEventListener(
-            "input",
-            function () {
-
-                const searchValue =
-                    this.value.toLowerCase().trim();
-
-
-                const rows =
-                    document.querySelectorAll(
-                        ".officer-request"
-                    );
-
-
-                rows.forEach(function (row) {
-
-                    const text =
-                        row.textContent.toLowerCase();
-
-
-                    if (
-                        !searchValue ||
-                        text.includes(searchValue)
-                    ) {
-
-                        row.style.display = "";
-
-                    } else {
-
-                        row.style.display = "none";
-
-                    }
-
-                });
-
-            }
-        );
-
+    if (complaintManagement) {
+        complaintManagement.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
     }
 
-})();
+    alert(
+        "Officer selected: " +
+        officer.name +
+        ". Now select a complaint from the Complaint Assignment section."
+    );
+}
+
+const officerCategoryModal = document.getElementById("officerCategoryModal");
+
+if (officerCategoryModal) {
+    officerCategoryModal.addEventListener("click", function(event) {
+        if (event.target === this) {
+            closeOfficerModal();
+        }
+    });
+}
+
+const searchInput = document.getElementById("dashboardSearch");
+
+if (searchInput) {
+    searchInput.addEventListener("input", function() {
+        const searchValue = this.value.toLowerCase().trim();
+        const rows = document.querySelectorAll(".officer-request");
+
+        rows.forEach(function(row) {
+            const text = row.textContent.toLowerCase();
+            row.style.display =
+                !searchValue || text.includes(searchValue) ? "" : "none";
+        });
+    });
+}
+
+const categoryDepartmentMap = {
+    pothole: "road",
+    garbage: "sanitation",
+    streetlight: "streetlight",
+    water: "water",
+    property: "property",
+    other: "other"
+};
+
+const complaintsData = [
+    {% for complaint in recent_complaints %}
+    {
+        id: "{{ complaint.id }}",
+        complaintId: "{{ complaint.complaint_id|escapejs }}",
+        title: "{{ complaint.title|escapejs }}",
+        category: "{{ complaint.category|escapejs }}",
+        assignedOfficerId:
+            {% if complaint.assigned_officer %}
+                "{{ complaint.assigned_officer.id }}"
+            {% else %}
+                null
+            {% endif %}
+    },
+    {% endfor %}
+];
+
+function openComplaintAssignmentModal(complaintId, categoryName, categoryCode) {
+    const modal = document.getElementById("assignmentModal");
+    const title = document.getElementById("assignmentModalTitle");
+    const subtitle = document.getElementById("assignmentModalSubtitle");
+    const list = document.getElementById("assignmentOfficerList");
+
+    if (!modal || !title || !subtitle || !list) {
+        return;
+    }
+
+    const expectedDepartment = categoryDepartmentMap[categoryCode];
+
+    const officers = approvedOfficers.filter(
+        officer => officer.department === expectedDepartment
+    );
+
+    title.textContent = "Assign Complaint " + getComplaintId(complaintId);
+
+    subtitle.textContent =
+        "Category: " +
+        categoryName +
+        " • Showing approved officers from the matching department.";
+
+    list.innerHTML = "";
+
+    if (officers.length === 0) {
+        list.innerHTML = `
+            <div class="assignment-no-officer">
+                <strong>No approved officer available</strong>
+                <span>
+                    No approved officer is registered for
+                    ${escapeHtml(categoryName)}.
+                </span>
+            </div>
+        `;
+    } else {
+        officers.forEach(function(officer) {
+            const firstLetter = officer.name.charAt(0).toUpperCase();
+
+            list.innerHTML += `
+                <div class="assignment-officer">
+                    <div class="assignment-officer-info">
+                        <div class="assignment-avatar">
+                            ${escapeHtml(firstLetter)}
+                        </div>
+
+                        <div class="assignment-officer-details">
+                            <strong>${escapeHtml(officer.name)}</strong>
+                            <span>
+                                Employee ID:
+                                ${escapeHtml(officer.employeeId)}
+                            </span>
+                            <span>
+                                ${escapeHtml(officer.departmentName)}
+                            </span>
+                        </div>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="assignment-action"
+                        onclick="assignComplaintToOfficer(${complaintId}, ${officer.id})"
+                    >
+                        Assign
+                    </button>
+                </div>
+            `;
+        });
+    }
+
+    modal.classList.add("show");
+}
+
+function assignComplaintToOfficer(complaintId, officerId) {
+    const complaint = complaintsData.find(
+        item => String(item.id) === String(complaintId)
+    );
+
+    const officer = approvedOfficers.find(
+        item => String(item.id) === String(officerId)
+    );
+
+    if (!complaint || !officer) {
+        alert("Complaint or officer information not found.");
+        return;
+    }
+
+    const expectedDepartment = categoryDepartmentMap[complaint.category];
+
+    if (officer.department !== expectedDepartment) {
+        alert("This officer does not belong to the required department.");
+        return;
+    }
+
+    const formData = new URLSearchParams();
+    formData.append("officer_id", String(officerId));
+
+    fetch("/admin/assign-complaint/" + complaintId + "/", {
+        method: "POST",
+        headers: {
+            "Content-Type":
+                "application/x-www-form-urlencoded; charset=UTF-8",
+            "X-CSRFToken": getCookie("csrftoken"),
+            "X-Requested-With": "XMLHttpRequest"
+        },
+        body: formData.toString()
+    })
+    .then(async response => {
+        const contentType = response.headers.get("content-type") || "";
+
+        if (!contentType.includes("application/json")) {
+            const text = await response.text();
+            throw new Error(
+                "Server returned an unexpected response. Check the Django backend."
+            );
+        }
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                data.message || "Unable to assign complaint."
+            );
+        }
+
+        return data;
+    })
+    .then(data => {
+        if (!data.success) {
+            throw new Error(
+                data.message || "Unable to assign complaint."
+            );
+        }
+
+        closeComplaintAssignmentModal();
+
+        alert(data.message || "Complaint assigned successfully.");
+
+        window.location.reload();
+    })
+    .catch(error => {
+        alert(error.message || "Unable to reach server.");
+    });
+}
+
+function closeComplaintAssignmentModal() {
+    const modal = document.getElementById("assignmentModal");
+
+    if (modal) {
+        modal.classList.remove("show");
+    }
+}
+
+function getComplaintId(complaintId) {
+    const complaint = complaintsData.find(
+        item => String(item.id) === String(complaintId)
+    );
+
+    return complaint ? complaint.complaintId : "#" + complaintId;
+}
+
+function escapeHtml(value) {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+const complaintAssignmentModal =
+    document.getElementById("assignmentModal");
+
+if (complaintAssignmentModal) {
+    complaintAssignmentModal.addEventListener("click", function(event) {
+        if (event.target === this) {
+            closeComplaintAssignmentModal();
+        }
+    });
+}
 </script>
-
 {% endblock %}

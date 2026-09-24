@@ -1,4 +1,5 @@
 from django.urls import path
+from . import views
 
 from .views import (
     home,
@@ -116,7 +117,11 @@ urlpatterns = [
     path("admin/officer-verification/", admin_officer_verification, name="admin_officer_verification"),
     path("admin/approve-officer/<int:officer_id>/", approve_officer, name="approve_officer"),
     path("admin/reject-officer/<int:officer_id>/", reject_officer, name="reject_officer"),
-
+    path(
+    "admin/assign-complaint/<int:complaint_id>/",
+    views.assign_complaint,
+    name="assign_complaint"
+    ),
 
     # =====================================================
     # ADMIN: LOGIN & DASHBOARD
