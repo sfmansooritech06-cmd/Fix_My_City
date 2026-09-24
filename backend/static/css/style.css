@@ -9092,3 +9092,7 @@ body > .skiptranslate {
 .photo-error.show {
     display: block;
 }
+.icon-red {
+    color: var(--red);
+    background: var(--red-bg);
+}
