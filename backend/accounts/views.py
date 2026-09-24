@@ -861,29 +861,44 @@ def admin_login_page(request):
 
 @require_POST
 def admin_login(request):
+
     admin_id = request.POST.get("admin_id", "").strip()
     password = request.POST.get("password", "")
 
+    # Empty fields
     if not admin_id or not password:
-        return JsonResponse({
-            "success": False,
-            "message": "Please enter Admin ID and password."
-        }, status=400)
+        return render(
+            request,
+            "admin_login.html",
+            {
+                "error": "Please enter Admin ID and password."
+            }
+        )
 
+    # Find admin user
     try:
         user = User.objects.get(username=admin_id)
+
     except User.DoesNotExist:
-        return JsonResponse({
-            "success": False,
-            "message": "Invalid Admin ID or password."
-        }, status=401)
+        return render(
+            request,
+            "admin_login.html",
+            {
+                "error": "Invalid Admin ID or password."
+            }
+        )
 
+    # Check admin role
     if user.role != "admin":
-        return JsonResponse({
-            "success": False,
-            "message": "You are not authorized as an admin."
-        }, status=403)
+        return render(
+            request,
+            "admin_login.html",
+            {
+                "error": "You are not authorized as an admin."
+            }
+        )
 
+    # Authenticate password
     authenticated_user = authenticate(
         request,
         username=user.username,
@@ -891,162 +906,29 @@ def admin_login(request):
     )
 
     if authenticated_user is None:
-        return JsonResponse({
-            "success": False,
-            "message": "Invalid Admin ID or password."
-        }, status=401)
+        return render(
+            request,
+            "admin_login.html",
+            {
+                "error": "Invalid Admin ID or password."
+            }
+        )
 
+    # Check active account
     if not user.is_active:
-        return JsonResponse({
-            "success": False,
-            "message": "Your admin account is inactive."
-        }, status=403)
+        return render(
+            request,
+            "admin_login.html",
+            {
+                "error": "Your admin account is inactive."
+            }
+        )
 
+    # Login user
     login(request, authenticated_user)
 
-    return JsonResponse({
-        "success": True,
-        "message": "Login successful.",
-        "redirect": "/admin-dashboard/"
-    })
-
-
-# =====================================================
-# ADMIN DASHBOARD
-# =====================================================
-
-def admin_dashboard(request):
-    if not request.user.is_authenticated:
-        return redirect("/admin-login/")
-
-    if request.user.role != "admin":
-        return redirect("/admin-login/")
-
-    # ---- Officer stats ----
-    pending_officers_qs = Officer.objects.filter(
-        is_approved=False
-    ).select_related("user").order_by("-created_at")
-
-    pending_requests_count = pending_officers_qs.count()
-    approved_officers_count = Officer.objects.filter(is_approved=True).count()
-
-    pending_officer_requests = []
-    for officer in pending_officers_qs[:4]:
-        name_parts = officer.full_name.strip().split()
-        if len(name_parts) >= 2:
-            initials = (name_parts[0][0] + name_parts[1][0]).upper()
-        elif name_parts:
-            initials = name_parts[0][0].upper()
-        else:
-            initials = "?"
-
-        pending_officer_requests.append({
-            "id": officer.id,
-            "initials": initials,
-            "full_name": officer.full_name,
-            "employee_id": officer.employee_id,
-            "email": officer.user.email,
-            "phone": officer.phone,
-            "department": officer.get_department_display(),
-            "created_at": officer.created_at,
-        })
-
-    # ---- Complaint stats ----
-    total_complaints_count = Complaint.objects.count()
-    reported_count = Complaint.objects.filter(status="reported").count()
-    in_progress_count = Complaint.objects.filter(status="in_progress").count()
-    resolved_count = Complaint.objects.filter(status="resolved").count()
-    unassigned_count = Complaint.objects.filter(
-        assigned_officer__isnull=True
-    ).count()
-
-    # ---- Department-wise approved officer counts ----
-    department_descriptions = {
-        "road": "Road and public infrastructure",
-        "sanitation": "Waste and cleanliness",
-        "streetlight": "Streetlight related issues",
-        "water": "Water leakage and supply",
-        "property": "Damaged public property",
-        "other": "Other civic issues",
-    }
-
-    department_stats = []
-    for code, label in Officer.DEPARTMENT_CHOICES:
-        department_stats.append({
-            "label": label,
-            "description": department_descriptions.get(code, ""),
-            "count": Officer.objects.filter(
-                department=code,
-                is_approved=True
-            ).count(),
-        })
-
-    # ---- Recent activity ----
-    activity_items = []
-    for officer in Officer.objects.order_by("-created_at")[:5]:
-        if officer.is_approved:
-            activity_items.append({
-                "icon": "✓",
-                "title": "Officer approved",
-                "description": f"{officer.full_name} ({officer.get_department_display()})",
-                "timestamp": officer.created_at,
-            })
-        else:
-            activity_items.append({
-                "icon": "!",
-                "title": "Officer registration request received",
-                "description": f"{officer.full_name} submitted a registration request.",
-                "timestamp": officer.created_at,
-            })
-
-    for complaint in Complaint.objects.order_by("-created_at")[:5]:
-        activity_items.append({
-            "icon": "↑",
-            "title": "Complaint received",
-            "description": f"{complaint.complaint_id} — {complaint.title}",
-            "timestamp": complaint.created_at,
-        })
-
-    for complaint in Complaint.objects.filter(
-        status="resolved"
-    ).order_by("-updated_at")[:5]:
-        activity_items.append({
-            "icon": "✓",
-            "title": "Complaint resolved",
-            "description": f"{complaint.complaint_id} marked as resolved.",
-            "timestamp": complaint.updated_at,
-        })
-
-    activity_items.sort(key=lambda item: item["timestamp"], reverse=True)
-    recent_activity = activity_items[:5]
-
-    # ---- Admin display info ----
-    admin_name = request.user.get_full_name() or request.user.username
-    name_parts = admin_name.strip().split()
-
-    if len(name_parts) >= 2:
-        admin_initials = (name_parts[0][0] + name_parts[1][0]).upper()
-    else:
-        admin_initials = name_parts[0][0].upper()
-
-    return render(
-        request,
-        "admin_dashboard.html",
-        {
-            "admin_name": admin_name,
-            "admin_initials": admin_initials,
-            "pending_requests_count": pending_requests_count,
-            "approved_officers_count": approved_officers_count,
-            "total_complaints_count": total_complaints_count,
-            "unassigned_count": unassigned_count,
-            "pending_officer_requests": pending_officer_requests,
-            "department_stats": department_stats,
-            "reported_count": reported_count,
-            "in_progress_count": in_progress_count,
-            "resolved_count": resolved_count,
-            "recent_activity": recent_activity,
-        }
-    )
+    # Direct dashboard redirect
+    return redirect("/admin-dashboard/")
 
 
 # =====================================================
@@ -1054,6 +936,7 @@ def admin_dashboard(request):
 # =====================================================
 
 def admin_officer_verification(request):
+
     if not request.user.is_authenticated:
         return redirect("/admin-login/")
 
@@ -1065,12 +948,20 @@ def admin_officer_verification(request):
     ).select_related("user").order_by("-created_at")
 
     pending_officers = []
+
     for officer in pending_officers_qs:
+
         name_parts = officer.full_name.strip().split()
+
         if len(name_parts) >= 2:
-            initials = (name_parts[0][0] + name_parts[1][0]).upper()
+            initials = (
+                name_parts[0][0] +
+                name_parts[-1][0]
+            ).upper()
+
         elif name_parts:
             initials = name_parts[0][0].upper()
+
         else:
             initials = "?"
 
@@ -1085,13 +976,24 @@ def admin_officer_verification(request):
             "created_at": officer.created_at,
         })
 
-    admin_name = request.user.get_full_name() or request.user.username
-    admin_name_parts = admin_name.strip().split()
+    admin_name = (
+        request.user.get_full_name()
+        or request.user.username
+    )
 
-    if len(admin_name_parts) >= 2:
-        admin_initials = (admin_name_parts[0][0] + admin_name_parts[1][0]).upper()
+    name_parts = admin_name.strip().split()
+
+    if len(name_parts) >= 2:
+        admin_initials = (
+            name_parts[0][0] +
+            name_parts[1][0]
+        ).upper()
+
+    elif name_parts:
+        admin_initials = name_parts[0][0].upper()
+
     else:
-        admin_initials = admin_name_parts[0][0].upper()
+        admin_initials = "A"
 
     return render(
         request,
@@ -1103,34 +1005,317 @@ def admin_officer_verification(request):
             "admin_initials": admin_initials,
         }
     )
-
-
 # =====================================================
-# ADMIN APPROVE OFFICER
+# ADMIN DASHBOARD
+# =====================================================
+
+def admin_dashboard(request):
+    if not request.user.is_authenticated:
+        return redirect("/admin-login/")
+
+    if request.user.role != "admin":
+        return redirect("/admin-login/")
+
+    # =================================================
+    # OFFICER STATS
+    # =================================================
+
+    pending_officers_qs = Officer.objects.filter(
+        is_approved=False
+    ).select_related("user").order_by("-created_at")
+
+    pending_requests_count = pending_officers_qs.count()
+
+    approved_officers_qs = Officer.objects.filter(
+        is_approved=True
+    ).select_related("user").order_by("full_name")
+
+    approved_officers_count = approved_officers_qs.count()
+
+    # =================================================
+    # PENDING OFFICER REQUESTS
+    # =================================================
+
+    pending_officer_requests = []
+
+    for officer in pending_officers_qs[:4]:
+
+        name_parts = officer.full_name.strip().split()
+
+        if len(name_parts) >= 2:
+            initials = (
+                name_parts[0][0] +
+                name_parts[1][0]
+            ).upper()
+
+        elif name_parts:
+            initials = name_parts[0][0].upper()
+
+        else:
+            initials = "?"
+
+        pending_officer_requests.append({
+            "id": officer.id,
+            "initials": initials,
+            "full_name": officer.full_name,
+            "employee_id": officer.employee_id,
+            "email": officer.user.email,
+            "phone": officer.phone,
+            "department": officer.get_department_display(),
+            "created_at": officer.created_at,
+        })
+
+    # =================================================
+    # APPROVED OFFICERS
+    # =================================================
+
+    approved_officers = []
+
+    for officer in approved_officers_qs:
+
+        name_parts = officer.full_name.strip().split()
+
+        if len(name_parts) >= 2:
+            initials = (
+                name_parts[0][0] +
+                name_parts[-1][0]
+            ).upper()
+
+        elif name_parts:
+            initials = name_parts[0][0].upper()
+
+        else:
+            initials = "?"
+
+        assigned_complaints_count = Complaint.objects.filter(
+            assigned_officer=officer
+        ).count()
+
+        approved_officers.append({
+            "id": officer.id,
+            "initials": initials,
+            "full_name": officer.full_name,
+            "employee_id": officer.employee_id,
+            "email": officer.user.email,
+            "phone": officer.phone,
+            "department": officer.get_department_display(),
+            "assigned_complaints_count": assigned_complaints_count,
+            "created_at": officer.created_at,
+        })
+
+    # =================================================
+    # COMPLAINT STATS
+    # =================================================
+
+    total_complaints_count = Complaint.objects.count()
+
+    reported_count = Complaint.objects.filter(
+        status="reported"
+    ).count()
+
+    in_progress_count = Complaint.objects.filter(
+        status="in_progress"
+    ).count()
+
+    resolved_count = Complaint.objects.filter(
+        status="resolved"
+    ).count()
+
+    unassigned_count = Complaint.objects.filter(
+        assigned_officer__isnull=True
+    ).count()
+
+    # =================================================
+    # DEPARTMENT-WISE APPROVED OFFICER COUNTS
+    # =================================================
+
+    department_descriptions = {
+        "road": "Road and public infrastructure",
+        "sanitation": "Waste and cleanliness",
+        "streetlight": "Streetlight related issues",
+        "water": "Water leakage and supply",
+        "property": "Damaged public property",
+        "other": "Other civic issues",
+    }
+
+    department_stats = []
+
+    for code, label in Officer.DEPARTMENT_CHOICES:
+
+        department_stats.append({
+            "label": label,
+            "description": department_descriptions.get(
+                code,
+                ""
+            ),
+            "count": Officer.objects.filter(
+                department=code,
+                is_approved=True
+            ).count(),
+        })
+
+    # =================================================
+    # RECENT ACTIVITY
+    # =================================================
+
+    activity_items = []
+
+    for officer in Officer.objects.order_by(
+        "-created_at"
+    )[:5]:
+
+        if officer.is_approved:
+
+            activity_items.append({
+                "icon": "✓",
+                "title": "Officer approved",
+                "description": (
+                    f"{officer.full_name} "
+                    f"({officer.get_department_display()})"
+                ),
+                "timestamp": officer.created_at,
+            })
+
+        else:
+
+            activity_items.append({
+                "icon": "!",
+                "title": "Officer registration request received",
+                "description": (
+                    f"{officer.full_name} "
+                    f"submitted a registration request."
+                ),
+                "timestamp": officer.created_at,
+            })
+
+    # Recent complaints
+
+    for complaint in Complaint.objects.order_by(
+        "-created_at"
+    )[:5]:
+
+        activity_items.append({
+            "icon": "↑",
+            "title": "Complaint received",
+            "description": (
+                f"{complaint.complaint_id} — "
+                f"{complaint.title}"
+            ),
+            "timestamp": complaint.created_at,
+        })
+
+    # Recently resolved complaints
+
+    for complaint in Complaint.objects.filter(
+        status="resolved"
+    ).order_by("-updated_at")[:5]:
+
+        activity_items.append({
+            "icon": "✓",
+            "title": "Complaint resolved",
+            "description": (
+                f"{complaint.complaint_id} "
+                f"marked as resolved."
+            ),
+            "timestamp": complaint.updated_at,
+        })
+
+    activity_items.sort(
+        key=lambda item: item["timestamp"],
+        reverse=True
+    )
+
+    recent_activity = activity_items[:5]
+
+    # =================================================
+    # ADMIN DISPLAY INFO
+    # =================================================
+
+    admin_name = (
+        request.user.get_full_name()
+        or request.user.username
+    )
+
+    name_parts = admin_name.strip().split()
+
+    if len(name_parts) >= 2:
+
+        admin_initials = (
+            name_parts[0][0] +
+            name_parts[1][0]
+        ).upper()
+
+    elif name_parts:
+
+        admin_initials = name_parts[0][0].upper()
+
+    else:
+
+        admin_initials = "A"
+
+    # =================================================
+    # RENDER ADMIN DASHBOARD
+    # =================================================
+
+    return render(
+        request,
+        "admin_dashboard.html",
+        {
+            "admin_name": admin_name,
+            "admin_initials": admin_initials,
+
+            # Officer data
+            "pending_requests_count": pending_requests_count,
+            "approved_officers_count": approved_officers_count,
+            "pending_officer_requests": pending_officer_requests,
+            "approved_officers": approved_officers,
+
+            # Complaint data
+            "total_complaints_count": total_complaints_count,
+            "unassigned_count": unassigned_count,
+            "reported_count": reported_count,
+            "in_progress_count": in_progress_count,
+            "resolved_count": resolved_count,
+
+            # Department data
+            "department_stats": department_stats,
+
+            # Activity
+            "recent_activity": recent_activity,
+        }
+    )
+# =====================================================
+# ADMIN - APPROVE OFFICER
 # =====================================================
 
 @require_POST
 def approve_officer(request, officer_id):
+
+    # Check admin login
     if not request.user.is_authenticated:
         return JsonResponse({
             "success": False,
             "message": "Authentication required."
         }, status=401)
 
+    # Only admin can approve officers
     if request.user.role != "admin":
         return JsonResponse({
             "success": False,
             "message": "Unauthorized access."
         }, status=403)
 
+    # Find officer
     try:
         officer = Officer.objects.get(id=officer_id)
+
     except Officer.DoesNotExist:
         return JsonResponse({
             "success": False,
             "message": "Officer not found."
         }, status=404)
 
+    # Approve officer
     officer.is_approved = True
     officer.save(update_fields=["is_approved"])
 
@@ -1141,34 +1326,41 @@ def approve_officer(request, officer_id):
 
 
 # =====================================================
-# ADMIN REJECT OFFICER
+# ADMIN - REJECT OFFICER
 # =====================================================
 
 @require_POST
 def reject_officer(request, officer_id):
+
+    # Check admin login
     if not request.user.is_authenticated:
         return JsonResponse({
             "success": False,
             "message": "Authentication required."
         }, status=401)
 
+    # Only admin can reject officers
     if request.user.role != "admin":
         return JsonResponse({
             "success": False,
             "message": "Unauthorized access."
         }, status=403)
 
+    # Find officer
     try:
-        officer = Officer.objects.select_related("user").get(id=officer_id)
+        officer = Officer.objects.select_related("user").get(
+            id=officer_id
+        )
+
     except Officer.DoesNotExist:
         return JsonResponse({
             "success": False,
             "message": "Officer not found."
         }, status=404)
 
+    # Delete officer and linked user account
     user = officer.user
 
-    # Delete Officer and its User account after rejection
     officer.delete()
     user.delete()
 

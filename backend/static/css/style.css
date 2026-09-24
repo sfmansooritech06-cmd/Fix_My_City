@@ -9092,6 +9092,7 @@ body > .skiptranslate {
 .photo-error.show {
     display: block;
 }
+<<<<<<< HEAD
 
 /* ================= PROGRESS TRACKER ================= */
 
@@ -9204,4 +9205,9 @@ body > .skiptranslate {
 .mini-progress-fill {
     height: 100%;
     border-radius: 10px;
+=======
+.icon-red {
+    color: var(--red);
+    background: var(--red-bg);
+>>>>>>> 5b5a3397f64efee9ab418c22beca3919ff34809b
 }
