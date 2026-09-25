@@ -1213,6 +1213,141 @@ dashboard-page
     }
 }
 
+
+
+/* =====================================================
+   COMPLAINT ASSIGNMENT + ADMIN ASSIGNED WORK
+   ===================================================== */
+
+.complaint-assignment-card,
+.admin-assigned-work-card {
+    margin-top: 22px;
+}
+
+.assignment-selected-officer {
+    padding: 10px 14px;
+    background: var(--primary-light);
+    border-radius: 10px;
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.complaint-assignment-list,
+.admin-assigned-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.complaint-assignment-item,
+.admin-assigned-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 17px 18px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--white);
+}
+
+.complaint-assignment-item:hover,
+.admin-assigned-item:hover {
+    box-shadow: var(--shadow);
+}
+
+.assignment-info,
+.admin-assigned-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.assignment-info h3,
+.admin-assigned-info h3 {
+    margin: 0 0 8px;
+    font-size: 14px;
+    color: var(--text);
+}
+
+.assignment-info p,
+.admin-assigned-info p {
+    margin: 4px 0;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.assignment-info strong,
+.admin-assigned-info strong {
+    color: var(--text);
+}
+
+.assignment-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+
+.assignment-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 9px;
+    border-radius: 999px;
+    background: var(--primary-light);
+    color: var(--primary);
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.assignment-action-btn {
+    flex-shrink: 0;
+    border: 0;
+    border-radius: 8px;
+    padding: 10px 15px;
+    background: var(--primary);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.assignment-action-btn:hover {
+    opacity: .92;
+}
+
+.assignment-empty {
+    padding: 28px 18px;
+    text-align: center;
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    color: var(--muted);
+}
+
+.assignment-empty strong {
+    display: block;
+    color: var(--text);
+    margin-bottom: 5px;
+}
+
+.assignment-empty p {
+    margin: 0;
+    font-size: 11px;
+}
+
+@media (max-width: 700px) {
+    .complaint-assignment-item,
+    .admin-assigned-item {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .assignment-action-btn {
+        width: 100%;
+    }
+}
+
 </style>
 
 
@@ -1914,6 +2049,125 @@ dashboard-page
 
 
             <!-- =================================================
+                 COMPLAINT ASSIGNMENT
+                 ================================================= -->
+
+            <section
+                class="dashboard-card complaint-assignment-card"
+                id="complaintAssignmentSection"
+                style="display:none;"
+            >
+
+                <div class="card-header">
+
+                    <div>
+                        <h2>Complaint Assignment</h2>
+                        <p>
+                            Select an unassigned complaint for the selected officer.
+                        </p>
+                    </div>
+
+                    <div
+                        class="assignment-selected-officer"
+                        id="selectedOfficerText"
+                    >
+                        No officer selected
+                    </div>
+
+                </div>
+
+                <div
+                    class="complaint-assignment-list"
+                    id="complaintAssignmentList"
+                ></div>
+
+            </section>
+
+
+            <!-- =================================================
+                 ADMIN ASSIGNED WORK
+                 ================================================= -->
+
+            <section
+                class="dashboard-card admin-assigned-work-card"
+            >
+
+                <div class="card-header">
+
+                    <div>
+                        <h2>Assigned Work</h2>
+                        <p>
+                            Complaints currently assigned to officers.
+                        </p>
+                    </div>
+
+                    <span class="count-badge">
+                        {{ assigned_complaints|length }}
+                    </span>
+
+                </div>
+
+                <div class="admin-assigned-list">
+
+                    {% for complaint in assigned_complaints %}
+
+                    <div class="admin-assigned-item">
+
+                        <div class="admin-assigned-info">
+
+                            <div class="assignment-meta">
+                                <span class="assignment-chip">
+                                    #{{ complaint.complaint_id }}
+                                </span>
+
+                                <span class="assignment-chip">
+                                    {{ complaint.get_category_display }}
+                                </span>
+
+                                <span class="assignment-chip">
+                                    {{ complaint.get_status_display }}
+                                </span>
+                            </div>
+
+                            <h3>{{ complaint.title }}</h3>
+
+                            <p>
+                                <strong>Citizen:</strong>
+                                {{ complaint.citizen.full_name }}
+                            </p>
+
+                            <p>
+                                <strong>Officer:</strong>
+                                {{ complaint.assigned_officer.full_name }}
+                                ({{ complaint.assigned_officer.employee_id }})
+                            </p>
+
+                            <p>
+                                <strong>Location:</strong>
+                                {{ complaint.address }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    {% empty %}
+
+                    <div class="assignment-empty">
+                        <strong>No assigned work yet</strong>
+                        <p>
+                            Assigned complaints will appear here after admin assigns them.
+                        </p>
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
                  RECENT ACTIVITY
                  ================================================= -->
 
@@ -2084,6 +2338,7 @@ dashboard-page
 
 
 {% block extra_js %}
+{{ assignment_complaints_data|json_script:"assignment-complaints-data" }}
 <script>
 function getCookie(name) {
     let cookieValue = null;
@@ -2101,6 +2356,46 @@ function getCookie(name) {
 }
 
 const csrftoken = getCookie("csrftoken");
+
+const categoryDepartmentMap = {
+    pothole: "road",
+    garbage: "sanitation",
+    streetlight: "streetlight",
+    water: "water",
+    property: "property",
+    other: "other"
+};
+
+const approvedOfficers = [
+    {% for officer in approved_officers %}
+    {
+        id: "{{ officer.id }}",
+        name: "{{ officer.full_name|escapejs }}",
+        employeeId: "{{ officer.employee_id|escapejs }}",
+        department: "{{ officer.department|escapejs }}",
+        departmentName: "{{ officer.get_department_display|escapejs }}",
+        phone: "{{ officer.phone|escapejs }}",
+        email: "{{ officer.user.email|escapejs }}"
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+];
+
+const assignmentComplaints = JSON.parse(
+    document.getElementById("assignment-complaints-data").textContent
+);
+
+let selectedOfficerId = null;
+let selectedOfficerName = "";
+
+function escapeHtml(value) {
+    if (value === null || value === undefined) return "";
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
 
 function approveOfficer(officerId) {
     fetch("/admin/approve-officer/" + officerId + "/", {
@@ -2144,28 +2439,12 @@ function rejectOfficer(officerId) {
     .catch(() => alert("Unable to reach server."));
 }
 
-const approvedOfficers = [
-    {% for officer in approved_officers %}
-    {
-        id: "{{ officer.id }}",
-        name: "{{ officer.full_name|escapejs }}",
-        employeeId: "{{ officer.employee_id|escapejs }}",
-        department: "{{ officer.department|escapejs }}",
-        departmentName: "{{ officer.get_department_display|escapejs }}",
-        phone: "{{ officer.phone|escapejs }}",
-        email: "{{ officer.user.email|escapejs }}"
-    },
-    {% endfor %}
-];
-
 function showCategoryOfficers(departmentCode, departmentName) {
     const modal = document.getElementById("officerCategoryModal");
     const modalTitle = document.getElementById("modalCategoryName");
     const officerList = document.getElementById("categoryOfficerList");
 
-    if (!modal || !modalTitle || !officerList) {
-        return;
-    }
+    if (!modal || !modalTitle || !officerList) return;
 
     modalTitle.textContent = departmentName;
 
@@ -2209,7 +2488,7 @@ function showCategoryOfficers(departmentCode, departmentName) {
                     <button
                         type="button"
                         class="assign-btn"
-                        onclick="selectOfficerForAssignment(${officer.id})"
+                        onclick="selectOfficerForAssignment('${officer.id}')"
                     >
                         Assign Work
                     </button>
@@ -2223,179 +2502,119 @@ function showCategoryOfficers(departmentCode, departmentName) {
 
 function closeOfficerModal() {
     const modal = document.getElementById("officerCategoryModal");
-    if (modal) {
-        modal.classList.remove("show");
-    }
+    if (modal) modal.classList.remove("show");
 }
 
-/*
- * Category officer modal is only for viewing approved officers.
- * Actual complaint assignment is done from the Complaint Assignment table,
- * where the complaint category automatically filters matching officers.
- */
 function selectOfficerForAssignment(officerId) {
     const officer = approvedOfficers.find(
         item => String(item.id) === String(officerId)
     );
-
-    closeOfficerModal();
 
     if (!officer) {
         alert("Officer information not found.");
         return;
     }
 
-    const complaintManagement =
-        document.getElementById("complaint-management");
+    selectedOfficerId = officer.id;
+    selectedOfficerName = officer.name;
 
-    if (complaintManagement) {
-        complaintManagement.scrollIntoView({
+    closeOfficerModal();
+
+    const section = document.getElementById("complaintAssignmentSection");
+    const selectedText = document.getElementById("selectedOfficerText");
+
+    if (selectedText) {
+        selectedText.textContent = "Selected Officer: " + officer.name;
+    }
+
+    if (section) {
+        section.style.display = "block";
+        section.scrollIntoView({
             behavior: "smooth",
             block: "start"
         });
     }
 
-    alert(
-        "Officer selected: " +
-        officer.name +
-        ". Now select a complaint from the Complaint Assignment section."
+    loadComplaintsForOfficer(officer);
+}
+
+function loadComplaintsForOfficer(officer) {
+    const list = document.getElementById("complaintAssignmentList");
+
+    if (!list) return;
+
+    const matchingComplaints = assignmentComplaints.filter(
+        complaint => categoryDepartmentMap[complaint.category] === officer.department
     );
-}
-
-const officerCategoryModal = document.getElementById("officerCategoryModal");
-
-if (officerCategoryModal) {
-    officerCategoryModal.addEventListener("click", function(event) {
-        if (event.target === this) {
-            closeOfficerModal();
-        }
-    });
-}
-
-const searchInput = document.getElementById("dashboardSearch");
-
-if (searchInput) {
-    searchInput.addEventListener("input", function() {
-        const searchValue = this.value.toLowerCase().trim();
-        const rows = document.querySelectorAll(".officer-request");
-
-        rows.forEach(function(row) {
-            const text = row.textContent.toLowerCase();
-            row.style.display =
-                !searchValue || text.includes(searchValue) ? "" : "none";
-        });
-    });
-}
-
-const categoryDepartmentMap = {
-    pothole: "road",
-    garbage: "sanitation",
-    streetlight: "streetlight",
-    water: "water",
-    property: "property",
-    other: "other"
-};
-
-const complaintsData = [
-    {% for complaint in recent_complaints %}
-    {
-        id: "{{ complaint.id }}",
-        complaintId: "{{ complaint.complaint_id|escapejs }}",
-        title: "{{ complaint.title|escapejs }}",
-        category: "{{ complaint.category|escapejs }}",
-        assignedOfficerId:
-            {% if complaint.assigned_officer %}
-                "{{ complaint.assigned_officer.id }}"
-            {% else %}
-                null
-            {% endif %}
-    },
-    {% endfor %}
-];
-
-function openComplaintAssignmentModal(complaintId, categoryName, categoryCode) {
-    const modal = document.getElementById("assignmentModal");
-    const title = document.getElementById("assignmentModalTitle");
-    const subtitle = document.getElementById("assignmentModalSubtitle");
-    const list = document.getElementById("assignmentOfficerList");
-
-    if (!modal || !title || !subtitle || !list) {
-        return;
-    }
-
-    const expectedDepartment = categoryDepartmentMap[categoryCode];
-
-    const officers = approvedOfficers.filter(
-        officer => officer.department === expectedDepartment
-    );
-
-    title.textContent = "Assign Complaint " + getComplaintId(complaintId);
-
-    subtitle.textContent =
-        "Category: " +
-        categoryName +
-        " • Showing approved officers from the matching department.";
 
     list.innerHTML = "";
 
-    if (officers.length === 0) {
+    if (matchingComplaints.length === 0) {
         list.innerHTML = `
-            <div class="assignment-no-officer">
-                <strong>No approved officer available</strong>
-                <span>
-                    No approved officer is registered for
-                    ${escapeHtml(categoryName)}.
-                </span>
+            <div class="assignment-empty">
+                <strong>No unassigned complaints</strong>
+                <p>
+                    There are currently no unassigned complaints for
+                    ${escapeHtml(officer.departmentName)}.
+                </p>
             </div>
         `;
-    } else {
-        officers.forEach(function(officer) {
-            const firstLetter = officer.name.charAt(0).toUpperCase();
-
-            list.innerHTML += `
-                <div class="assignment-officer">
-                    <div class="assignment-officer-info">
-                        <div class="assignment-avatar">
-                            ${escapeHtml(firstLetter)}
-                        </div>
-
-                        <div class="assignment-officer-details">
-                            <strong>${escapeHtml(officer.name)}</strong>
-                            <span>
-                                Employee ID:
-                                ${escapeHtml(officer.employeeId)}
-                            </span>
-                            <span>
-                                ${escapeHtml(officer.departmentName)}
-                            </span>
-                        </div>
-                    </div>
-
-                    <button
-                        type="button"
-                        class="assignment-action"
-                        onclick="assignComplaintToOfficer(${complaintId}, ${officer.id})"
-                    >
-                        Assign
-                    </button>
-                </div>
-            `;
-        });
+        return;
     }
 
-    modal.classList.add("show");
+    matchingComplaints.forEach(function(complaint) {
+        list.innerHTML += `
+            <div class="complaint-assignment-item">
+                <div class="assignment-info">
+                    <div class="assignment-meta">
+                        <span class="assignment-chip">
+                            #${escapeHtml(complaint.complaint_id)}
+                        </span>
+                        <span class="assignment-chip">
+                            ${escapeHtml(complaint.category_name)}
+                        </span>
+                    </div>
+
+                    <h3>${escapeHtml(complaint.title)}</h3>
+
+                    <p>
+                        <strong>Citizen:</strong>
+                        ${escapeHtml(complaint.citizen_name)}
+                    </p>
+
+                    <p>
+                        <strong>Location:</strong>
+                        ${escapeHtml(complaint.address)}
+                    </p>
+
+                    <p>
+                        <strong>Reported:</strong>
+                        ${escapeHtml(complaint.created_at)}
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    class="assignment-action-btn"
+                    onclick="assignComplaintToOfficer('${complaint.id}', '${officer.id}')"
+                >
+                    Assign Complaint
+                </button>
+            </div>
+        `;
+    });
 }
 
 function assignComplaintToOfficer(complaintId, officerId) {
-    const complaint = complaintsData.find(
-        item => String(item.id) === String(complaintId)
-    );
-
     const officer = approvedOfficers.find(
         item => String(item.id) === String(officerId)
     );
 
-    if (!complaint || !officer) {
+    const complaint = assignmentComplaints.find(
+        item => String(item.id) === String(complaintId)
+    );
+
+    if (!officer || !complaint) {
         alert("Complaint or officer information not found.");
         return;
     }
@@ -2413,8 +2632,7 @@ function assignComplaintToOfficer(complaintId, officerId) {
     fetch("/admin/assign-complaint/" + complaintId + "/", {
         method: "POST",
         headers: {
-            "Content-Type":
-                "application/x-www-form-urlencoded; charset=UTF-8",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
             "X-CSRFToken": getCookie("csrftoken"),
             "X-Requested-With": "XMLHttpRequest"
         },
@@ -2424,73 +2642,29 @@ function assignComplaintToOfficer(complaintId, officerId) {
         const contentType = response.headers.get("content-type") || "";
 
         if (!contentType.includes("application/json")) {
-            const text = await response.text();
-            throw new Error(
-                "Server returned an unexpected response. Check the Django backend."
-            );
+            throw new Error("Server returned an unexpected response. Check assign_complaint in views.py.");
         }
 
         const data = await response.json();
 
-        if (!response.ok) {
-            throw new Error(
-                data.message || "Unable to assign complaint."
-            );
+        if (!response.ok || !data.success) {
+            throw new Error(data.message || "Unable to assign complaint.");
         }
 
         return data;
     })
     .then(data => {
-        if (!data.success) {
-            throw new Error(
-                data.message || "Unable to assign complaint."
-            );
-        }
-
-        closeComplaintAssignmentModal();
-
-        alert(data.message || "Complaint assigned successfully.");
+        alert(
+            data.message +
+            "\n\nOfficer: " + officer.name +
+            "\nCitizen: " + data.citizen_name +
+            "\nStatus: " + data.status
+        );
 
         window.location.reload();
     })
     .catch(error => {
         alert(error.message || "Unable to reach server.");
-    });
-}
-
-function closeComplaintAssignmentModal() {
-    const modal = document.getElementById("assignmentModal");
-
-    if (modal) {
-        modal.classList.remove("show");
-    }
-}
-
-function getComplaintId(complaintId) {
-    const complaint = complaintsData.find(
-        item => String(item.id) === String(complaintId)
-    );
-
-    return complaint ? complaint.complaintId : "#" + complaintId;
-}
-
-function escapeHtml(value) {
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-const complaintAssignmentModal =
-    document.getElementById("assignmentModal");
-
-if (complaintAssignmentModal) {
-    complaintAssignmentModal.addEventListener("click", function(event) {
-        if (event.target === this) {
-            closeComplaintAssignmentModal();
-        }
     });
 }
 </script>

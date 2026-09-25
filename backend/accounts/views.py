@@ -503,9 +503,14 @@ def officer_dashboard(request):
     # GET ASSIGNED COMPLAINTS
     # =================================================
 
-    complaints = Complaint.objects.filter(
-        assigned_officer=officer
-    ).order_by("-created_at")
+    complaints = (
+        Complaint.objects
+        .select_related("citizen", "assigned_officer")
+        .filter(
+            assigned_officer=officer
+        )
+        .order_by("-created_at")
+    )
 
     # =================================================
     # DASHBOARD COUNTS
@@ -549,8 +554,8 @@ def officer_dashboard(request):
 
     if len(name_parts) >= 2:
         initials = (
-            name_parts[0][0] +
-            name_parts[-1][0]
+            name_parts[0][0]
+            + name_parts[-1][0]
         )
     elif len(name_parts) == 1:
         initials = name_parts[0][0]
@@ -575,10 +580,80 @@ def officer_dashboard(request):
             "in_progress_count": in_progress_count,
             "resolved_count": resolved_count,
 
+            # All assigned complaints
+            "assigned_complaints": complaints,
+
+            # Existing dashboard sections
             "recent_complaints": recent_complaints,
             "priority_complaints": priority_complaints,
         }
     )
+    # =====================================================
+# UPDATE COMPLAINT STATUS - OFFICER
+# =====================================================
+
+@require_POST
+def update_complaint_status(request, complaint_id):
+
+    if not request.user.is_authenticated:
+        return JsonResponse({
+            "success": False,
+            "message": "Authentication required."
+        }, status=401)
+
+    if request.user.role != "officer":
+        return JsonResponse({
+            "success": False,
+            "message": "Unauthorized access."
+        }, status=403)
+
+    try:
+        officer = request.user.officer_profile
+    except Officer.DoesNotExist:
+        return JsonResponse({
+            "success": False,
+            "message": "Officer profile not found."
+        }, status=404)
+
+    try:
+        complaint = Complaint.objects.get(
+            id=complaint_id,
+            assigned_officer=officer
+        )
+    except Complaint.DoesNotExist:
+        return JsonResponse({
+            "success": False,
+            "message": "Complaint is not assigned to you."
+        }, status=404)
+
+    status_value = request.POST.get("status")
+
+    allowed_statuses = [
+        "reported",
+        "in_progress",
+        "resolved"
+    ]
+
+    if status_value not in allowed_statuses:
+        return JsonResponse({
+            "success": False,
+            "message": "Invalid complaint status."
+        }, status=400)
+
+    complaint.status = status_value
+
+    complaint.save(
+        update_fields=[
+            "status",
+            "updated_at"
+        ]
+    )
+
+    return JsonResponse({
+        "success": True,
+        "message": "Complaint status updated successfully.",
+        "status": complaint.get_status_display()
+    })
 
 def officer_complaints(request):
     if not request.user.is_authenticated:
@@ -653,7 +728,8 @@ def officer_complaints(request):
 # OFFICER COMPLAINT DETAILS
 # =====================================================
 
-def officer_complaint_details(request):
+def officer_complaint_details(request, complaint_id):
+
     if not request.user.is_authenticated:
         return redirect("/officer-login/")
 
@@ -670,11 +746,16 @@ def officer_complaint_details(request):
         logout(request)
         return redirect("/officer-login/")
 
-    complaint = Complaint.objects.filter(
-        assigned_officer=officer
-    ).order_by("-created_at").first()
-
-    if not complaint:
+    try:
+        complaint = (
+            Complaint.objects
+            .select_related("citizen", "assigned_officer")
+            .get(
+                id=complaint_id,
+                assigned_officer=officer
+            )
+        )
+    except Complaint.DoesNotExist:
         return redirect("/officer-complaints/")
 
     return render(
@@ -685,6 +766,7 @@ def officer_complaint_details(request):
             "complaint": complaint,
         }
     )
+
 
 # =====================================================
 # OFFICER LOGOUT
@@ -1013,34 +1095,18 @@ def admin_officer_verification(request):
 
 def admin_dashboard(request):
 
-    # -------------------------------------------------
-    # ADMIN LOGIN CHECK
-    # -------------------------------------------------
-
     if not request.user.is_authenticated:
         return redirect("/admin-login/")
 
     if request.user.role != "admin":
         return redirect("/admin-login/")
 
-
-    # =================================================
-    # ADMIN INFORMATION
-    # =================================================
-
     admin_name = request.user.username
-
     if request.user.first_name:
         admin_name = request.user.first_name
 
     admin_initials = request.user.username[:2].upper()
 
-
-    # =================================================
-    # OFFICER DATA
-    # =================================================
-
-    # Pending officer registration requests
     pending_officer_requests = (
         Officer.objects
         .select_related("user")
@@ -1050,8 +1116,6 @@ def admin_dashboard(request):
 
     pending_requests_count = pending_officer_requests.count()
 
-
-    # Approved officers
     approved_officers = (
         Officer.objects
         .select_related("user")
@@ -1061,17 +1125,8 @@ def admin_dashboard(request):
 
     approved_officers_count = approved_officers.count()
 
-
-    # =================================================
-    # DEPARTMENT STATISTICS
-    # =================================================
-
     department_stats = []
-
-    departments = Officer.DEPARTMENT_CHOICES
-
-    for department_code, department_name in departments:
-
+    for department_code, department_name in Officer.DEPARTMENT_CHOICES:
         count = Officer.objects.filter(
             department=department_code,
             is_approved=True
@@ -1083,33 +1138,40 @@ def admin_dashboard(request):
             "count": count
         })
 
-
-    # =================================================
-    # COMPLAINT DATA
-    # =================================================
-
     total_complaints_count = Complaint.objects.count()
-
-    reported_count = Complaint.objects.filter(
-        status="reported"
-    ).count()
-
-    in_progress_count = Complaint.objects.filter(
-        status="in_progress"
-    ).count()
-
-    resolved_count = Complaint.objects.filter(
-        status="resolved"
-    ).count()
-
+    reported_count = Complaint.objects.filter(status="reported").count()
+    in_progress_count = Complaint.objects.filter(status="in_progress").count()
+    resolved_count = Complaint.objects.filter(status="resolved").count()
     unassigned_count = Complaint.objects.filter(
         assigned_officer__isnull=True
     ).count()
 
+    unassigned_complaints = (
+        Complaint.objects
+        .select_related("citizen")
+        .filter(assigned_officer__isnull=True)
+        .order_by("-created_at")
+    )
 
-    # =================================================
-    # REGISTERED CITIZENS
-    # =================================================
+    assigned_complaints = (
+        Complaint.objects
+        .select_related("citizen", "assigned_officer")
+        .filter(assigned_officer__isnull=False)
+        .order_by("-updated_at")
+    )
+
+    assignment_complaints_data = []
+    for complaint in unassigned_complaints:
+        assignment_complaints_data.append({
+            "id": complaint.id,
+            "complaint_id": complaint.complaint_id,
+            "title": complaint.title,
+            "category": complaint.category,
+            "category_name": complaint.get_category_display(),
+            "address": complaint.address,
+            "citizen_name": complaint.citizen.full_name,
+            "created_at": complaint.created_at.strftime("%d %b %Y, %I:%M %p"),
+        })
 
     citizens = (
         Citizen.objects
@@ -1119,441 +1181,68 @@ def admin_dashboard(request):
     )
 
     citizen_list = []
-
     for citizen in citizens:
-
-        complaints = list(
-            citizen.complaints.all()
-        )
-
+        complaints = list(citizen.complaints.all())
         categories = []
 
         for complaint in complaints:
-
             category = complaint.get_category_display()
-
             if category not in categories:
                 categories.append(category)
 
         citizen_list.append({
-
             "id": citizen.id,
-
             "full_name": citizen.full_name,
-
             "citizen_id": citizen.citizen_id,
-
             "email": citizen.user.email,
-
             "phone": citizen.phone,
-
             "categories": categories,
-
             "complaint_count": len(complaints),
-
             "created_at": citizen.user.date_joined,
         })
 
-
     total_citizens_count = len(citizen_list)
-
-
-    # =================================================
-    # RECENT COMPLAINTS
-    # =================================================
 
     recent_complaints = (
         Complaint.objects
-        .select_related(
-            "citizen",
-            "assigned_officer"
-        )
+        .select_related("citizen", "assigned_officer")
         .order_by("-created_at")[:10]
     )
 
-
-    # =================================================
-    # RECENT ACTIVITY
-    # =================================================
-
     recent_activity = []
-
     for complaint in recent_complaints:
-
-        citizen_name = complaint.citizen.full_name
-
         recent_activity.append({
-
             "type": "complaint",
-
-            "title": f"New complaint reported by {citizen_name}",
-
+            "title": f"New complaint reported by {complaint.citizen.full_name}",
             "description": complaint.title,
-
             "complaint_id": complaint.complaint_id,
-
             "status": complaint.get_status_display(),
-
             "created_at": complaint.created_at,
         })
 
-
-    # =================================================
-    # DASHBOARD CONTEXT---------
-    # =================================================
-
-
-
     context = {
-
-        # Admin
         "admin_name": admin_name,
         "admin_initials": admin_initials,
-
-
-        # Officer
-        "pending_requests_count":
-            pending_requests_count,
-
-        "approved_officers_count":
-            approved_officers_count,
-
-        "pending_officer_requests":
-            pending_officer_requests,
-
-        "approved_officers":
-            approved_officers,
-
-
-        # Departments
-        "department_stats":
-            department_stats,
-
-
-        # Complaints
-        "total_complaints_count":
-            total_complaints_count,
-
-        "reported_count":
-            reported_count,
-
-        "in_progress_count":
-            in_progress_count,
-
-        "resolved_count":
-            resolved_count,
-
-        "unassigned_count":
-            unassigned_count,
-
-        "recent_complaints":
-            recent_complaints,
-
-
-        # Citizens
-        "citizens":
-            citizen_list,
-
-        "total_citizens_count":
-            total_citizens_count,
-
-
-        # Activity
-        "recent_activity":
-            recent_activity,
+        "pending_requests_count": pending_requests_count,
+        "approved_officers_count": approved_officers_count,
+        "pending_officer_requests": pending_officer_requests,
+        "approved_officers": approved_officers,
+        "department_stats": department_stats,
+        "total_complaints_count": total_complaints_count,
+        "reported_count": reported_count,
+        "in_progress_count": in_progress_count,
+        "resolved_count": resolved_count,
+        "unassigned_count": unassigned_count,
+        "unassigned_complaints": unassigned_complaints,
+        "assigned_complaints": assigned_complaints,
+        "assignment_complaints_data": assignment_complaints_data,
+        "recent_complaints": recent_complaints,
+        "citizens": citizen_list,
+        "total_citizens_count": total_citizens_count,
+        "recent_activity": recent_activity,
     }
 
-
-    # =================================================
-    # RENDER ADMIN DASHBOARD
-    # =================================================
-
-    return render(
-        request,
-        "admin_dashboard.html",
-        context
-    )
-
-    # =================================================
-    # OFFICER STATS
-    # =================================================
-
-    pending_officers_qs = Officer.objects.filter(
-        is_approved=False
-    ).select_related("user").order_by("-created_at")
-
-    pending_requests_count = pending_officers_qs.count()
-
-    approved_officers_qs = Officer.objects.filter(
-        is_approved=True
-    ).select_related("user").order_by("full_name")
-
-    approved_officers_count = approved_officers_qs.count()
-
-    # =================================================
-    # PENDING OFFICER REQUESTS
-    # =================================================
-
-    pending_officer_requests = []
-
-    for officer in pending_officers_qs[:4]:
-
-        name_parts = officer.full_name.strip().split()
-
-        if len(name_parts) >= 2:
-            initials = (
-                name_parts[0][0] +
-                name_parts[1][0]
-            ).upper()
-
-        elif name_parts:
-            initials = name_parts[0][0].upper()
-
-        else:
-            initials = "?"
-
-        pending_officer_requests.append({
-            "id": officer.id,
-            "initials": initials,
-            "full_name": officer.full_name,
-            "employee_id": officer.employee_id,
-            "email": officer.user.email,
-            "phone": officer.phone,
-            "department": officer.get_department_display(),
-            "created_at": officer.created_at,
-        })
-
-    # =================================================
-    # APPROVED OFFICERS
-    # =================================================
-
-    approved_officers = []
-
-    for officer in approved_officers_qs:
-
-        name_parts = officer.full_name.strip().split()
-
-        if len(name_parts) >= 2:
-            initials = (
-                name_parts[0][0] +
-                name_parts[-1][0]
-            ).upper()
-
-        elif name_parts:
-            initials = name_parts[0][0].upper()
-
-        else:
-            initials = "?"
-
-        assigned_complaints_count = Complaint.objects.filter(
-            assigned_officer=officer
-        ).count()
-
-        approved_officers.append({
-            "id": officer.id,
-            "initials": initials,
-            "full_name": officer.full_name,
-            "employee_id": officer.employee_id,
-            "email": officer.user.email,
-            "phone": officer.phone,
-            "department": officer.get_department_display(),
-            "assigned_complaints_count": assigned_complaints_count,
-            "created_at": officer.created_at,
-        })
-
-    # =================================================
-    # COMPLAINT STATS
-    # =================================================
-
-    total_complaints_count = Complaint.objects.count()
-
-    reported_count = Complaint.objects.filter(
-        status="reported"
-    ).count()
-
-    in_progress_count = Complaint.objects.filter(
-        status="in_progress"
-    ).count()
-
-    resolved_count = Complaint.objects.filter(
-        status="resolved"
-    ).count()
-
-    unassigned_count = Complaint.objects.filter(
-        assigned_officer__isnull=True
-    ).count()
-
-    # =================================================
-    # DEPARTMENT-WISE APPROVED OFFICER COUNTS
-    # =================================================
-
-    department_descriptions = {
-        "road": "Road and public infrastructure",
-        "sanitation": "Waste and cleanliness",
-        "streetlight": "Streetlight related issues",
-        "water": "Water leakage and supply",
-        "property": "Damaged public property",
-        "other": "Other civic issues",
-    }
-
-    department_stats = []
-
-    for code, label in Officer.DEPARTMENT_CHOICES:
-
-        department_stats.append({
-            "label": label,
-            "description": department_descriptions.get(
-                code,
-                ""
-            ),
-            "count": Officer.objects.filter(
-                department=code,
-                is_approved=True
-            ).count(),
-        })
-
-    # =================================================
-    # RECENT ACTIVITY
-    # =================================================
-
-    activity_items = []
-
-    for officer in Officer.objects.order_by(
-        "-created_at"
-    )[:5]:
-
-        if officer.is_approved:
-
-            activity_items.append({
-                "icon": "✓",
-                "title": "Officer approved",
-                "description": (
-                    f"{officer.full_name} "
-                    f"({officer.get_department_display()})"
-                ),
-                "timestamp": officer.created_at,
-            })
-
-        else:
-
-            activity_items.append({
-                "icon": "!",
-                "title": "Officer registration request received",
-                "description": (
-                    f"{officer.full_name} "
-                    f"submitted a registration request."
-                ),
-                "timestamp": officer.created_at,
-            })
-
-    # Recent complaints
-
-    for complaint in Complaint.objects.order_by(
-        "-created_at"
-    )[:5]:
-
-        activity_items.append({
-            "icon": "↑",
-            "title": "Complaint received",
-            "description": (
-                f"{complaint.complaint_id} — "
-                f"{complaint.title}"
-            ),
-            "timestamp": complaint.created_at,
-        })
-
-    # Recently resolved complaints
-
-    for complaint in Complaint.objects.filter(
-        status="resolved"
-    ).order_by("-updated_at")[:5]:
-
-        activity_items.append({
-            "icon": "✓",
-            "title": "Complaint resolved",
-            "description": (
-                f"{complaint.complaint_id} "
-                f"marked as resolved."
-            ),
-            "timestamp": complaint.updated_at,
-        })
-
-    activity_items.sort(
-        key=lambda item: item["timestamp"],
-        reverse=True
-    )
-
-    recent_activity = activity_items[:5]
-
-    # =================================================
-    # ADMIN DISPLAY INFO
-    # =================================================
-
-    admin_name = (
-        request.user.get_full_name()
-        or request.user.username
-    )
-
-    name_parts = admin_name.strip().split()
-
-    if len(name_parts) >= 2:
-
-        admin_initials = (
-            name_parts[0][0] +
-            name_parts[1][0]
-        ).upper()
-
-    elif name_parts:
-
-        admin_initials = name_parts[0][0].upper()
-
-    else:
-
-        admin_initials = "A"
-
-    # =================================================
-    # RENDER ADMIN DASHBOARD
-    # =================================================
-
-    return render(
-        request,
-        "admin_dashboard.html",
-        {
-            "admin_name": admin_name,
-            "admin_initials": admin_initials,
-
-            # Officer data
-            "pending_requests_count": pending_requests_count,
-            "approved_officers_count": approved_officers_count,
-            "pending_officer_requests": pending_officer_requests,
-            "approved_officers": approved_officers,
-
-            # Complaint data
-            "total_complaints_count": total_complaints_count,
-            "unassigned_count": unassigned_count,
-            "reported_count": reported_count,
-            "in_progress_count": in_progress_count,
-            "resolved_count": resolved_count,
-
-            # Department data
-            "department_stats": department_stats,
-
-            # Activity
-            "recent_activity": recent_activity,
-        }
-    )
-    # =========================================================
-# ADMIN - CATEGORY OFFICERS
-# =========================================================
-
-CATEGORY_DEPARTMENT_MAP = {
-    "pothole": "road",
-    "garbage": "sanitation",
-    "streetlight": "streetlight",
-    "water": "water",
-    "property": "property",
-    "other": "other",
-}
+    return render(request, "admin_dashboard.html", context)
 
 
 def admin_category_view(request, department_code):
@@ -1661,7 +1350,7 @@ def assign_complaint(request, complaint_id):
         }, status=400)
 
     try:
-        complaint = Complaint.objects.get(
+        complaint = Complaint.objects.select_related("citizen").get(
             id=complaint_id
         )
     except Complaint.DoesNotExist:
@@ -1681,7 +1370,6 @@ def assign_complaint(request, complaint_id):
             "message": "Approved officer not found."
         }, status=404)
 
-    # Category → Department validation
     required_department = CATEGORY_DEPARTMENT_MAP.get(
         complaint.category
     )
@@ -1689,30 +1377,30 @@ def assign_complaint(request, complaint_id):
     if required_department != officer.department:
         return JsonResponse({
             "success": False,
-            "message": (
-                "This officer does not belong "
-                "to the required category."
-            )
+            "message": "This officer does not belong to the required department."
         }, status=400)
 
-    # Assign complaint
     complaint.assigned_officer = officer
 
-    # When assigning a complaint, move it to in-progress
     if complaint.status == "reported":
         complaint.status = "in_progress"
 
-    complaint.save(
-        update_fields=[
-            "assigned_officer",
-            "status",
-            "updated_at"
-        ]
-    )
+    complaint.save(update_fields=[
+        "assigned_officer",
+        "status",
+        "updated_at"
+    ])
 
-    return redirect(
-        f"/admin-category/{officer.department}/"
-    )
+    return JsonResponse({
+        "success": True,
+        "message": "Complaint assigned successfully.",
+        "complaint_id": complaint.complaint_id,
+        "officer_name": officer.full_name,
+        "citizen_name": complaint.citizen.full_name,
+        "status": complaint.get_status_display(),
+    })
+
+
 # =====================================================
 # ADMIN - APPROVE OFFICER
 # =====================================================

@@ -105,11 +105,18 @@ urlpatterns = [
         name="officer_complaint_details"
     ),
 
+    
+    
     path(
-        "officer-logout/",
-        officer_logout,
-        name="officer_logout"
+    "officer/complaint/<int:complaint_id>/update-status/",
+    views.update_complaint_status,
+    name="update_complaint_status"
     ),
+    path(
+            "officer-logout/",
+            officer_logout,
+            name="officer_logout"
+        ),
 
 
     # =====================================================

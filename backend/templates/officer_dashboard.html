@@ -238,71 +238,86 @@ dashboard-page
 
             <div class="complaint-item">
 
-                <div class="complaint-image road-image">
+            <div class="complaint-image road-image">
+                <span>
+                    {{ complaint.get_category_display }}
+                </span>
+            </div>
+
+            <div class="complaint-info">
+
+                <div class="complaint-title-row">
+
+                    <h3>
+                        {{ complaint.title }}
+                    </h3>
+
+                    {% if complaint.status == "reported" %}
+
+                        <span class="status-badge reported">
+                            Reported
+                        </span>
+
+                    {% elif complaint.status == "in_progress" %}
+
+                        <span class="status-badge progress">
+                            In Progress
+                        </span>
+
+                    {% elif complaint.status == "resolved" %}
+
+                        <span class="status-badge resolved">
+                            Resolved
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+                <!-- CITIZEN NAME -->
+                <p>
+                    <strong>Citizen:</strong>
+                    {{ complaint.citizen.full_name }}
+                </p>
+
+                <!-- ADDRESS -->
+                <p>
+                    <strong>Location:</strong>
+                    {{ complaint.address }}
+                </p>
+
+                <!-- COMPLAINT META -->
+                <div class="complaint-meta">
 
                     <span>
-                        {{ complaint.get_category_display }}
+                        #{{ complaint.complaint_id }}
+                    </span>
+
+                    <span>
+                        📅 {{ complaint.created_at|date:"d M Y" }}
+                    </span>
+
+                    <span>
+                        ↑ {{ complaint.upvotes }} Upvotes
                     </span>
 
                 </div>
 
+                <!-- VIEW BUTTON -->
+                <div style="margin-top: 12px;">
 
-                <div class="complaint-info">
-
-                    <div class="complaint-title-row">
-
-                        <h3>
-                            {{ complaint.title }}
-                        </h3>
-
-
-                        {% if complaint.status == "reported" %}
-
-                            <span class="status-badge reported">
-                                Reported
-                            </span>
-
-                        {% elif complaint.status == "in_progress" %}
-
-                            <span class="status-badge progress">
-                                In Progress
-                            </span>
-
-                        {% elif complaint.status == "resolved" %}
-
-                            <span class="status-badge resolved">
-                                Resolved
-                            </span>
-
-                        {% endif %}
-
-                    </div>
-
-
-                    <p>
-                        {{ complaint.address }}
-                    </p>
-
-
-                    <div class="complaint-meta">
-
-                        <span>
-                            #{{ complaint.complaint_id }}
-                        </span>
-
-                        <span>
-                            📅 {{ complaint.created_at|date:"d M Y" }}
-                        </span>
-
-                        <span>
-                            ↑ {{ complaint.upvotes }} Upvotes
-                        </span>
-
-                    </div>
+                    <a
+                        href="{% url 'officer_complaint_details' complaint.id %}"
+                        class="secondary-btn"
+                    >
+                        View Complaint →
+                    </a>
 
                 </div>
 
             </div>
+
+        </div>
 
             {% empty %}
 
@@ -353,7 +368,7 @@ dashboard-page
             {% for complaint in priority_complaints %}
 
             <a
-                href="{% url 'officer_complaint_details' %}"
+                href="{% url 'officer_complaint_details' complaint.id %}"
                 class="quick-action"
             >
 
@@ -409,7 +424,146 @@ dashboard-page
         </div>
 
     </section>
+<!-- ================= ASSIGNED WORK ================= -->
 
+<section class="dashboard-card assigned-work-section">
+
+    <div class="card-header">
+
+        <div>
+
+            <p class="card-label">
+                ASSIGNED WORK
+            </p>
+
+            <h2>
+                Complaints Assigned to You
+            </h2>
+
+            <p class="section-description">
+                Complaints assigned by the admin for your department.
+            </p>
+
+        </div>
+
+        <span class="card-count">
+            {{ total_assigned }}
+        </span>
+
+    </div>
+
+
+    <div class="assigned-work-list">
+
+        {% for complaint in assigned_complaints %}
+
+        <div class="assigned-work-item">
+
+            <!-- LEFT SIDE -->
+
+            <div class="assigned-work-info">
+
+                <div class="complaint-title-row">
+
+                    <h3>
+                        {{ complaint.title }}
+                    </h3>
+
+                    {% if complaint.status == "reported" %}
+
+                        <span class="status-badge reported">
+                            Reported
+                        </span>
+
+                    {% elif complaint.status == "in_progress" %}
+
+                        <span class="status-badge progress">
+                            In Progress
+                        </span>
+
+                    {% elif complaint.status == "resolved" %}
+
+                        <span class="status-badge resolved">
+                            Resolved
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="assigned-work-details">
+
+                    <p>
+                        <strong>Complaint ID:</strong>
+                        #{{ complaint.complaint_id }}
+                    </p>
+
+                    <p>
+                        <strong>Citizen:</strong>
+                        {{ complaint.citizen.full_name }}
+                    </p>
+
+                    <p>
+                        <strong>Category:</strong>
+                        {{ complaint.get_category_display }}
+                    </p>
+
+                    <p>
+                        <strong>Location:</strong>
+                        {{ complaint.address }}
+                    </p>
+
+                    <p>
+                        <strong>Reported:</strong>
+                        {{ complaint.created_at|date:"d M Y, h:i A" }}
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- RIGHT SIDE -->
+
+            <div class="assigned-work-action">
+
+                <a
+                    href="{% url 'officer_complaint_details' complaint.id %}"
+                    class="primary-dashboard-btn"
+                >
+                    View Complaint →
+                </a>
+
+            </div>
+
+        </div>
+
+
+        {% empty %}
+
+        <div class="complaint-item">
+
+            <div class="complaint-info">
+
+                <h3>
+                    No assigned work
+                </h3>
+
+                <p>
+                    When admin assigns a complaint to you,
+                    it will appear here.
+                </p>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
 
     <!-- ================= DEPARTMENT OVERVIEW ================= -->
 
