@@ -1,445 +1,302 @@
 {% extends "base.html" %}
 
-{% block title %}
-Complaint Details | FixMyCity
-{% endblock %}
-
-{% block body_class %}
-officer-details-page
-{% endblock %}
+{% block title %}Complaint Details | FixMyCity{% endblock %}
 
 {% block content %}
 
-<!-- ================= NAVBAR ================= -->
+<div class="officer-page">
 
-<nav class="navbar">
+    <!-- ================= NAVBAR ================= -->
+    <header class="officer-navbar">
 
-    <div class="nav-container">
-
-        <a href="{% url 'officer_dashboard' %}" class="logo">
-            <span class="logo-mark">+</span>
-            FixMyCity
-        </a>
-
-
-        <div class="nav-links">
-
+        <div class="brand">
             <a href="{% url 'officer_dashboard' %}">
-                Dashboard
+                <span class="brand-icon">+</span>
+                <span>FixMyCity</span>
             </a>
+        </div>
 
+        <nav class="nav-links">
+            <a href="{% url 'officer_dashboard' %}">Dashboard</a>
             <a href="{% url 'officer_complaints' %}" class="active">
                 Complaints
             </a>
+        </nav>
 
-        </div>
-
-
-        <div class="nav-user">
-
-            <div class="user-avatar">
-                RS
+        <div class="officer-profile">
+            <div class="profile-avatar">
+                {{ request.user.first_name|default:"O"|first|upper }}
             </div>
 
-            <div class="user-info">
-
+            <div class="profile-info">
                 <strong>
-                    Rahul Sharma
+                    {{ request.user.officer_profile.employee_id|default:"FMCOF00003" }}
                 </strong>
-
-                <span>
-                    Road & Infrastructure
-                </span>
-
+                <span>Officer</span>
             </div>
 
-            <a href="{% url 'officer_login' %}" class="logout-btn">
+            <a href="{% url 'officer_logout' %}" class="logout-btn">
                 Logout
             </a>
-
         </div>
 
-    </div>
-
-</nav>
+    </header>
 
 
-<!-- ================= MAIN ================= -->
+    <!-- ================= MAIN ================= -->
+    <main class="complaint-container">
 
-<main class="officer-details-page">
-
-
-    <!-- ================= HEADER ================= -->
-
-    <section class="details-page-header">
-
-        <div>
-
-            <a
-                href="{% url 'officer_complaints' %}"
-                class="back-link"
-            >
-                ← Back to Complaints
-            </a>
+        <!-- BACK -->
+        <a href="{% url 'officer_complaints' %}" class="back-link">
+            ← Back to Complaints
+        </a>
 
 
-            <div class="details-title-row">
+        <!-- PAGE HEADER -->
+        <div class="page-header">
 
-                <div>
+            <div>
+                <span class="page-label">COMPLAINT DETAILS</span>
 
-                    <span class="section-label">
-                        COMPLAINT DETAILS
-                    </span>
+                <h1>
+                    {{ complaint.title }}
+                </h1>
 
-                    <h1>
-                        Large Pothole on Main Road
-                    </h1>
+                <p class="complaint-number">
+                    Complaint ID:
+                    <strong>#{{ complaint.complaint_id }}</strong>
+                </p>
+            </div>
 
-                    <div class="details-id">
-                        Complaint ID:
-                        <strong>#FMC-000124</strong>
-                    </div>
+            <div class="header-status">
 
-                </div>
+                <span class="status-badge {{ complaint.status|lower }}">
+                    {{ complaint.status|title }}
+                </span>
 
-
-                <span class="status-badge in-progress">
-                    IN PROGRESS
+                <span class="priority-badge">
+                    {{ complaint.priority|default:"HIGH"|upper }}
                 </span>
 
             </div>
 
         </div>
 
-    </section>
 
+        <!-- ================= ISSUE INFORMATION ================= -->
+        <section class="dashboard-card">
 
-    <!-- ================= CONTENT ================= -->
+            <div class="section-heading">
+                <div class="section-number">01</div>
 
-    <div class="officer-details-layout">
+                <div>
+                    <span>ISSUE INFORMATION</span>
+                    <h2>Complaint Information</h2>
+                </div>
+            </div>
 
+            <div class="info-grid">
 
-        <!-- ================= LEFT CONTENT ================= -->
-
-        <section class="details-main">
-
-
-            <!-- ISSUE INFORMATION -->
-
-            <div class="details-card">
-
-                <div class="details-card-header">
-
-                    <div>
-
-                        <span class="section-label">
-                            01 ISSUE INFORMATION
-                        </span>
-
-                        <h2>
-                            Complaint Information
-                        </h2>
-
-                    </div>
-
+                <div class="info-item">
+                    <span>Category</span>
+                    <strong>{{ complaint.category }}</strong>
                 </div>
 
-
-                <div class="issue-info-grid">
-
-                    <div class="info-item">
-
-                        <span>
-                            Category
-                        </span>
-
-                        <strong>
-                            Road & Infrastructure
-                        </strong>
-
-                    </div>
-
-
-                    <div class="info-item">
-
-                        <span>
-                            Reported On
-                        </span>
-
-                        <strong>
-                            02 Sep 2026
-                        </strong>
-
-                    </div>
-
-
-                    <div class="info-item">
-
-                        <span>
-                            Community Upvotes
-                        </span>
-
-                        <strong>
-                            18
-                        </strong>
-
-                    </div>
-
-
-                    <div class="info-item">
-
-                        <span>
-                            Priority
-                        </span>
-
-                        <strong class="priority-high">
-                            HIGH
-                        </strong>
-
-                    </div>
-
+                <div class="info-item">
+                    <span>Reported On</span>
+                    <strong>
+                        {{ complaint.created_at|date:"d M Y" }}
+                    </strong>
                 </div>
 
+                <div class="info-item">
+                    <span>Community Upvotes</span>
+                    <strong>
+                        ↑ {{ complaint.upvotes|default:"0" }}
+                    </strong>
+                </div>
 
-                <div class="issue-description">
-
-                    <span>
-                        Description
-                    </span>
-
-                    <p>
-                        A large pothole has developed near the main road
-                        and is causing difficulty for vehicles and
-                        pedestrians. The pothole becomes more dangerous
-                        during evening hours and needs urgent repair.
-                    </p>
-
+                <div class="info-item">
+                    <span>Priority</span>
+                    <strong class="priority-text">
+                        {{ complaint.priority|default:"HIGH"|upper }}
+                    </strong>
                 </div>
 
             </div>
 
+            <div class="description-box">
 
-            <!-- ================= ISSUE PHOTO ================= -->
+                <span>Description</span>
 
-            <div class="details-card">
+                <p>
+                    {{ complaint.description }}
+                </p>
 
-                <div class="details-card-header">
+            </div>
+
+        </section>
+
+
+        <!-- ================= PHOTO + LOCATION ================= -->
+        <div class="two-column">
+
+
+            <!-- PHOTO -->
+            <section class="dashboard-card">
+
+                <div class="section-heading">
+                    <div class="section-number">02</div>
 
                     <div>
-
-                        <span class="section-label">
-                            02 ISSUE PHOTO
-                        </span>
-
-                        <h2>
-                            Reported Image
-                        </h2>
-
+                        <span>ISSUE PHOTO</span>
+                        <h2>Reported Image</h2>
                     </div>
-
                 </div>
 
+                {% if complaint.photo %}
 
-                <div class="complaint-photo-placeholder">
-
-                    <div class="photo-placeholder-icon">
-                        ▣
+                    <div class="complaint-photo">
+                        <img
+                            src="{{ complaint.photo.url }}"
+                            alt="Complaint Photo"
+                        >
                     </div>
+
+                    <div class="photo-caption">
+                        <strong>Complaint Photo</strong>
+                        <span>Uploaded by citizen</span>
+                    </div>
+
+                {% else %}
+
+                    <div class="no-photo">
+                        <span>▣</span>
+                        <p>No image uploaded</p>
+                    </div>
+
+                {% endif %}
+
+            </section>
+
+
+            <!-- LOCATION -->
+            <section class="dashboard-card">
+
+                <div class="section-heading">
+                    <div class="section-number">03</div>
+
+                    <div>
+                        <span>LOCATION</span>
+                        <h2>Complaint Location</h2>
+                    </div>
+                </div>
+
+                <div class="location-icon">
+                    ●
+                </div>
+
+                <div class="location-details">
+
+                    <span>Complaint Location</span>
 
                     <strong>
-                        Complaint Photo
+                        {{ complaint.address }}
                     </strong>
 
-                    <span>
-                        Uploaded by citizen
-                    </span>
+                </div>
+
+                <div class="coordinates">
+
+                    <div>
+                        <span>Latitude</span>
+                        <strong>
+                            {{ complaint.latitude|default:"N/A" }}
+                        </strong>
+                    </div>
+
+                    <div>
+                        <span>Longitude</span>
+                        <strong>
+                            {{ complaint.longitude|default:"N/A" }}
+                        </strong>
+                    </div>
 
                 </div>
 
+            </section>
+
+        </div>
+
+
+        <!-- ================= STATUS TIMELINE ================= -->
+        <section class="dashboard-card">
+
+            <div class="section-heading">
+                <div class="section-number">04</div>
+
+                <div>
+                    <span>COMPLAINT STATUS</span>
+                    <h2>Status Timeline</h2>
+                </div>
             </div>
 
 
-            <!-- ================= LOCATION ================= -->
+            <div class="status-timeline">
 
-            <div class="details-card">
+                <div class="timeline-item completed">
 
-                <div class="details-card-header">
+                    <div class="timeline-dot">✓</div>
 
-                    <div>
-
-                        <span class="section-label">
-                            03 LOCATION
-                        </span>
-
-                        <h2>
-                            Complaint Location
-                        </h2>
-
-                    </div>
-
-                </div>
-
-
-                <div class="location-map">
-
-                    <div class="map-grid">
-
-                        <div class="map-marker">
-                            ●
-                        </div>
-
-                        <span class="map-label">
-                            Complaint Location
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-                <div class="location-information">
-
-                    <div>
+                    <div class="timeline-content">
+                        <strong>Reported</strong>
+                        <p>Complaint submitted by citizen</p>
 
                         <span>
-                            Address
+                            {{ complaint.created_at|date:"d M Y" }}
                         </span>
-
-                        <strong>
-                            Near Vijay Nagar Square, Indore
-                        </strong>
-
-                    </div>
-
-
-                    <div>
-
-                        <span>
-                            Latitude
-                        </span>
-
-                        <strong>
-                            22.7533
-                        </strong>
-
-                    </div>
-
-
-                    <div>
-
-                        <span>
-                            Longitude
-                        </span>
-
-                        <strong>
-                            75.8937
-                        </strong>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- ================= STATUS TIMELINE ================= -->
-
-            <div class="details-card">
-
-                <div class="details-card-header">
-
-                    <div>
-
-                        <span class="section-label">
-                            04 COMPLAINT STATUS
-                        </span>
-
-                        <h2>
-                            Status Timeline
-                        </h2>
-
                     </div>
 
                 </div>
 
 
-                <div class="status-timeline">
+                <div class="timeline-item
+                    {% if complaint.status == 'in_progress' or complaint.status == 'resolved' %}
+                        completed
+                    {% endif %}">
 
+                    <div class="timeline-dot">●</div>
 
-                    <div class="timeline-item completed">
+                    <div class="timeline-content">
+                        <strong>In Progress</strong>
+                        <p>Complaint is currently being handled</p>
 
-                        <div class="timeline-marker">
-                            ✓
-                        </div>
-
-                        <div class="timeline-content">
-
-                            <strong>
-                                Reported
-                            </strong>
-
-                            <span>
-                                Complaint submitted by citizen
-                            </span>
-
-                            <small>
-                                02 Sep 2026
-                            </small>
-
-                        </div>
-
+                        {% if complaint.status == "in_progress" or complaint.status == "resolved" %}
+                            <span>In progress</span>
+                        {% else %}
+                            <span>Waiting</span>
+                        {% endif %}
                     </div>
 
-
-                    <div class="timeline-line"></div>
-
-
-                    <div class="timeline-item current">
-
-                        <div class="timeline-marker">
-                            ●
-                        </div>
-
-                        <div class="timeline-content">
-
-                            <strong>
-                                In Progress
-                            </strong>
-
-                            <span>
-                                Complaint is currently being handled
-                            </span>
-
-                            <small>
-                                03 Sep 2026
-                            </small>
-
-                        </div>
-
-                    </div>
+                </div>
 
 
-                    <div class="timeline-line"></div>
+                <div class="timeline-item
+                    {% if complaint.status == 'resolved' %}
+                        completed
+                    {% endif %}">
 
+                    <div class="timeline-dot">○</div>
 
-                    <div class="timeline-item">
+                    <div class="timeline-content">
+                        <strong>Resolved</strong>
+                        <p>Waiting for resolution</p>
 
-                        <div class="timeline-marker">
-                            ○
-                        </div>
-
-                        <div class="timeline-content">
-
-                            <strong>
-                                Resolved
-                            </strong>
-
-                            <span>
-                                Waiting for resolution
-                            </span>
-
-                        </div>
-
+                        {% if complaint.status == "resolved" %}
+                            <span>Completed</span>
+                        {% else %}
+                            <span>Pending</span>
+                        {% endif %}
                     </div>
 
                 </div>
@@ -449,366 +306,273 @@ officer-details-page
         </section>
 
 
-        <!-- ================= RIGHT SIDEBAR ================= -->
+        <!-- ================= CITIZEN ================= -->
+        <section class="citizen-card">
 
-        <aside class="details-sidebar">
+            <div class="citizen-avatar">
+                {{ complaint.citizen.user.first_name|default:"U"|first|upper }}
+            </div>
 
+            <div class="citizen-info">
 
-            <!-- REPORTED BY -->
+                <span>REPORTED BY</span>
 
-            <div class="sidebar-card">
+                <h3>
+                    {{ complaint.citizen.user.get_full_name|default:"Citizen" }}
+                </h3>
 
-                <span class="section-label">
-                    REPORTED BY
-                </span>
+                <p>Citizen</p>
 
-                <div class="reported-user">
+            </div>
 
-                    <div class="reported-avatar">
-                        SF
-                    </div>
+            <div class="citizen-id">
 
-                    <div>
+                <span>Citizen ID</span>
 
-                        <strong>
-                            Sadaf Fatima
-                        </strong>
+                <strong>
+                    {{ complaint.citizen.citizen_id }}
+                </strong>
 
-                        <span>
-                            Citizen
-                        </span>
+            </div>
 
-                    </div>
-
-                </div>
+        </section>
 
 
-                <div class="citizen-id">
+        <!-- ================= VERIFICATION ================= -->
+        <section class="dashboard-card">
 
-                    <span>
-                        Citizen ID
-                    </span>
+            <div class="section-heading">
 
-                    <strong>
-                        FMC-CIT-000001
-                    </strong>
+                <div class="section-number">✓</div>
 
+                <div>
+                    <span>COMPLAINT VERIFICATION</span>
+                    <h2>Review Complaint</h2>
                 </div>
 
             </div>
 
+            <p class="section-description">
+                Verify the complaint before starting the resolution process.
+            </p>
 
-            <!-- VERIFICATION -->
+            <div class="verification-actions">
 
-            <div class="sidebar-card">
-
-                <span class="section-label">
-                    COMPLAINT VERIFICATION
-                </span>
-
-                <h3>
-                    Review Complaint
-                </h3>
-
-                <p>
-                    Verify the complaint before starting the
-                    resolution process.
-                </p>
-
-
-                <button class="verify-btn">
+                <button class="verify-btn" type="button">
                     ✓ Verify Complaint
                 </button>
 
-
-                <button class="duplicate-btn">
+                <button class="duplicate-btn" type="button">
                     ⚠ Mark as Duplicate
                 </button>
 
             </div>
 
-
-            <!-- UPDATE STATUS -->
-
-            <div class="sidebar-card">
-
-                <span class="section-label">
-                    UPDATE COMPLAINT
-                </span>
-
-                <h3>
-                    Manage Status
-                </h3>
+        </section>
 
 
-                <label for="status">
-                    Current Status
-                </label>
+        <!-- ================= UPDATE ================= -->
+        <section class="dashboard-card update-card">
 
-                <select id="status">
+            <div class="section-heading">
 
-                    <option>
-                        Reported
-                    </option>
+                <div class="section-number">05</div>
 
-                    <option selected>
-                        In Progress
-                    </option>
-
-                    <option>
-                        Resolved
-                    </option>
-
-                </select>
-
-
-                <label for="resolution-note">
-                    Resolution Note
-                </label>
-
-                <textarea
-                    id="resolution-note"
-                    rows="5"
-                    placeholder="Enter resolution details..."
-                ></textarea>
-
-
-                <label>
-                    Resolution Photo
-                </label>
-
-                <div class="file-upload-box">
-
-                    <span>
-                        + Add resolution photo
-                    </span>
-
-                    <small>
-                        JPG, JPEG or PNG
-                    </small>
-
-                    <input
-                        type="file"
-                        accept=".jpg,.jpeg,.png"
-                    >
-
+                <div>
+                    <span>UPDATE COMPLAINT</span>
+                    <h2>Manage Status</h2>
                 </div>
-
-
-                <button class="update-complaint-btn">
-                    Update Complaint
-                </button>
 
             </div>
 
 
-            <!-- COMMUNITY SUPPORT -->
+            <form method="POST" enctype="multipart/form-data">
 
-            <div class="sidebar-card support-card">
+                {% csrf_token %}
 
-                <span class="section-label">
-                    COMMUNITY SUPPORT
-                </span>
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label>Status</label>
+
+                        <select name="status">
+
+                            <option value="reported"
+                                {% if complaint.status == "reported" %}
+                                    selected
+                                {% endif %}>
+                                Reported
+                            </option>
+
+                            <option value="in_progress"
+                                {% if complaint.status == "in_progress" %}
+                                    selected
+                                {% endif %}>
+                                In Progress
+                            </option>
+
+                            <option value="resolved"
+                                {% if complaint.status == "resolved" %}
+                                    selected
+                                {% endif %}>
+                                Resolved
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Resolution Note</label>
+
+                        <textarea
+                            name="resolution_note"
+                            placeholder="Write resolution details..."
+                        >{{ complaint.resolution_note|default:"" }}</textarea>
+
+                    </div>
+
+
+                    <div class="form-group full-width">
+
+                        <label>Resolution Photo</label>
+
+                        <label class="upload-box">
+
+                            <input
+                                type="file"
+                                name="resolution_photo"
+                                accept=".jpg,.jpeg,.png"
+                            >
+
+                            <span>＋ Add resolution photo</span>
+
+                            <small>
+                                JPG, JPEG or PNG
+                            </small>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <div class="update-footer">
+
+                    <button type="submit" class="update-btn">
+                        Update Complaint
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+        <!-- ================= COMMUNITY ================= -->
+        <section class="support-card">
+
+            <div>
+
+                <span>COMMUNITY SUPPORT</span>
 
                 <div class="support-number">
-                    18
+                    {{ complaint.upvotes|default:"0" }}
                 </div>
 
                 <p>
                     citizens have upvoted this complaint.
                 </p>
 
+            </div>
 
-                <div class="priority-display">
+            <div class="support-priority">
 
-                    <span>
-                        Current Priority
-                    </span>
+                <span>Current Priority</span>
 
-                    <strong>
-                        HIGH
-                    </strong>
+                <strong>
+                    {{ complaint.priority|default:"HIGH"|upper }}
+                </strong>
 
+            </div>
+
+        </section>
+
+
+        <!-- ================= PROGRESS ================= -->
+        <section class="dashboard-card">
+
+            <div class="section-heading">
+
+                <div class="section-number">06</div>
+
+                <div>
+                    <span>COMPLAINT PROGRESS</span>
+                    <h2>Track Complaint Progress</h2>
                 </div>
 
             </div>
 
+            <div class="progress-header">
 
-        </aside>
+                <strong>
+                    {{ complaint.progress|default:"0" }}%
+                </strong>
 
-    </div>
+                <span>
+                    Progress Percentage
+                </span>
 
-    <!-- ================= PROGRESS TRACKER ================= -->
+            </div>
 
-<section class="progress-tracker-card">
+            <div class="progress-bar">
 
-    <div class="progress-header">
+                <div
+                    class="progress-fill"
+                    style="width: {{ complaint.progress|default:'0' }}%;"
+                ></div>
 
-        <div>
-            <p class="card-label">
-                COMPLAINT PROGRESS
-            </p>
+            </div>
 
-            <h2>
-                Track Complaint Progress
-            </h2>
-        </div>
+            <div class="progress-info">
 
-        <div class="progress-percentage">
-            {{ complaint.progress }}%
-        </div>
+                <span>
+                    Progress Update
+                </span>
 
-    </div>
+                <strong>
+                    {{ complaint.progress_note|default:"No progress update available." }}
+                </strong>
 
+            </div>
 
-    <!-- PROGRESS BAR -->
-
-    <div class="progress-bar-container">
-
-        <div
-            class="progress-bar"
-            style="width: {{ complaint.progress }}%;"
-        ></div>
-
-    </div>
+        </section>
 
 
-    <!-- STATUS -->
-
-    <div class="progress-status">
-
-        {% if complaint.progress == 0 %}
-
-            <span class="progress-status-badge reported">
-                Reported
-            </span>
-
-        {% elif complaint.progress < 100 %}
-
-            <span class="progress-status-badge progress">
-                In Progress
-            </span>
-
-        {% else %}
-
-            <span class="progress-status-badge resolved">
-                Resolved
-            </span>
-
-        {% endif %}
-
-    </div>
+    </main>
 
 
-    <!-- UPDATE FORM -->
+    <!-- ================= FOOTER ================= -->
 
-    <form
-        method="POST"
-        action="{% url 'update_complaint_progress' complaint.complaint_id %}"
-        class="progress-update-form"
-    >
+    <footer class="officer-footer">
 
-        {% csrf_token %}
-
-        <div class="form-group">
-
-            <label for="progress">
-                Progress Percentage
-            </label>
-
-            <input
-                type="number"
-                id="progress"
-                name="progress"
-                min="0"
-                max="100"
-                value="{{ complaint.progress }}"
-                required
-            >
-
-        </div>
-
-
-        <div class="form-group">
-
-            <label for="progress_note">
-                Progress Update
-            </label>
-
-            <textarea
-                id="progress_note"
-                name="progress_note"
-                rows="4"
-                placeholder="Enter progress update..."
-            >{{ complaint.progress_note|default:"" }}</textarea>
-
-        </div>
-
-
-        <button
-            type="submit"
-            class="primary-dashboard-btn"
-        >
-            Update Progress
-        </button>
-
-    </form>
-
-</section>
-
-<div class="mini-progress">
-
-    <div class="mini-progress-header">
-
-        <span>Progress</span>
-
-        <strong>
-            {{ complaint.progress }}%
-        </strong>
-
-    </div>
-
-    <div class="mini-progress-track">
-
-        <div
-            class="mini-progress-fill"
-            style="width: {{ complaint.progress }}%;"
-        ></div>
-
-    </div>
-
-</div>
-
-    
-
-</main>
-
-
-<!-- ================= FOOTER ================= -->
-
-<footer class="footer">
-
-    <div class="footer-content">
-
-        <div>
-
-            <strong>
-                FixMyCity
-            </strong>
-
-            <p>
-                Making cities better, one complaint at a time.
-            </p>
-
-        </div>
-
+        <strong>FixMyCity</strong>
 
         <span>
-            Officer Control Center
+            Making cities better, one complaint at a time.
         </span>
 
-    </div>
+        <small>
+            Officer Control Center
+        </small>
 
-</footer>
+    </footer>
+
+</div>
 
 {% endblock %}

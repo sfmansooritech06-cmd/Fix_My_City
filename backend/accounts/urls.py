@@ -108,10 +108,10 @@ urlpatterns = [
     
     
     path(
-    "officer/complaint/<int:complaint_id>/update-status/",
-    views.update_complaint_status,
-    name="update_complaint_status"
-    ),
+            "officer-complaint-details/<int:complaint_id>/",
+            views.officer_complaint_details,
+            name="officer_complaint_details"
+        ),
     path(
             "officer-logout/",
             officer_logout,

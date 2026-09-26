@@ -7,6 +7,14 @@ Citizen Dashboard | FixMyCity
 {% block content %}
 
 <body class="dashboard-page">
+     <!-- SUCCESS / ERROR MESSAGES -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="dashboard-message {{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
 
     <!-- ================= NAVBAR ================= -->
     <header class="dashboard-navbar">
