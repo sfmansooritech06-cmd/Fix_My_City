@@ -110,12 +110,7 @@ def register_citizen(request):
         security_question = security_question,
         security_answer = make_password(security_answer.strip().lower())
     )
-
-    return JsonResponse({
-        "success": True,
-        "message": "Account created successfully.",
-        "citizen_id": citizen.citizen_id
-    }, status=201)
+    return redirect("/citizen-dashboard/")
 
 
 # =====================================================
@@ -407,6 +402,7 @@ def officer_register(request):
         username=employee_id,
         email=email,
         password=password,
+        
         role="officer"
     )
 
@@ -951,11 +947,12 @@ def submit_complaint(request):
         status="reported"
     )
 
-    return JsonResponse({
-        "success": True,
-        "message": "Complaint submitted successfully.",
-        "complaint_id": complaint.complaint_id
-    })
+    messages.success(
+    request,
+    f"Your complaint has been successfully submitted. Complaint ID: {complaint.complaint_id}"
+    )
+
+    return redirect("citizen_dashboard")
 
 
 # =====================================================
