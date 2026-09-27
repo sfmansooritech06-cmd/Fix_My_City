@@ -161,6 +161,51 @@ auth-page
                 >
 
             </div>
+            <div class="form-group">
+
+                <label for="security_question">
+                    Security Question
+                </label>
+
+                <select
+                    id="security_question"
+                    name="security_question"
+                    required
+                >
+                    <option value="">Select a security question</option>
+                    <option value="pet">
+                        What was the name of your first pet?
+                    </option>
+                    <option value="school">
+                        What was the name of your first school?
+                    </option>
+                    <option value="city">
+                        What city were you born in?
+                    </option>
+                    <option value="nickname">
+                        What was your childhood nickname?
+                    </option>
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="security_answer">
+                    Security Answer
+                </label>
+
+                <input
+                    type="text"
+                    id="security_answer"
+                    name="security_answer"
+                    placeholder="Enter your answer"
+                    required
+                    autocomplete="off"
+                >
+
+            </div>
 
 
 

@@ -26,6 +26,13 @@ from .views import (
     officer_complaint_details,
     officer_logout,
 
+    # Forget password
+
+    forgot_password_page,
+    forgot_password_start,
+    forgot_password_verify,
+    forgot_password_reset,
+
     # Admin Verification & Login
     admin_officer_verification,
     approve_officer,
@@ -82,6 +89,33 @@ urlpatterns = [
     path("officer-login/", officer_login_page, name="officer_login"),
     path("officer-login/submit/", officer_login, name="officer_login_submit"),
 
+    # =====================================================
+# FORGOT PASSWORD
+# =====================================================
+
+path(
+    "forgot-password/",
+    forgot_password_page,
+    name="forgot_password"
+),
+
+path(
+    "forgot-password/start/",
+    forgot_password_start,
+    name="forgot_password_start"
+),
+
+path(
+    "forgot-password/verify/",
+    forgot_password_verify,
+    name="forgot_password_verify"
+),
+
+path(
+    "forgot-password/reset/",
+    forgot_password_reset,
+    name="forgot_password_reset"
+),
 
     # =====================================================
 # OFFICER DASHBOARD & COMPLAINTS

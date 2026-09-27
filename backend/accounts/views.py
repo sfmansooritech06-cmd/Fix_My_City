@@ -3,8 +3,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.http import require_POST
 from django.contrib import messages
-
+from django.contrib.auth.hashers import make_password , check_password
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 from .models import User, Citizen, Officer, Complaint
+from django.db.models import Q
 
 import os
 from PIL import Image, UnidentifiedImageError
@@ -40,12 +43,21 @@ def register_citizen(request):
     phone = request.POST.get("phone", "").strip()
     password = request.POST.get("password", "")
     confirm_password = request.POST.get("confirm_password", "")
-
+    security_question = request.POST.get("security_question","").strip()
+    security_answer = request.POST.get("security_answer","").strip()
+   
     # Required fields
-    if not full_name or not email or not phone or not password:
-        return JsonResponse({
+    if not all([
+            full_name,
+            email,
+            phone,
+            password,
+            security_question,
+            security_answer
+        ]):
+            return JsonResponse({
             "success": False,
-            "message": "All fields are required."
+            "message": "Please fill all the required fields."
         }, status=400)
 
     # Password check
@@ -94,7 +106,9 @@ def register_citizen(request):
         user=user,
         citizen_id=citizen_id,
         full_name=full_name,
-        phone=phone
+        phone=phone,
+        security_question = security_question,
+        security_answer = make_password(security_answer.strip().lower())
     )
 
     return JsonResponse({
@@ -164,7 +178,7 @@ def citizen_login(request):
     return JsonResponse({
         "success": False,
         "message": "Invalid email/citizen ID or password."
-    }, status=401)
+    }, status=400)
 
 
 # =====================================================
@@ -320,9 +334,22 @@ def officer_register(request):
     department = request.POST.get("department", "").strip()
     password = request.POST.get("password", "")
     confirm_password = request.POST.get("confirm_password", "")
+    security_question = request.POST.get("security_question","").strip()
+    security_answer = request.POST.get("security_answer","").strip()
+
 
     # Required fields
-    if not all([full_name, employee_id, email, phone, department, password, confirm_password]):
+    if not all([
+        full_name,
+        employee_id,
+        email,
+        phone,
+        department,
+        password,
+        confirm_password,
+        security_question,
+        security_answer
+        ]):
         return JsonResponse({
             "success": False,
             "message": "All fields are required."
@@ -390,7 +417,9 @@ def officer_register(request):
         full_name=full_name,
         phone=phone,
         department=department,
-        is_approved=False
+        is_approved=False,
+        security_question = security_question,
+        security_answer = make_password(security_answer.strip().lower())
     )
 
     return JsonResponse({
@@ -1576,3 +1605,444 @@ def update_complaint_progress(request, complaint_id):
             )
 
     return redirect("officer_dashboard")
+
+# =====================================================
+# FORGOT PASSWORD
+# SECURITY QUESTION BASED RESET
+# =====================================================
+
+def forgot_password_page(request):
+
+    role = request.GET.get("role", "citizen").lower()
+
+    if role not in ["citizen", "officer"]:
+        role = "citizen"
+
+    return render(
+        request,
+        "forgot_password.html",
+        {
+            "role": role
+        }
+    )
+
+
+# =====================================================
+# FORGOT PASSWORD - FIND ACCOUNT
+# =====================================================
+
+@require_POST
+def forgot_password_start(request):
+
+    role = request.POST.get("role", "citizen").lower()
+    identifier = request.POST.get("identifier", "").strip()
+
+    if role not in ["citizen", "officer"]:
+        return render(
+            request,
+            "forgot_password.html",
+            {
+                "role": "citizen",
+                "error": "Invalid account type."
+            }
+        )
+
+    if not identifier:
+        return render(
+            request,
+            "forgot_password.html",
+            {
+                "role": role,
+                "error": "Please enter your account ID or email."
+            }
+        )
+
+    profile = None
+
+    if role == "citizen":
+
+        profile = (
+            Citizen.objects
+            .select_related("user")
+            .filter(
+                user__role="citizen"
+            )
+            .filter(
+                Q(citizen_id__iexact=identifier) |
+                Q(user__email__iexact=identifier)
+            )
+            .first()
+        )
+
+    else:
+
+        profile = (
+            Officer.objects
+            .select_related("user")
+            .filter(
+                user__role="officer"
+            )
+            .filter(
+                Q(employee_id__iexact=identifier) |
+                Q(user__email__iexact=identifier)
+            )
+            .first()
+        )
+
+    if not profile:
+
+        return render(
+            request,
+            "forgot_password.html",
+            {
+                "role": role,
+                "error": "Account not found. Please check your details."
+            }
+        )
+
+    # Security question must exist
+    if not profile.security_question or not profile.security_answer:
+
+        return render(
+            request,
+            "forgot_password.html",
+            {
+                "role": role,
+                "error": (
+                    "Security question is not configured for this account. "
+                    "Please contact the administrator."
+                )
+            }
+        )
+
+    # Store reset information in session
+    request.session["forgot_reset_profile_id"] = profile.id
+    request.session["forgot_reset_role"] = role
+    request.session["forgot_reset_attempts"] = 0
+
+    question_dict = dict(
+        Citizen.SECURITY_QUESTION_CHOICES
+    )
+
+    question_text = question_dict.get(
+        profile.security_question
+    )
+
+    return render(
+        request,
+        "forgot_password_question.html",
+        {
+            "role": role,
+            "question": question_text
+        }
+    )
+
+
+# =====================================================
+# FORGOT PASSWORD - VERIFY SECURITY ANSWER
+# =====================================================
+
+@require_POST
+def forgot_password_verify(request):
+
+    role = request.session.get("forgot_reset_role")
+    profile_id = request.session.get("forgot_reset_profile_id")
+
+    if not role or not profile_id:
+        return redirect(
+            f"/forgot-password/?role={role or 'citizen'}"
+        )
+
+    attempts = request.session.get(
+        "forgot_reset_attempts",
+        0
+    )
+
+    if attempts >= 3:
+
+        request.session.pop(
+            "forgot_reset_profile_id",
+            None
+        )
+        request.session.pop(
+            "forgot_reset_role",
+            None
+        )
+        request.session.pop(
+            "forgot_reset_attempts",
+            None
+        )
+
+        return render(
+            request,
+            "forgot_password.html",
+            {
+                "role": role,
+                "error": (
+                    "Too many incorrect attempts. "
+                    "Please start the password reset process again."
+                )
+            }
+        )
+
+    answer = request.POST.get(
+        "security_answer",
+        ""
+    ).strip().lower()
+
+    if role == "citizen":
+
+        profile = (
+            Citizen.objects
+            .select_related("user")
+            .filter(id=profile_id)
+            .first()
+        )
+
+    else:
+
+        profile = (
+            Officer.objects
+            .select_related("user")
+            .filter(id=profile_id)
+            .first()
+        )
+
+    if not profile:
+
+        request.session.flush()
+
+        return redirect(
+            "/forgot-password/"
+        )
+
+    # Compare hashed answer
+    if not check_password(
+        answer,
+        profile.security_answer
+    ):
+
+        attempts += 1
+
+        request.session[
+            "forgot_reset_attempts"
+        ] = attempts
+
+        remaining = 3 - attempts
+
+        if remaining <= 0:
+
+            request.session.pop(
+                "forgot_reset_profile_id",
+                None
+            )
+            request.session.pop(
+                "forgot_reset_role",
+                None
+            )
+            request.session.pop(
+                "forgot_reset_attempts",
+                None
+            )
+
+            return render(
+                request,
+                "forgot_password.html",
+                {
+                    "role": role,
+                    "error": (
+                        "Too many incorrect attempts. "
+                        "Please start again."
+                    )
+                }
+            )
+
+        question_dict = dict(
+            Citizen.SECURITY_QUESTION_CHOICES
+        )
+
+        return render(
+            request,
+            "forgot_password_question.html",
+            {
+                "role": role,
+                "question": question_dict.get(
+                    profile.security_question
+                ),
+                "error": (
+                    f"Incorrect answer. "
+                    f"{remaining} attempt(s) remaining."
+                )
+            }
+        )
+
+    # Answer correct
+    request.session[
+        "forgot_reset_verified"
+    ] = True
+
+    return render(
+        request,
+        "forgot_password_reset.html",
+        {
+            "role": role
+        }
+    )
+
+
+# =====================================================
+# FORGOT PASSWORD - SET NEW PASSWORD
+# =====================================================
+
+@require_POST
+def forgot_password_reset(request):
+
+    role = request.session.get(
+        "forgot_reset_role"
+    )
+
+    profile_id = request.session.get(
+        "forgot_reset_profile_id"
+    )
+
+    verified = request.session.get(
+        "forgot_reset_verified",
+        False
+    )
+
+    if not role or not profile_id or not verified:
+
+        return redirect(
+            f"/forgot-password/?role={role or 'citizen'}"
+        )
+
+    new_password = request.POST.get(
+        "new_password",
+        ""
+    )
+
+    confirm_password = request.POST.get(
+        "confirm_password",
+        ""
+    )
+
+    if not new_password or not confirm_password:
+
+        return render(
+            request,
+            "forgot_password_reset.html",
+            {
+                "role": role,
+                "error": "All fields are required."
+            }
+        )
+
+    if new_password != confirm_password:
+
+        return render(
+            request,
+            "forgot_password_reset.html",
+            {
+                "role": role,
+                "error": "Passwords do not match."
+            }
+        )
+
+    if len(new_password) < 8:
+
+        return render(
+            request,
+            "forgot_password_reset.html",
+            {
+                "role": role,
+                "error": (
+                    "Password must contain at least 8 characters."
+                )
+            }
+        )
+
+    if role == "citizen":
+
+        profile = (
+            Citizen.objects
+            .select_related("user")
+            .filter(id=profile_id)
+            .first()
+        )
+
+    else:
+
+        profile = (
+            Officer.objects
+            .select_related("user")
+            .filter(id=profile_id)
+            .first()
+        )
+
+    if not profile:
+
+        request.session.flush()
+
+        return redirect(
+            "/forgot-password/"
+        )
+
+    user = profile.user
+
+    # Django password validation
+    try:
+        validate_password(
+            new_password,
+            user
+        )
+
+    except ValidationError as e:
+
+        return render(
+            request,
+            "forgot_password_reset.html",
+            {
+                "role": role,
+                "error": " ".join(
+                    e.messages
+                )
+            }
+        )
+
+    # Set new password securely
+    user.set_password(
+        new_password
+    )
+
+    user.save(
+        update_fields=["password"]
+    )
+
+    # Clear reset session
+    request.session.pop(
+        "forgot_reset_profile_id",
+        None
+    )
+
+    request.session.pop(
+        "forgot_reset_role",
+        None
+    )
+
+    request.session.pop(
+        "forgot_reset_attempts",
+        None
+    )
+
+    request.session.pop(
+        "forgot_reset_verified",
+        None
+    )
+
+    return render(
+        request,
+        "forgot_password_complete.html",
+        {
+            "role": role
+        }
+    )

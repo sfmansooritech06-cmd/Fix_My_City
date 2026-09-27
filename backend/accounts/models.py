@@ -2,6 +2,10 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
+# =====================================================
+# USER
+# =====================================================
+
 class User(AbstractUser):
 
     ROLE_CHOICES = (
@@ -10,7 +14,9 @@ class User(AbstractUser):
         ('admin', 'Admin'),
     )
 
-    email = models.EmailField(unique=True)
+    email = models.EmailField(
+        unique=True
+    )
 
     role = models.CharField(
         max_length=20,
@@ -22,7 +28,18 @@ class User(AbstractUser):
         return self.username
 
 
+# =====================================================
+# CITIZEN
+# =====================================================
+
 class Citizen(models.Model):
+
+    SECURITY_QUESTION_CHOICES = (
+        ("pet", "What was the name of your first pet?"),
+        ("school", "What was the name of your first school?"),
+        ("city", "What city were you born in?"),
+        ("nickname", "What was your childhood nickname?"),
+    )
 
     user = models.OneToOneField(
         User,
@@ -43,6 +60,19 @@ class Citizen(models.Model):
         max_length=15
     )
 
+    # Security question used for password recovery
+    security_question = models.CharField(
+        max_length=30,
+        choices=SECURITY_QUESTION_CHOICES,
+        default=""
+    )
+
+    # Stores hashed security answer
+    security_answer = models.CharField(
+        max_length=255,
+        default=""
+    )
+
     is_approved = models.BooleanField(
         default=False
     )
@@ -50,6 +80,10 @@ class Citizen(models.Model):
     def __str__(self):
         return f"{self.full_name} ({self.citizen_id})"
 
+
+# =====================================================
+# OFFICER
+# =====================================================
 
 class Officer(models.Model):
 
@@ -60,6 +94,13 @@ class Officer(models.Model):
         ('water', 'Water Supply'),
         ('property', 'Public Property'),
         ('other', 'Other'),
+    )
+
+    SECURITY_QUESTION_CHOICES = (
+        ("pet", "What was the name of your first pet?"),
+        ("school", "What was the name of your first school?"),
+        ("city", "What city were you born in?"),
+        ("nickname", "What was your childhood nickname?"),
     )
 
     user = models.OneToOneField(
@@ -86,6 +127,19 @@ class Officer(models.Model):
         choices=DEPARTMENT_CHOICES
     )
 
+    # Security question used for password recovery
+    security_question = models.CharField(
+        max_length=30,
+        choices=SECURITY_QUESTION_CHOICES,
+        default=""
+    )
+
+    # Stores hashed security answer
+    security_answer = models.CharField(
+        max_length=255,
+        default=""
+    )
+
     is_approved = models.BooleanField(
         default=False
     )
@@ -97,6 +151,10 @@ class Officer(models.Model):
     def __str__(self):
         return f"{self.full_name} ({self.employee_id})"
 
+
+# =====================================================
+# COMPLAINT
+# =====================================================
 
 class Complaint(models.Model):
 
@@ -177,6 +235,27 @@ class Complaint(models.Model):
         default=0
     )
 
+    # =================================================
+    # OFFICER PROGRESS
+    # =================================================
+
+    progress = models.PositiveIntegerField(
+        default=0
+    )
+
+    progress_note = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    progress_updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    # =================================================
+    # TIMESTAMPS
+    # =================================================
+
     created_at = models.DateTimeField(
         auto_now_add=True
     )
@@ -187,11 +266,3 @@ class Complaint(models.Model):
 
     def __str__(self):
         return f"{self.complaint_id} - {self.title}"
-    
-progress = models.PositiveIntegerField(default=0)
-
-progress_note = models.TextField(blank=True, null=True)
-
-progress_updated_at = models.DateTimeField(
-    auto_now=True
-)
