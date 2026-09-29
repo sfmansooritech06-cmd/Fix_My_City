@@ -234,6 +234,7 @@ def citizen_dashboard(request):
 
     initials = initials.upper()
 
+# error fixed we won 
     # =====================================================
     # DASHBOARD DATA
     # =====================================================
