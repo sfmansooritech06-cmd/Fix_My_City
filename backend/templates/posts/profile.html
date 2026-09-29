@@ -1,0 +1,131 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ profile_user.username }} - Profile</title>
+
+    <link rel="stylesheet" href="{% static 'posts/style.css' %}">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+
+        <h2>
+            InstaFeed
+        </h2>
+
+        <div class="nav-links">
+
+            <a href="{% url 'feed' %}">
+                🏠 Home
+            </a>
+
+            <a href="{% url 'create_post' %}">
+                ➕ Create
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- Profile -->
+    <main class="profile-container">
+
+        <section class="profile-header">
+
+            <div class="profile-avatar">
+                {{ profile_user.username|first|upper }}
+            </div>
+
+            <div class="profile-info">
+
+                <h1>
+                    @{{ profile_user.username }}
+                </h1>
+
+                <div class="profile-stats">
+
+                    <div>
+                        <strong>{{ user_posts.count }}</strong>
+                        <span>Posts</span>
+                    </div>
+
+                    <div>
+                        <strong>{{ profile_user.followers.count }}</strong>
+                        <span>Followers</span>
+                    </div>
+
+                    <div>
+                        <strong>{{ profile_user.following.count }}</strong>
+                        <span>Following</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- User Posts -->
+
+        <section class="profile-posts">
+
+            <h2>
+                My Posts
+            </h2>
+
+            {% if user_posts %}
+
+                <div class="post-grid">
+
+                    {% for post in user_posts %}
+
+                        <div class="profile-post">
+
+                            <img
+                                src="{{ post.image.url }}"
+                                alt="Post by {{ profile_user.username }}"
+                            >
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="no-posts">
+
+                    <h3>
+                        No posts yet 📸
+                    </h3>
+
+                    <p>
+                        Create your first post!
+                    </p>
+
+                    <a href="{% url 'create_post' %}">
+                        Create Post
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>

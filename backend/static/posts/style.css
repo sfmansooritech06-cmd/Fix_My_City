@@ -1,0 +1,406 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f5f5;
+    color: #222;
+}
+
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar {
+    height: 64px;
+    background: #ffffff;
+    border-bottom: 1px solid #ddd;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 30px;
+
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+
+    background: linear-gradient(
+        45deg,
+        #feda75,
+        #fa7e1e,
+        #d62976,
+        #962fbf,
+        #4f5bd5
+    );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #222;
+    font-size: 15px;
+}
+
+.logout-btn {
+    text-decoration: none;
+    background: #111;
+    color: white;
+
+    padding: 8px 16px;
+    border-radius: 8px;
+
+    font-size: 14px;
+}
+
+
+/* =========================
+   FEED
+========================= */
+
+.feed {
+    width: 600px;
+    max-width: 95%;
+
+    margin: 30px auto 100px;
+}
+
+
+/* =========================
+   POST CARD
+========================= */
+
+.post-card {
+    background: white;
+
+    border: 1px solid #ddd;
+    border-radius: 12px;
+
+    margin-bottom: 25px;
+
+    overflow: hidden;
+}
+
+
+/* =========================
+   POST HEADER
+========================= */
+
+.post-header {
+    height: 65px;
+
+    padding: 10px 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.profile-circle {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 50%;
+
+    background: linear-gradient(
+        135deg,
+        #ff7a18,
+        #af002d 70%
+    );
+
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.user-info h3 {
+    font-size: 14px;
+}
+
+.user-info span {
+    font-size: 12px;
+    color: #888;
+}
+
+.more-btn {
+    border: none;
+    background: none;
+
+    font-size: 18px;
+
+    cursor: pointer;
+}
+
+
+/* =========================
+   POST IMAGE
+========================= */
+
+.post-image-container {
+    width: 100%;
+    background: #eee;
+}
+
+.post-image {
+    width: 100%;
+
+    height: 600px;
+
+    display: block;
+
+    object-fit: cover;
+}
+
+
+/* =========================
+   ACTIONS
+========================= */
+
+.post-actions {
+    padding: 10px 15px 5px;
+
+    display: flex;
+    justify-content: space-between;
+}
+
+.left-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.action-btn {
+    border: none;
+    background: transparent;
+
+    font-size: 27px;
+
+    cursor: pointer;
+
+    transition: transform 0.15s;
+}
+
+.action-btn:hover {
+    transform: scale(1.15);
+}
+
+.like-btn:hover {
+    color: #ed4956;
+}
+
+
+/* =========================
+   LIKES
+========================= */
+
+.likes {
+    padding: 5px 15px;
+
+    font-size: 14px;
+
+    font-weight: bold;
+}
+
+
+/* =========================
+   CAPTION
+========================= */
+
+.caption {
+    padding: 5px 15px;
+
+    font-size: 14px;
+
+    line-height: 22px;
+}
+
+.caption strong {
+    margin-right: 6px;
+}
+
+
+/* =========================
+   COMMENTS
+========================= */
+
+.comments {
+    padding: 8px 15px;
+}
+
+.comments p {
+    font-size: 14px;
+
+    margin-bottom: 7px;
+}
+
+.comments strong {
+    margin-right: 5px;
+}
+
+.view-comments {
+    border: none;
+    background: transparent;
+
+    color: #888;
+
+    font-size: 14px;
+
+    cursor: pointer;
+}
+
+
+/* =========================
+   COMMENT BOX
+========================= */
+
+.comment-box {
+    border-top: 1px solid #eee;
+
+    padding: 12px 15px;
+
+    display: flex;
+    align-items: center;
+}
+
+.comment-box input {
+    flex: 1;
+
+    border: none;
+    outline: none;
+
+    font-size: 14px;
+}
+
+.comment-box button {
+    border: none;
+
+    background: transparent;
+
+    color: #0095f6;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+
+/* =========================
+   MOBILE NAVIGATION
+========================= */
+
+.bottom-nav {
+    display: none;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+
+    .navbar {
+        padding: 0 15px;
+    }
+
+    .logo {
+        font-size: 21px;
+    }
+
+    .nav-actions {
+        gap: 10px;
+    }
+
+    .nav-link {
+        display: none;
+    }
+
+    .feed {
+        width: 100%;
+        max-width: 100%;
+
+        margin-top: 10px;
+    }
+
+    .post-card {
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+
+    .post-image {
+        height: 500px;
+    }
+
+    .bottom-nav {
+        position: fixed;
+
+        bottom: 0;
+        left: 0;
+
+        width: 100%;
+        height: 60px;
+
+        background: white;
+
+        border-top: 1px solid #ddd;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: space-around;
+
+        z-index: 200;
+    }
+
+    .bottom-nav a {
+        text-decoration: none;
+
+        color: #222;
+
+        font-size: 25px;
+    }
+
+    .bottom-nav .add-post {
+        width: 35px;
+        height: 35px;
+
+        border: 2px solid #222;
+
+        border-radius: 10px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-size: 25px;
+    }
+}

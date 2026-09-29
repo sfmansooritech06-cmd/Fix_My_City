@@ -1,0 +1,548 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+```
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>InstaScroll</title>
+
+<link rel="stylesheet" href="{% static 'posts/style.css' %}">
+```
+
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<header class="navbar">
+
+```
+<div class="logo">
+    FixMyCity
+</div>
+
+
+<div class="nav-actions">
+
+    <a href="/" class="nav-link active">
+        🏠 Home
+    </a>
+
+    <a href="#" class="nav-link">
+        🔍 Explore
+    </a>
+
+    <a href="#" class="nav-link">
+        ❤️ Activity
+    </a>
+
+    <a href="{% url 'create_post' %}" class="create-post-btn">
+    + Create Post
+    </a>
+
+    <a href="{% url 'profile' %}">
+    👤 Profile
+    </a>
+
+
+    {% if request.user.is_authenticated %}
+
+        <a href="#" class="profile-link">
+
+            <div class="nav-avatar">
+
+                {{ request.user.username|first|upper }}
+
+            </div>
+
+        </a>
+
+        <a href="#" class="logout-btn">
+            Logout
+        </a>
+
+    {% endif %}
+
+</div>
+```
+
+</header>
+
+<!-- ================= MAIN FEED ================= -->
+
+<main class="feed-container">
+
+```
+<!-- Feed Heading -->
+
+<div class="feed-top">
+
+    <div>
+
+        <h1>
+            For You
+        </h1>
+
+        <p>
+            Discover posts from the community
+        </p>
+
+    </div>
+
+
+    <a href="#" class="create-post-btn">
+        + Create Post
+    </a>
+
+</div>
+
+
+
+<!-- ================= POSTS ================= -->
+
+<section class="feed">
+
+
+    {% for post in posts %}
+
+
+    <article class="post-card">
+
+
+        <!-- ================= POST HEADER ================= -->
+
+        <div class="post-header">
+
+
+            <div class="user-info">
+
+
+                <div class="profile-circle">
+
+                    {{ post.author.username|first|upper }}
+
+                </div>
+
+
+                <div class="user-details">
+
+                    <h3>
+
+                        {{ post.author.username }}
+
+                    </h3>
+
+
+                    <span>
+
+                        {{ post.created_at|timesince }} ago
+
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+            <button
+                type="button"
+                class="more-btn"
+            >
+
+                ⋯
+
+            </button>
+
+
+        </div>
+
+
+
+        <!-- ================= POST IMAGE ================= -->
+
+        <div class="post-image-container">
+
+
+            {% if post.image %}
+
+                <img
+                    src="{{ post.image.url }}"
+                    alt="{{ post.caption }}"
+                    class="post-image"
+                >
+
+            {% else %}
+
+                <div class="no-image">
+
+                    📷
+                    <p>No image</p>
+
+                </div>
+
+            {% endif %}
+
+
+        </div>
+
+
+
+        <!-- ================= ACTION BUTTONS ================= -->
+
+        <div class="post-actions">
+
+
+            <div class="left-actions">
+
+
+                <!-- LIKE -->
+
+        <button
+    class="like-btn"
+    data-post-id="{{ post.id }}"
+    onclick="likePost(this)"
+>
+    ❤️
+</button>
+
+                <!-- COMMENT -->
+
+                <button
+                    type="button"
+                    class="action-btn comment-btn"
+                >
+
+                    💬
+
+                </button>
+
+
+                <!-- SHARE -->
+
+                <button
+                    type="button"
+                    class="action-btn share-btn"
+                >
+
+                    ↗
+
+                </button>
+
+
+            </div>
+
+
+            <!-- SAVE -->
+
+            <button
+                type="button"
+                class="action-btn save-btn"
+            >
+
+                ♡
+
+            </button>
+
+
+        </div>
+
+
+
+        <!-- ================= LIKE COUNT ================= -->
+
+        <div class="likes">
+
+            <span class="like-count">
+
+                {{ post.like_count }}
+
+            </span>
+
+            likes
+
+        </div>
+
+
+
+        <!-- ================= CAPTION ================= -->
+
+        {% if post.caption %}
+
+        <div class="caption">
+
+
+            <strong>
+
+                {{ post.author.username }}
+
+            </strong>
+
+
+            <span>
+
+                {{ post.caption }}
+
+            </span>
+
+
+        </div>
+
+        {% endif %}
+
+
+
+        <!-- ================= COMMENTS ================= -->
+
+        <div class="comments">
+
+
+            {% for comment in post.comments.all|slice:":2" %}
+
+
+                <div class="comment">
+
+
+                    <strong>
+
+                        {{ comment.user.username }}
+
+                    </strong>
+
+
+                    <span>
+
+                        {{ comment.text }}
+
+                    </span>
+
+
+                </div>
+
+
+            {% empty %}
+
+
+                <p class="no-comments">
+
+                    No comments yet.
+
+                </p>
+
+
+            {% endfor %}
+
+
+
+            {% if post.comment_count > 0 %}
+
+
+                <button
+                    type="button"
+                    class="view-comments"
+                >
+
+                    View all
+                    {{ post.comment_count }}
+                    comments
+
+                </button>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+
+        <!-- ================= ADD COMMENT ================= -->
+
+
+        {% if request.user.is_authenticated %}
+
+
+        <form
+            method="POST"
+            action="{% url 'add_comment' post.id %}"
+            class="comment-box"
+        >
+
+
+            {% csrf_token %}
+
+
+            <div class="comment-avatar">
+
+                {{ request.user.username|first|upper }}
+
+            </div>
+
+
+            <input
+                type="text"
+                name="comment"
+                placeholder="Add a comment..."
+                autocomplete="off"
+                required
+            >
+
+
+            <button
+                type="submit"
+            >
+
+                Post
+
+            </button>
+
+
+        </form>
+
+
+        {% endif %}
+
+
+    </article>
+
+
+    {% empty %}
+
+
+    <!-- ================= NO POSTS ================= -->
+
+
+    <div class="empty-feed">
+
+
+        <div class="empty-icon">
+
+            📸
+
+        </div>
+
+
+        <h2>
+
+            No posts yet
+
+        </h2>
+
+
+        <p>
+
+            Be the first person to share something
+            with the community.
+
+        </p>
+
+
+        <a
+            href="#"
+            class="create-post-btn"
+        >
+
+            Create your first post
+
+        </a>
+
+
+    </div>
+
+
+    {% endfor %}
+
+
+</section>
+```
+
+</main>
+
+<!-- ================= MOBILE NAV ================= -->
+
+<nav class="bottom-nav">
+
+```
+<a
+    href="/"
+    class="mobile-nav-item active"
+>
+
+    🏠
+
+    <span>
+        Home
+    </span>
+
+</a>
+
+
+<a
+    href="#"
+    class="mobile-nav-item"
+>
+
+    🔍
+
+    <span>
+        Explore
+    </span>
+
+</a>
+
+
+<a
+    href="#"
+    class="mobile-add-post"
+>
+
+    +
+
+</a>
+
+
+<a
+    href="#"
+    class="mobile-nav-item"
+>
+
+    ❤️
+
+    <span>
+        Activity
+    </span>
+
+</a>
+
+
+<a
+    href="#"
+    class="mobile-nav-item"
+>
+
+    <div class="mobile-avatar">
+
+        {{ request.user.username|first|upper }}
+
+    </div>
+
+    <span>
+        Profile
+    </span>
+
+</a>
+```
+
+</nav>
+
+</body>
+
+</html>

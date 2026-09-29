@@ -1,0 +1,74 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Post</title>
+
+    <link rel="stylesheet" href="{% static 'posts/style.css' %}">
+</head>
+
+<body>
+
+    <div class="create-container">
+
+        <div class="create-card">
+
+            <h1>Create New Post 📸</h1>
+
+            <form method="POST" enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                <div class="form-group">
+
+                    <label for="image">
+                        Select Image
+                    </label>
+
+                    <input
+                        type="file"
+                        id="image"
+                        name="image"
+                        accept="image/*"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="caption">
+                        Caption
+                    </label>
+
+                    <textarea
+                        id="caption"
+                        name="caption"
+                        rows="4"
+                        placeholder="Write a caption..."
+                    ></textarea>
+
+                </div>
+
+                <button type="submit">
+                    Create Post
+                </button>
+
+            </form>
+
+            <a href="{% url 'feed' %}">
+                ← Back to Feed
+            </a>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
