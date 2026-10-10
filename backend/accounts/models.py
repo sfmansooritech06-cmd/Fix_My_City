@@ -155,9 +155,8 @@ class Officer(models.Model):
 # =====================================================
 # COMPLAINT
 # =====================================================
-
 class Complaint(models.Model):
-
+    
     CATEGORY_CHOICES = (
         ('pothole', 'Pothole'),
         ('garbage', 'Garbage'),
@@ -234,6 +233,58 @@ class Complaint(models.Model):
     upvotes = models.PositiveIntegerField(
         default=0
     )
+
+    # =================================================
+    # COMPLAINT PRIORITY & VERIFICATION
+    # =================================================
+
+    PRIORITY_CHOICES = (
+        ('high', 'High'),
+        ('medium', 'Medium'),
+        ('low', 'Low'),
+    )
+
+    priority = models.CharField(
+        max_length=10,
+        choices=PRIORITY_CHOICES,
+        default='high'
+    )
+
+    is_verified = models.BooleanField(
+        default=False
+    )
+
+    # =================================================
+    # OFFICER PROGRESS
+    # =================================================
+
+    progress = models.PositiveIntegerField(
+        default=0
+    )
+
+    progress_note = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    progress_updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    # =================================================
+    # TIMESTAMPS
+    # =================================================
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    def __str__(self):
+        return f"{self.complaint_id} - {self.title}"
 
     # =================================================
     # OFFICER PROGRESS

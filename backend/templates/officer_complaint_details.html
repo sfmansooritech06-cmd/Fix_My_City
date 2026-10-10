@@ -358,16 +358,47 @@
 
             <div class="verification-actions">
 
-                <button class="verify-btn" type="button">
-                    ✓ Verify Complaint
+        <div class="verification-actions">
+
+            {% if complaint.is_verified %}
+
+                <button
+                    class="verify-btn"
+                    type="button"
+                    disabled
+                >
+                    ✓ Complaint Verified
                 </button>
 
-                <button class="duplicate-btn" type="button">
-                    ⚠ Mark as Duplicate
-                </button>
+            {% else %}
 
-            </div>
+                <form
+                    method="POST"
+                    action="{% url 'verify_complaint' complaint.complaint_id %}"
+                >
 
+                    {% csrf_token %}
+
+                    <button
+                        class="verify-btn"
+                        type="submit"
+                    >
+                        ✓ Verify Complaint
+                    </button>
+
+                </form>
+
+            {% endif %}
+
+
+            <button
+                class="duplicate-btn"
+                type="button"
+            >
+                ⚠ Mark as Duplicate
+            </button>
+
+        </div>
         </section>
 
 
