@@ -1,1229 +1,1229 @@
 {% extends "base.html" %}
-
+ 
 {% block title %}
 Admin Dashboard | FixMyCity
 {% endblock %}
-
+ 
 {% block body_class %}
 dashboard-page
 {% endblock %}
-
+ 
 {% block content %}
-
+ 
 <style>
-
+ 
 /* =====================================================
    FIXMYCITY ADMIN DASHBOARD
    ===================================================== */
-
+ 
 :root {
     --admin-bg: #f5f7fb;
     --sidebar: #171b26;
     --sidebar-hover: #252b39;
     --sidebar-text: #9da5b5;
-
+ 
     --primary: #5b5ce2;
     --primary-light: #eeefff;
-
+ 
     --text: #202432;
     --muted: #707889;
     --border: #e8eaf0;
     --white: #ffffff;
-
+ 
     --green: #28a66f;
     --green-bg: #eaf8f1;
-
+ 
     --orange: #f39b38;
     --orange-bg: #fff5e8;
-
+ 
     --red: #e05252;
     --red-bg: #fff0f0;
-
+ 
     --blue: #4c8fe8;
     --blue-bg: #edf5ff;
-
+ 
     --shadow: 0 4px 20px rgba(25, 32, 56, 0.05);
 }
-
-
+ 
+ 
 /* =====================================================
    MAIN WRAPPER
    ===================================================== */
-
+ 
 .admin-dashboard-wrapper {
     display: flex;
     min-height: 100vh;
     background: var(--admin-bg);
     color: var(--text);
 }
-
+ 
 .admin-dashboard-wrapper * {
     box-sizing: border-box;
 }
-
-
+ 
+ 
 /* =====================================================
    SIDEBAR
    ===================================================== */
-
+ 
 .admin-sidebar {
     width: 245px;
     min-height: 100vh;
     background: var(--sidebar);
     color: white;
-
+ 
     position: fixed;
     left: 0;
     top: 0;
     bottom: 0;
-
+ 
     z-index: 1000;
-
+ 
     display: flex;
     flex-direction: column;
-
+ 
     padding: 26px 16px;
 }
-
+ 
 .admin-brand {
     padding: 4px 12px 34px;
 }
-
+ 
 .admin-brand a {
     text-decoration: none;
     color: white;
-
+ 
     font-size: 23px;
     font-weight: 800;
 }
-
+ 
 .admin-brand span {
     color: #7778ef;
 }
-
+ 
 .sidebar-label {
     color: #626a7b;
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 1.5px;
-
+ 
     padding: 0 13px 10px;
     text-transform: uppercase;
 }
-
+ 
 .sidebar-nav {
     display: flex;
     flex-direction: column;
     gap: 5px;
 }
-
+ 
 .sidebar-nav a {
     display: flex;
     align-items: center;
-
+ 
     gap: 13px;
-
+ 
     padding: 12px 13px;
-
+ 
     border-radius: 9px;
-
+ 
     color: var(--sidebar-text);
     text-decoration: none;
-
+ 
     font-size: 14px;
     font-weight: 500;
-
+ 
     transition: 0.2s ease;
 }
-
+ 
 .sidebar-nav a:hover {
     background: var(--sidebar-hover);
     color: white;
 }
-
+ 
 .sidebar-nav a.active {
     background: var(--primary);
     color: white;
 }
-
+ 
 .sidebar-icon {
     width: 19px;
     text-align: center;
     font-size: 15px;
 }
-
+ 
 .sidebar-bottom {
     margin-top: auto;
 }
-
+ 
 .sidebar-divider {
     height: 1px;
     background: #2a2f3c;
     margin: 20px 5px;
 }
-
+ 
 .admin-mini-profile {
     display: flex;
     align-items: center;
-
+ 
     gap: 10px;
     padding: 10px 8px;
 }
-
+ 
 .admin-avatar {
     width: 37px;
     height: 37px;
-
+ 
     border-radius: 50%;
-
+ 
     background: var(--primary);
-
+ 
     display: flex;
     align-items: center;
     justify-content: center;
-
+ 
     color: white;
-
+ 
     font-size: 12px;
     font-weight: 700;
-
+ 
     flex-shrink: 0;
 }
-
+ 
 .admin-mini-info strong {
     display: block;
-
+ 
     color: white;
-
+ 
     font-size: 12px;
 }
-
+ 
 .admin-mini-info span {
     color: #777f90;
     font-size: 10px;
 }
-
+ 
 .sidebar-logout {
     display: block;
-
+ 
     text-align: center;
-
+ 
     margin-top: 10px;
-
+ 
     padding: 9px;
-
+ 
     border-radius: 8px;
-
+ 
     background: #222735;
-
+ 
     color: #b4bac7;
-
+ 
     text-decoration: none;
-
+ 
     font-size: 12px;
 }
-
+ 
 .sidebar-logout:hover {
     background: #303646;
     color: white;
 }
-
-
+ 
+ 
 /* =====================================================
    MAIN
    ===================================================== */
-
+ 
 .admin-main {
     margin-left: 245px;
-
+ 
     width: calc(100% - 245px);
-
+ 
     min-height: 100vh;
 }
-
-
+ 
+ 
 /* =====================================================
    TOPBAR
    ===================================================== */
-
+ 
 .admin-topbar {
     height: 72px;
-
+ 
     background: white;
-
+ 
     border-bottom: 1px solid var(--border);
-
+ 
     display: flex;
     align-items: center;
     justify-content: space-between;
-
+ 
     padding: 0 34px;
-
+ 
     position: sticky;
     top: 0;
-
+ 
     z-index: 900;
 }
-
+ 
 .admin-search {
     width: 310px;
     position: relative;
 }
-
+ 
 .admin-search input {
     width: 100%;
-
+ 
     height: 39px;
-
+ 
     border: 1px solid var(--border);
-
+ 
     background: #f8f9fc;
-
+ 
     border-radius: 8px;
-
+ 
     padding: 0 15px 0 39px;
-
+ 
     outline: none;
-
+ 
     font-size: 13px;
 }
-
+ 
 .search-icon {
     position: absolute;
-
+ 
     left: 14px;
     top: 10px;
-
+ 
     color: #9299aa;
 }
-
+ 
 .topbar-right {
     display: flex;
     align-items: center;
-
+ 
     gap: 17px;
 }
-
+ 
 .topbar-icon {
     width: 35px;
     height: 35px;
-
+ 
     border: 1px solid var(--border);
-
+ 
     border-radius: 8px;
-
+ 
     display: flex;
     align-items: center;
     justify-content: center;
-
+ 
     color: #707789;
-
+ 
     background: white;
 }
-
+ 
 .topbar-admin {
     display: flex;
     align-items: center;
-
+ 
     gap: 9px;
 }
-
+ 
 .topbar-admin-text strong {
     display: block;
-
+ 
     font-size: 12px;
 }
-
+ 
 .topbar-admin-text span {
     display: block;
-
+ 
     color: var(--muted);
-
+ 
     font-size: 10px;
-
+ 
     margin-top: 2px;
 }
-
-
+ 
+ 
 /* =====================================================
    CONTENT
    ===================================================== */
-
+ 
 .admin-content {
     padding: 30px 34px 45px;
-
+ 
     max-width: 1600px;
-
+ 
     margin: auto;
 }
-
+ 
 .page-heading {
     display: flex;
-
+ 
     align-items: flex-end;
-
+ 
     justify-content: space-between;
-
+ 
     margin-bottom: 26px;
 }
-
+ 
 .page-heading h1 {
     margin: 0;
-
+ 
     font-size: 27px;
-
+ 
     color: var(--text);
 }
-
+ 
 .page-heading p {
     margin: 7px 0 0;
-
+ 
     color: var(--muted);
-
+ 
     font-size: 13px;
 }
-
+ 
 .page-date {
     color: var(--muted);
-
+ 
     font-size: 12px;
 }
-
-
+ 
+ 
 /* =====================================================
    STAT CARDS
    ===================================================== */
-
+ 
 .stats-grid {
     display: grid;
-
+ 
     grid-template-columns: repeat(4, 1fr);
-
+ 
     gap: 18px;
-
+ 
     margin-bottom: 24px;
 }
-
+ 
 .stat-card {
     background: white;
-
+ 
     border: 1px solid var(--border);
-
+ 
     border-radius: 11px;
-
+ 
     padding: 20px;
-
+ 
     box-shadow: var(--shadow);
-
+ 
     display: flex;
-
+ 
     justify-content: space-between;
 }
-
+ 
 .stat-content span {
     display: block;
-
+ 
     color: var(--muted);
-
+ 
     font-size: 12px;
-
+ 
     margin-bottom: 9px;
 }
-
+ 
 .stat-content strong {
     display: block;
-
+ 
     font-size: 27px;
-
+ 
     color: var(--text);
-
+ 
     margin-bottom: 9px;
 }
-
+ 
 .stat-content small {
     color: #a0a6b3;
-
+ 
     font-size: 10px;
 }
-
+ 
 .stat-icon-box {
     width: 40px;
     height: 40px;
-
+ 
     border-radius: 9px;
-
+ 
     display: flex;
     align-items: center;
     justify-content: center;
-
+ 
     font-size: 17px;
 }
-
+ 
 .icon-purple {
     color: var(--primary);
     background: var(--primary-light);
 }
-
+ 
 .icon-orange {
     color: var(--orange);
     background: var(--orange-bg);
 }
-
+ 
 .icon-blue {
     color: var(--blue);
     background: var(--blue-bg);
 }
-
+ 
 .icon-green {
     color: var(--green);
     background: var(--green-bg);
 }
-
+ 
 .icon-red {
     color: var(--red);
     background: var(--red-bg);
 }
-
-
+ 
+ 
 /* =====================================================
    DASHBOARD CARDS
    ===================================================== */
-
+ 
 .dashboard-card {
     background: white;
-
+ 
     border: 1px solid var(--border);
-
+ 
     border-radius: 11px;
-
+ 
     box-shadow: var(--shadow);
-
+ 
     margin-bottom: 22px;
-
+ 
     overflow: hidden;
 }
-
+ 
 .card-header {
     padding: 20px 22px;
-
+ 
     border-bottom: 1px solid var(--border);
-
+ 
     display: flex;
-
+ 
     align-items: center;
-
+ 
     justify-content: space-between;
 }
-
+ 
 .card-header h2 {
     margin: 0;
-
+ 
     font-size: 16px;
-
+ 
     color: var(--text);
 }
-
+ 
 .card-header p {
     margin: 5px 0 0;
-
+ 
     color: var(--muted);
-
+ 
     font-size: 11px;
 }
-
+ 
 .count-badge {
     background: var(--primary-light);
-
+ 
     color: var(--primary);
-
+ 
     padding: 6px 10px;
-
+ 
     border-radius: 6px;
-
+ 
     font-size: 11px;
-
+ 
     font-weight: 700;
 }
-
+ 
 .view-link {
     color: var(--primary);
-
+ 
     text-decoration: none;
-
+ 
     font-size: 11px;
-
+ 
     font-weight: 600;
 }
-
-
+ 
+ 
 /* =====================================================
    TABLE
    ===================================================== */
-
+ 
 .request-table {
     width: 100%;
-
+ 
     border-collapse: collapse;
 }
-
+ 
 .request-table th {
     background: #fafbfc;
-
+ 
     color: #9198a7;
-
+ 
     text-align: left;
-
+ 
     font-size: 10px;
-
+ 
     font-weight: 700;
-
+ 
     text-transform: uppercase;
-
+ 
     padding: 12px 20px;
-
+ 
     border-bottom: 1px solid var(--border);
 }
-
+ 
 .request-table td {
     padding: 14px 20px;
-
+ 
     border-bottom: 1px solid #f0f1f4;
-
+ 
     color: #555c6d;
-
+ 
     font-size: 12px;
 }
-
+ 
 .officer-cell {
     display: flex;
-
+ 
     align-items: center;
-
+ 
     gap: 10px;
 }
-
+ 
 .table-avatar {
     width: 32px;
     height: 32px;
-
+ 
     border-radius: 8px;
-
+ 
     background: var(--primary-light);
-
+ 
     color: var(--primary);
-
+ 
     display: flex;
-
+ 
     align-items: center;
     justify-content: center;
-
+ 
     font-size: 10px;
-
+ 
     font-weight: 700;
 }
-
+ 
 .officer-cell strong {
     display: block;
-
+ 
     color: var(--text);
-
+ 
     font-size: 12px;
 }
-
+ 
 .officer-cell span {
     display: block;
-
+ 
     color: var(--muted);
-
+ 
     font-size: 10px;
-
+ 
     margin-top: 2px;
 }
-
+ 
 .department-tag {
     display: inline-block;
-
+ 
     background: #f4f5f8;
-
+ 
     color: #697080;
-
+ 
     border-radius: 5px;
-
+ 
     padding: 5px 8px;
-
+ 
     font-size: 10px;
 }
-
+ 
 .request-actions {
     display: flex;
-
+ 
     gap: 6px;
 }
-
+ 
 .approve-btn,
 .reject-btn {
     border: none;
-
+ 
     border-radius: 6px;
-
+ 
     padding: 7px 10px;
-
+ 
     font-size: 10px;
-
+ 
     font-weight: 600;
-
+ 
     cursor: pointer;
 }
-
+ 
 .approve-btn {
     background: var(--green-bg);
-
+ 
     color: var(--green);
 }
-
+ 
 .reject-btn {
     background: var(--red-bg);
-
+ 
     color: var(--red);
 }
-
+ 
 .empty-row {
     text-align: center !important;
-
+ 
     padding: 28px !important;
-
+ 
     color: var(--muted) !important;
 }
-
-
+ 
+ 
 /* =====================================================
    TWO COLUMN
    ===================================================== */
-
+ 
 .two-column {
     display: grid;
-
+ 
     grid-template-columns: 1.15fr 0.85fr;
-
+ 
     gap: 22px;
-
+ 
     margin-bottom: 22px;
 }
-
-
+ 
+ 
 /* =====================================================
    DEPARTMENT LIST
    ===================================================== */
-
+ 
 .department-list {
     padding: 6px 20px;
 }
-
+ 
 .department-row {
     display: flex;
-
+ 
     align-items: center;
-
+ 
     justify-content: space-between;
-
+ 
     padding: 15px 0;
-
+ 
     border-bottom: 1px solid #f0f1f4;
-
+ 
     cursor: pointer;
-
+ 
     transition: 0.2s;
 }
-
+ 
 .department-row:hover {
     background: #f7f7ff;
-
+ 
     padding-left: 8px;
     padding-right: 8px;
-
+ 
     border-radius: 7px;
 }
-
+ 
 .department-row:last-child {
     border-bottom: none;
 }
-
+ 
 .department-info strong {
     display: block;
-
+ 
     font-size: 13px;
-
+ 
     font-weight: 700;
-
+ 
     color: #202432 !important;
 }
-
+ 
 .department-info span {
     display: block;
-
+ 
     font-size: 10px;
-
+ 
     color: #6f7788 !important;
-
+ 
     margin-top: 4px;
 }
-
+ 
 .department-count {
     min-width: 38px;
-
+ 
     height: 32px;
-
+ 
     padding: 0 9px;
-
+ 
     border-radius: 8px;
-
+ 
     background: #f0f1f5;
-
+ 
     color: #202432;
-
+ 
     display: flex;
-
+ 
     align-items: center;
-
+ 
     justify-content: center;
-
+ 
     font-size: 11px;
-
+ 
     font-weight: 700;
 }
-
-
+ 
+ 
 /* =====================================================
    OFFICER CATEGORY MODAL
    ===================================================== */
-
+ 
 .officer-modal {
     display: none;
-
+ 
     position: fixed;
-
+ 
     inset: 0;
-
+ 
     background: rgba(15, 18, 27, 0.55);
-
+ 
     z-index: 3000;
-
+ 
     align-items: center;
-
+ 
     justify-content: center;
-
+ 
     padding: 20px;
 }
-
+ 
 .officer-modal.show {
     display: flex;
 }
-
+ 
 .officer-modal-box {
     width: 100%;
-
+ 
     max-width: 650px;
-
+ 
     max-height: 80vh;
-
+ 
     overflow-y: auto;
-
+ 
     background: white;
-
+ 
     border-radius: 14px;
-
+ 
     box-shadow: 0 20px 60px rgba(0,0,0,0.2);
 }
-
+ 
 .officer-modal-header {
     padding: 20px 22px;
-
+ 
     border-bottom: 1px solid var(--border);
-
+ 
     display: flex;
-
+ 
     justify-content: space-between;
-
+ 
     align-items: center;
 }
-
+ 
 .officer-modal-header h2 {
     margin: 0;
-
+ 
     font-size: 18px;
-
+ 
     color: #202432;
 }
-
+ 
 .officer-modal-header p {
     margin: 5px 0 0;
-
+ 
     font-size: 11px;
-
+ 
     color: var(--muted);
 }
-
+ 
 .close-modal {
     border: none;
-
+ 
     background: #f1f2f6;
-
+ 
     width: 34px;
     height: 34px;
-
+ 
     border-radius: 8px;
-
+ 
     cursor: pointer;
-
+ 
     font-size: 16px;
 }
-
+ 
 .officer-modal-body {
     padding: 20px;
 }
-
+ 
 .category-officer {
     display: flex;
-
+ 
     align-items: center;
-
+ 
     justify-content: space-between;
-
+ 
     padding: 14px;
-
+ 
     border: 1px solid var(--border);
-
+ 
     border-radius: 10px;
-
+ 
     margin-bottom: 10px;
 }
-
+ 
 .category-officer-left {
     display: flex;
-
+ 
     align-items: center;
-
+ 
     gap: 12px;
 }
-
+ 
 .category-officer-avatar {
     width: 40px;
     height: 40px;
-
+ 
     border-radius: 10px;
-
+ 
     background: var(--primary-light);
-
+ 
     color: var(--primary);
-
+ 
     display: flex;
-
+ 
     align-items: center;
     justify-content: center;
-
+ 
     font-weight: 700;
 }
-
+ 
 .category-officer-name {
     font-size: 13px;
-
+ 
     font-weight: 700;
-
+ 
     color: #202432;
 }
-
+ 
 .category-officer-info {
     margin-top: 3px;
-
+ 
     font-size: 10px;
-
+ 
     color: #707889;
 }
-
+ 
 .assign-btn {
     border: none;
-
+ 
     background: var(--primary);
-
+ 
     color: white;
-
+ 
     padding: 8px 12px;
-
+ 
     border-radius: 7px;
-
+ 
     font-size: 10px;
-
+ 
     font-weight: 600;
-
+ 
     cursor: pointer;
 }
-
+ 
 .assign-btn:hover {
     background: #494ad0;
 }
-
+ 
 .no-officer {
     text-align: center;
-
+ 
     padding: 30px 15px;
-
+ 
     color: #707889;
-
+ 
     font-size: 12px;
 }
-
-
+ 
+ 
 /* =====================================================
    COMPLAINT OVERVIEW
    ===================================================== */
-
+ 
 .overview-list {
     padding: 8px 20px;
 }
-
+ 
 .overview-row {
     display: flex;
-
+ 
     justify-content: space-between;
-
+ 
     align-items: center;
-
+ 
     padding: 15px 0;
-
+ 
     border-bottom: 1px solid #f0f1f4;
 }
-
+ 
 .overview-row:last-child {
     border-bottom: none;
 }
-
+ 
 .overview-label {
     display: flex;
-
+ 
     align-items: center;
-
+ 
     gap: 9px;
-
+ 
     color: #646b7a;
-
+ 
     font-size: 12px;
 }
-
+ 
 .status-dot {
     width: 8px;
     height: 8px;
-
+ 
     border-radius: 50%;
 }
-
+ 
 .dot-reported {
     background: var(--orange);
 }
-
+ 
 .dot-progress {
     background: var(--blue);
 }
-
+ 
 .dot-resolved {
     background: var(--green);
 }
-
+ 
 .dot-unassigned {
     background: var(--red);
 }
-
+ 
 .overview-row strong {
     font-size: 14px;
-
+ 
     color: var(--text);
 }
-
-
+ 
+ 
 /* =====================================================
    RECENT ACTIVITY
    ===================================================== */
-
+ 
 .activity-list {
     padding: 4px 22px;
 }
-
+ 
 .activity-item {
     display: flex;
-
+ 
     align-items: center;
-
+ 
     gap: 13px;
-
+ 
     padding: 14px 0;
-
+ 
     border-bottom: 1px solid #f0f1f4;
 }
-
+ 
 .activity-item:last-child {
     border-bottom: none;
 }
-
+ 
 .activity-icon {
     width: 34px;
     height: 34px;
-
+ 
     border-radius: 8px;
-
+ 
     background: var(--primary-light);
-
+ 
     color: var(--primary);
-
+ 
     display: flex;
-
+ 
     align-items: center;
     justify-content: center;
-
+ 
     font-size: 13px;
 }
-
+ 
 .activity-content {
     flex: 1;
 }
-
+ 
 .activity-content strong {
     display: block;
-
+ 
     color: var(--text);
-
+ 
     font-size: 12px;
 }
-
+ 
 .activity-content p {
     margin: 3px 0 0;
-
+ 
     color: var(--muted);
-
+ 
     font-size: 10px;
 }
-
+ 
 .activity-time {
     color: #a0a6b2;
-
+ 
     font-size: 10px;
 }
-
-
+ 
+ 
 /* =====================================================
    FOOTER
    ===================================================== */
-
+ 
 .admin-footer {
     padding: 20px 34px;
-
+ 
     color: #9ba1ae;
-
+ 
     font-size: 10px;
-
+ 
     border-top: 1px solid var(--border);
-
+ 
     background: white;
-
+ 
     display: flex;
-
+ 
     justify-content: space-between;
 }
-
-
+ 
+ 
 /* =====================================================
    RESPONSIVE
    ===================================================== */
-
+ 
 @media (max-width: 1100px) {
-
+ 
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
     }
-
+ 
     .two-column {
         grid-template-columns: 1fr;
     }
 }
-
+ 
 @media (max-width: 800px) {
-
+ 
     .admin-sidebar {
         width: 70px;
-
+ 
         padding: 20px 9px;
     }
-
+ 
     .admin-brand a {
         font-size: 0;
     }
-
+ 
     .admin-brand a::before {
         content: "F";
-
+ 
         font-size: 23px;
-
+ 
         color: white;
     }
-
+ 
     .sidebar-label,
     .sidebar-nav a span:not(.sidebar-icon),
     .admin-mini-profile,
     .sidebar-logout {
         display: none;
     }
-
+ 
     .sidebar-nav a {
         justify-content: center;
     }
-
+ 
     .admin-main {
         margin-left: 70px;
-
+ 
         width: calc(100% - 70px);
     }
-
+ 
     .admin-content {
         padding: 24px 18px;
     }
 }
-
+ 
 @media (max-width: 600px) {
-
+ 
     .stats-grid {
         grid-template-columns: 1fr;
     }
-
+ 
     .page-heading {
         flex-direction: column;
-
+ 
         align-items: flex-start;
-
+ 
         gap: 8px;
     }
-
+ 
     .request-table {
         min-width: 750px;
     }
-
+ 
     .dashboard-card {
         overflow-x: auto;
     }
-
+ 
     .officer-modal-box {
         max-height: 90vh;
     }
 }
-
-
-
+ 
+ 
+ 
 /* =====================================================
    COMPLAINT ASSIGNMENT + ADMIN ASSIGNED WORK
    ===================================================== */
-
+ 
 .complaint-assignment-card,
 .admin-assigned-work-card {
     margin-top: 22px;
 }
-
+ 
 .assignment-selected-officer {
     padding: 10px 14px;
     background: var(--primary-light);
@@ -1232,14 +1232,14 @@ dashboard-page
     font-size: 12px;
     font-weight: 700;
 }
-
+ 
 .complaint-assignment-list,
 .admin-assigned-list {
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
-
+ 
 .complaint-assignment-item,
 .admin-assigned-item {
     display: flex;
@@ -1251,25 +1251,25 @@ dashboard-page
     border-radius: 12px;
     background: var(--white);
 }
-
+ 
 .complaint-assignment-item:hover,
 .admin-assigned-item:hover {
     box-shadow: var(--shadow);
 }
-
+ 
 .assignment-info,
 .admin-assigned-info {
     flex: 1;
     min-width: 0;
 }
-
+ 
 .assignment-info h3,
 .admin-assigned-info h3 {
     margin: 0 0 8px;
     font-size: 14px;
     color: var(--text);
 }
-
+ 
 .assignment-info p,
 .admin-assigned-info p {
     margin: 4px 0;
@@ -1277,19 +1277,19 @@ dashboard-page
     font-size: 11px;
     line-height: 1.5;
 }
-
+ 
 .assignment-info strong,
 .admin-assigned-info strong {
     color: var(--text);
 }
-
+ 
 .assignment-meta {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
     margin-bottom: 8px;
 }
-
+ 
 .assignment-chip {
     display: inline-flex;
     align-items: center;
@@ -1300,7 +1300,7 @@ dashboard-page
     font-size: 10px;
     font-weight: 700;
 }
-
+ 
 .assignment-action-btn {
     flex-shrink: 0;
     border: 0;
@@ -1312,11 +1312,11 @@ dashboard-page
     font-weight: 700;
     cursor: pointer;
 }
-
+ 
 .assignment-action-btn:hover {
     opacity: .92;
 }
-
+ 
 .assignment-empty {
     padding: 28px 18px;
     text-align: center;
@@ -1324,476 +1324,621 @@ dashboard-page
     border-radius: 12px;
     color: var(--muted);
 }
-
+ 
 .assignment-empty strong {
     display: block;
     color: var(--text);
     margin-bottom: 5px;
 }
-
+ 
 .assignment-empty p {
     margin: 0;
     font-size: 11px;
 }
-
+ 
 @media (max-width: 700px) {
     .complaint-assignment-item,
     .admin-assigned-item {
         flex-direction: column;
         align-items: stretch;
     }
-
+ 
     .assignment-action-btn {
         width: 100%;
     }
 }
-
+ 
+ 
+ 
+/* =====================================================
+   CITIZENS + ALL COMPLAINTS TABLES
+   ===================================================== */
+ 
+.admin-data-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--white);
+}
+ 
+.admin-data-table {
+    width: 100%;
+    min-width: 820px;
+    border-collapse: collapse;
+    text-align: left;
+}
+ 
+.admin-data-table thead {
+    background: #f7f8fc;
+}
+ 
+.admin-data-table th {
+    padding: 14px 16px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .45px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--border);
+}
+ 
+.admin-data-table td {
+    padding: 14px 16px;
+    font-size: 13px;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+}
+ 
+.admin-data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+ 
+.admin-data-table tbody tr:hover {
+    background: #fafbff;
+}
+ 
+.admin-table-primary {
+    display: block;
+    font-weight: 700;
+    color: var(--text);
+}
+ 
+.admin-table-secondary {
+    display: block;
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 11px;
+    overflow-wrap: anywhere;
+}
+ 
+.admin-table-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 9px;
+    border-radius: 20px;
+    background: var(--blue-bg);
+    color: var(--blue);
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+ 
+.admin-table-status.status-resolved {
+    background: var(--green-bg);
+    color: var(--green);
+}
+ 
+.admin-table-status.status-progress {
+    background: var(--orange-bg);
+    color: #b76b10;
+}
+ 
+.admin-table-empty {
+    padding: 28px !important;
+    text-align: center;
+    color: var(--muted) !important;
+}
+ 
+ 
+/* =====================================================
+   COMPLAINTS + CITIZENS VIEWS
+   ===================================================== */
+ 
+.table-scroll {
+    overflow-x: auto;
+}
+ 
+.table-scroll .request-table {
+    min-width: 760px;
+}
+ 
+.cell-title {
+    display: block;
+    color: var(--text);
+    font-size: 12px;
+}
+ 
+.cell-sub {
+    display: block;
+    color: var(--muted);
+    font-size: 10px;
+    margin-top: 3px;
+    max-width: 280px;
+}
+ 
+.status-filter {
+    border: 1px solid var(--border);
+    background: #f8f9fc;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 12px;
+    color: var(--text);
+    outline: none;
+    cursor: pointer;
+}
+ 
+.status-pill {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 700;
+    background: #f1f2f6;
+    color: #697080;
+}
+ 
+.status-reported    { background: var(--orange-bg); color: var(--orange); }
+.status-in_progress,
+.status-in-progress,
+.status-assigned    { background: var(--blue-bg);   color: var(--blue); }
+.status-resolved,
+.status-completed   { background: var(--green-bg);  color: var(--green); }
+.status-unassigned  { background: var(--red-bg);    color: var(--red); }
+ 
 </style>
-
-
+ 
+ 
 <!-- =====================================================
      MAIN WRAPPER
      ===================================================== -->
-
+ 
 <div class="admin-dashboard-wrapper">
-
-
+ 
+ 
     <!-- =====================================================
          SIDEBAR
          ===================================================== -->
-
+ 
     <aside class="admin-sidebar">
-
+ 
         <div class="admin-brand">
-
+ 
             <a href="{% url 'admin_dashboard' %}">
                 FixMy<span>City</span>
             </a>
-
+ 
         </div>
-
-
+ 
+ 
         <div class="sidebar-label">
             Main Menu
         </div>
-
-
+ 
+ 
         <nav class="sidebar-nav">
-
-            <a
-                href="{% url 'admin_dashboard' %}"
-                class="active"
-            >
+ 
+            <a href="#dashboard" data-nav="dashboard" class="active">
                 <span class="sidebar-icon">⌂</span>
                 <span>Dashboard</span>
             </a>
-
-
-            <a href="{% url 'admin_officer_verification' %}">
+ 
+            <a href="#officer-requests" data-nav="officer-requests">
                 <span class="sidebar-icon">◉</span>
                 <span>Officer Requests</span>
             </a>
-
-
-            <a href="#officers">
+ 
+            <a href="#officers" data-nav="officers">
                 <span class="sidebar-icon">♙</span>
                 <span>Officers</span>
             </a>
-
-
-            <a href="#complaints">
+ 
+            <a href="#complaints" data-nav="complaints">
                 <span class="sidebar-icon">▤</span>
                 <span>Complaints</span>
             </a>
-
-
-            <a href="#citizens">
+ 
+            <a href="#citizens" data-nav="citizens">
                 <span class="sidebar-icon">♙</span>
                 <span>Citizens</span>
             </a>
-
+ 
         </nav>
-
-
+ 
+ 
         <div class="sidebar-bottom">
-
+ 
             <div class="sidebar-divider"></div>
-
-
+ 
+ 
             <div class="admin-mini-profile">
-
+ 
                 <div class="admin-avatar">
                     {{ admin_initials }}
                 </div>
-
+ 
                 <div class="admin-mini-info">
-
+ 
                     <strong>
                         {{ admin_name }}
                     </strong>
-
+ 
                     <span>
                         Administrator
                     </span>
-
+ 
                 </div>
-
+ 
             </div>
-
-
+ 
+ 
             <a
                 href="{% url 'admin_logout' %}"
                 class="sidebar-logout"
             >
                 Logout
             </a>
-
+ 
         </div>
-
+ 
     </aside>
-
-
-
+ 
+ 
+ 
     <!-- =====================================================
          MAIN
          ===================================================== -->
-
+ 
     <div class="admin-main">
-
-
+ 
+ 
         <!-- TOPBAR -->
-
+ 
         <header class="admin-topbar">
-
+ 
             <div class="admin-search">
-
+ 
                 <span class="search-icon">
                     ⌕
                 </span>
-
+ 
                 <input
                     type="text"
                     id="dashboardSearch"
                     placeholder="Search dashboard..."
                 >
-
+ 
             </div>
-
-
+ 
+ 
             <div class="topbar-right">
-
+ 
                 <div class="topbar-icon">
                     ♢
                 </div>
-
-
+ 
+ 
                 <div class="topbar-admin">
-
+ 
                     <div class="admin-avatar">
                         {{ admin_initials }}
                     </div>
-
+ 
                     <div class="topbar-admin-text">
-
+ 
                         <strong>
                             {{ admin_name }}
                         </strong>
-
+ 
                         <span>
                             System Administrator
                         </span>
-
+ 
                     </div>
-
+ 
                 </div>
-
+ 
             </div>
-
+ 
         </header>
-
-
-
+ 
+ 
+ 
         <!-- =====================================================
              CONTENT
              ===================================================== -->
-
+ 
         <main class="admin-content">
-
-
+ 
+ 
+            <div class="admin-view" id="view-dashboard">
+ 
             <!-- HEADING -->
-
+ 
             <section class="page-heading">
-
+ 
                 <div>
-
+ 
                     <h1>
                         Dashboard Overview
                     </h1>
-
+ 
                     <p>
                         Monitor complaints, officers and FixMyCity operations.
                     </p>
-
+ 
                 </div>
-
+ 
                 <div class="page-date">
                     FixMyCity Administration
                 </div>
-
+ 
             </section>
-
-
-
+ 
+ 
+ 
             <!-- =================================================
                  STATISTICS
                  ================================================= -->
-
+ 
             <section class="stats-grid">
-
-
+ 
+ 
                 <div class="stat-card">
-
+ 
                     <div class="stat-content">
-
+ 
                         <span>
                             Pending Requests
                         </span>
-
+ 
                         <strong>
                             {{ pending_requests_count }}
                         </strong>
-
+ 
                         <small>
                             Requires approval
                         </small>
-
+ 
                     </div>
-
+ 
                     <div class="stat-icon-box icon-orange">
                         !
                     </div>
-
+ 
                 </div>
-
-
-
+ 
+ 
+ 
                 <div class="stat-card">
-
+ 
                     <div class="stat-content">
-
+ 
                         <span>
                             Approved Officers
                         </span>
-
+ 
                         <strong>
                             {{ approved_officers_count }}
                         </strong>
-
+ 
                         <small>
                             Active officers
                         </small>
-
+ 
                     </div>
-
+ 
                     <div class="stat-icon-box icon-purple">
                         ♙
                     </div>
-
+ 
                 </div>
-
-
-
+ 
+ 
+ 
                 <div class="stat-card">
-
+ 
                     <div class="stat-content">
-
+ 
                         <span>
                             Total Complaints
                         </span>
-
+ 
                         <strong>
                             {{ total_complaints_count }}
                         </strong>
-
+ 
                         <small>
                             All departments
                         </small>
-
+ 
                     </div>
-
+ 
                     <div class="stat-icon-box icon-blue">
                         ▤
                     </div>
-
+ 
                 </div>
-
-
-
+ 
+ 
+ 
                 <div class="stat-card">
-
+ 
                     <div class="stat-content">
-
+ 
                         <span>
                             Unassigned
                         </span>
-
+ 
                         <strong>
                             {{ unassigned_count }}
                         </strong>
-
+ 
                         <small>
                             Awaiting assignment
                         </small>
-
+ 
                     </div>
-
+ 
                     <div class="stat-icon-box icon-red">
                         ○
                     </div>
-
+ 
                 </div>
-
+ 
             </section>
-
-
-
+ 
+ 
+ 
             <!-- =================================================
                  PENDING OFFICER REQUESTS
                  ================================================= -->
-
+ 
             <section
                 class="dashboard-card"
                 id="officer-requests"
             >
-
+ 
                 <div class="card-header">
-
+ 
                     <div>
-
+ 
                         <h2>
                             Pending Officer Requests
                         </h2>
-
+ 
                         <p>
                             Review and approve newly registered officers.
                         </p>
-
+ 
                     </div>
-
-
+ 
+ 
                     <div>
-
+ 
                         <span class="count-badge">
                             {{ pending_requests_count }} Pending
                         </span>
-
+ 
                         <a
-                            href="{% url 'admin_officer_verification' %}"
+                            href="{% url 'admin_dashboard' %}#officer-requests"
                             class="view-link"
                         >
                             View All →
                         </a>
-
+ 
                     </div>
-
+ 
                 </div>
-
-
+ 
+ 
                 <div id="officerRequestList">
-
+ 
                     <table class="request-table">
-
+ 
                         <thead>
-
+ 
                             <tr>
-
+ 
                                 <th>
                                     Officer
                                 </th>
-
+ 
                                 <th>
                                     Employee ID
                                 </th>
-
+ 
                                 <th>
                                     Department
                                 </th>
-
+ 
                                 <th>
                                     Contact
                                 </th>
-
+ 
                                 <th>
                                     Registered
                                 </th>
-
+ 
                                 <th>
                                     Action
                                 </th>
-
+ 
                             </tr>
-
+ 
                         </thead>
-
-
+ 
+ 
                         <tbody>
-
+ 
                             {% for officer in pending_officer_requests %}
-
+ 
                             <tr
                                 class="officer-request"
                                 data-officer-id="{{ officer.id }}"
                             >
-
+ 
                                 <td>
-
+ 
                                     <div class="officer-cell">
-
+ 
                                         <div class="table-avatar">
-
+ 
                                             {{ officer.full_name|slice:":1"|upper }}
-
+ 
                                         </div>
-
+ 
                                         <div>
-
+ 
                                             <strong>
                                                 {{ officer.full_name }}
                                             </strong>
-
+ 
                                             <span>
                                                 Officer
                                             </span>
-
+ 
                                         </div>
-
+ 
                                     </div>
-
+ 
                                 </td>
-
-
+ 
+ 
                                 <td>
                                     {{ officer.employee_id }}
                                 </td>
-
-
+ 
+ 
                                 <td>
-
+ 
                                     <span class="department-tag">
-
+ 
                                         {{ officer.get_department_display }}
-
+ 
                                     </span>
-
+ 
                                 </td>
-
-
+ 
+ 
                                 <td>
-
+ 
                                     <div>
                                         {{ officer.user.email }}
                                     </div>
-
+ 
                                     <div
                                         style="
                                             margin-top:3px;
@@ -1802,19 +1947,19 @@ dashboard-page
                                     >
                                         {{ officer.phone }}
                                     </div>
-
+ 
                                 </td>
-
-
+ 
+ 
                                 <td>
                                     {{ officer.created_at|date:"d M Y" }}
                                 </td>
-
-
+ 
+ 
                                 <td>
-
+ 
                                     <div class="request-actions">
-
+ 
                                         <button
                                             class="approve-btn"
                                             type="button"
@@ -1822,8 +1967,8 @@ dashboard-page
                                         >
                                             ✓ Approve
                                         </button>
-
-
+ 
+ 
                                         <button
                                             class="reject-btn"
                                             type="button"
@@ -1831,78 +1976,78 @@ dashboard-page
                                         >
                                             ✕ Reject
                                         </button>
-
+ 
                                     </div>
-
+ 
                                 </td>
-
+ 
                             </tr>
-
+ 
                             {% empty %}
-
+ 
                             <tr>
-
+ 
                                 <td
                                     colspan="6"
                                     class="empty-row"
                                 >
                                     No pending officer requests right now.
                                 </td>
-
+ 
                             </tr>
-
+ 
                             {% endfor %}
-
+ 
                         </tbody>
-
+ 
                     </table>
-
+ 
                 </div>
-
+ 
             </section>
-
-
-
+ 
+ 
+ 
             <!-- =================================================
                  OFFICERS + COMPLAINT OVERVIEW
                  ================================================= -->
-
+ 
             <section class="two-column">
-
-
+ 
+ 
                 <!-- OFFICERS -->
-
+ 
                 <div
                     class="dashboard-card"
                     id="officers"
                 >
-
+ 
                     <div class="card-header">
-
+ 
                         <div>
-
+ 
                             <h2>
                                 Department Officers
                             </h2>
-
+ 
                             <p>
                                 Click a category to view its approved officers.
                             </p>
-
+ 
                         </div>
-
-
+ 
+ 
                         <span class="count-badge">
                             {{ approved_officers_count }} Officers
                         </span>
-
+ 
                     </div>
-
-
+ 
+ 
                     <div class="department-list">
-
+ 
                         {% for dept in department_stats %}
-
+ 
                         <div
                             class="department-row"
                             onclick="showCategoryOfficers(
@@ -1910,405 +2055,701 @@ dashboard-page
                                 '{{ dept.name|escapejs }}'
                             )"
                         >
-
+ 
                             <div class="department-info">
-
+ 
                                 <strong>
                                     {{ dept.name }}
                                 </strong>
-
+ 
                                 <span>
                                     {{ dept.count }}
                                     active officer{{ dept.count|pluralize }}
                                 </span>
-
+ 
                             </div>
-
-
+ 
+ 
                             <div class="department-count">
                                 {{ dept.count }}
                             </div>
-
+ 
                         </div>
-
+ 
                         {% empty %}
-
+ 
                         <div class="no-officer">
                             No officer data available.
                         </div>
-
+ 
                         {% endfor %}
-
+ 
                     </div>
-
+ 
                 </div>
-
-
-
+ 
+ 
+ 
                 <!-- COMPLAINT OVERVIEW -->
-
+ 
                 <div
                     class="dashboard-card"
-                    id="complaints"
+                    id="complaint-overview"
                 >
-
+ 
                     <div class="card-header">
-
+ 
                         <div>
-
+ 
                             <h2>
                                 Complaint Overview
                             </h2>
-
+ 
                             <p>
                                 Current complaint status.
                             </p>
-
+ 
                         </div>
-
+ 
                     </div>
-
-
+ 
+ 
                     <div class="overview-list">
-
-
+ 
+ 
                         <div class="overview-row">
-
+ 
                             <span class="overview-label">
-
+ 
                                 <i class="status-dot dot-reported"></i>
-
+ 
                                 Reported
-
+ 
                             </span>
-
+ 
                             <strong>
                                 {{ reported_count }}
                             </strong>
-
+ 
                         </div>
-
-
+ 
+ 
                         <div class="overview-row">
-
+ 
                             <span class="overview-label">
-
+ 
                                 <i class="status-dot dot-progress"></i>
-
+ 
                                 In Progress
-
+ 
                             </span>
-
+ 
                             <strong>
                                 {{ in_progress_count }}
                             </strong>
-
+ 
                         </div>
-
-
+ 
+ 
                         <div class="overview-row">
-
+ 
                             <span class="overview-label">
-
+ 
                                 <i class="status-dot dot-resolved"></i>
-
+ 
                                 Resolved
-
+ 
                             </span>
-
+ 
                             <strong>
                                 {{ resolved_count }}
                             </strong>
-
+ 
                         </div>
-
-
+ 
+ 
                         <div class="overview-row">
-
+ 
                             <span class="overview-label">
-
+ 
                                 <i class="status-dot dot-unassigned"></i>
-
+ 
                                 Unassigned
-
+ 
                             </span>
-
+ 
                             <strong>
                                 {{ unassigned_count }}
                             </strong>
-
+ 
                         </div>
-
-
+ 
+ 
                     </div>
-
+ 
                 </div>
-
+ 
             </section>
-
-
-
+ 
+ 
+ 
             <!-- =================================================
                  COMPLAINT ASSIGNMENT
                  ================================================= -->
-
+ 
             <section
                 class="dashboard-card complaint-assignment-card"
                 id="complaintAssignmentSection"
                 style="display:none;"
             >
-
+ 
                 <div class="card-header">
-
+ 
                     <div>
                         <h2>Complaint Assignment</h2>
                         <p>
                             Select an unassigned complaint for the selected officer.
                         </p>
                     </div>
-
+ 
                     <div
                         class="assignment-selected-officer"
                         id="selectedOfficerText"
                     >
                         No officer selected
                     </div>
-
+ 
                 </div>
-
+ 
                 <div
                     class="complaint-assignment-list"
                     id="complaintAssignmentList"
                 ></div>
-
+ 
             </section>
-
-
+ 
+ 
             <!-- =================================================
                  ADMIN ASSIGNED WORK
                  ================================================= -->
-
+ 
             <section
                 class="dashboard-card admin-assigned-work-card"
             >
-
+ 
                 <div class="card-header">
-
+ 
                     <div>
                         <h2>Assigned Work</h2>
                         <p>
                             Complaints currently assigned to officers.
                         </p>
                     </div>
-
+ 
                     <span class="count-badge">
                         {{ assigned_complaints|length }}
                     </span>
-
+ 
                 </div>
-
+ 
                 <div class="admin-assigned-list">
-
+ 
                     {% for complaint in assigned_complaints %}
-
+ 
                     <div class="admin-assigned-item">
-
+ 
                         <div class="admin-assigned-info">
-
+ 
                             <div class="assignment-meta">
                                 <span class="assignment-chip">
                                     #{{ complaint.complaint_id }}
                                 </span>
-
+ 
                                 <span class="assignment-chip">
                                     {{ complaint.get_category_display }}
                                 </span>
-
+ 
                                 <span class="assignment-chip">
                                     {{ complaint.get_status_display }}
                                 </span>
                             </div>
-
+ 
                             <h3>{{ complaint.title }}</h3>
-
+ 
                             <p>
                                 <strong>Citizen:</strong>
                                 {{ complaint.citizen.full_name }}
                             </p>
-
+ 
                             <p>
                                 <strong>Officer:</strong>
                                 {{ complaint.assigned_officer.full_name }}
                                 ({{ complaint.assigned_officer.employee_id }})
                             </p>
-
+ 
                             <p>
                                 <strong>Location:</strong>
                                 {{ complaint.address }}
                             </p>
-
+ 
                         </div>
-
+ 
                     </div>
-
+ 
                     {% empty %}
-
+ 
                     <div class="assignment-empty">
                         <strong>No assigned work yet</strong>
                         <p>
                             Assigned complaints will appear here after admin assigns them.
                         </p>
                     </div>
-
+ 
                     {% endfor %}
-
+ 
                 </div>
-
+ 
             </section>
-
-
+ 
+ 
             <!-- =================================================
                  RECENT ACTIVITY
                  ================================================= -->
-
+ 
             <section class="dashboard-card">
-
+ 
                 <div class="card-header">
-
+ 
                     <div>
-
+ 
                         <h2>
                             Recent Activity
                         </h2>
-
+ 
                         <p>
                             Latest activity in the FixMyCity system.
                         </p>
-
+ 
                     </div>
-
+ 
                 </div>
-
-
+ 
+ 
                 <div class="activity-list">
-
+ 
                     {% for item in recent_activity %}
-
+ 
                     <div class="activity-item">
-
+ 
                         <div class="activity-icon">
                             ⚡
                         </div>
-
-
+ 
+ 
                         <div class="activity-content">
-
+ 
                             <strong>
                                 {{ item.title }}
                             </strong>
-
+ 
                             <p>
                                 {{ item.description }}
                             </p>
-
+ 
                         </div>
-
-
+ 
+ 
                         <span class="activity-time">
-
+ 
                             {{ item.created_at|timesince }}
                             ago
-
+ 
                         </span>
-
+ 
                     </div>
-
+ 
                     {% empty %}
-
+ 
                     <div class="activity-item">
-
+ 
                         <div class="activity-icon">
                             -
                         </div>
-
+ 
                         <div class="activity-content">
-
+ 
                             <strong>
                                 No recent activity
                             </strong>
-
+ 
                             <p>
                                 Activity will appear here as complaints come in.
                             </p>
-
+ 
                         </div>
-
+ 
                     </div>
-
+ 
                     {% endfor %}
-
+ 
                 </div>
-
+ 
             </section>
-
-
+ 
+ 
+        
+ 
+            <!-- ALL COMPLAINTS -->
+            <section class="dashboard-card" id="complaint-overview">
+                <div class="card-header">
+                    <div>
+                        <h2>All Complaints</h2>
+                        <p>Every civic complaint reported on FixMyCity.</p>
+                    </div>
+                    <span class="count-badge">
+                        {{ total_complaints_count }} Complaints
+                    </span>
+                </div>
+ 
+                <div class="admin-data-table-wrap">
+                    <table class="admin-data-table">
+                        <thead>
+                            <tr>
+                                <th>Complaint ID</th>
+                                <th>Complaint</th>
+                                <th>Citizen</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th>Assigned Officer</th>
+                                <th>Reported On</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for complaint in all_complaints %}
+                            <tr>
+                                <td>
+                                    <span class="admin-table-primary">
+                                        {{ complaint.complaint_id }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="admin-table-primary">
+                                        {{ complaint.title }}
+                                    </span>
+                                    <span class="admin-table-secondary">
+                                        {{ complaint.address }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="admin-table-primary">
+                                        {{ complaint.citizen.full_name }}
+                                    </span>
+                                    <span class="admin-table-secondary">
+                                        {{ complaint.citizen.user.email }}
+                                    </span>
+                                </td>
+                                <td>{{ complaint.get_category_display }}</td>
+                                <td>
+                                    <span class="admin-table-status
+                                        {% if complaint.status == 'resolved' %}status-resolved
+                                        {% elif complaint.status == 'in_progress' %}status-progress
+                                        {% endif %}">
+                                        {{ complaint.get_status_display }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if complaint.assigned_officer %}
+                                        {{ complaint.assigned_officer.full_name }}
+                                    {% else %}
+                                        <span class="admin-table-secondary">Unassigned</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ complaint.created_at|date:"d M Y" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="admin-table-empty">
+                                    No complaints have been reported yet.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+ 
+            <!-- REGISTERED CITIZENS -->
+            <section class="dashboard-card" id="citizens">
+                <div class="card-header">
+                    <div>
+                        <h2>Registered Citizens</h2>
+                        <p>Citizens registered on the FixMyCity platform.</p>
+                    </div>
+                    <span class="count-badge">
+                        {{ total_citizens_count }} Citizens
+                    </span>
+                </div>
+ 
+                <div class="admin-data-table-wrap">
+                    <table class="admin-data-table">
+                        <thead>
+                            <tr>
+                                <th>Citizen</th>
+                                <th>Citizen ID</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Complaints</th>
+                                <th>Registered On</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for citizen in citizens %}
+                            <tr>
+                                <td>
+                                    <span class="admin-table-primary">
+                                        {{ citizen.full_name }}
+                                    </span>
+                                </td>
+                                <td>{{ citizen.citizen_id }}</td>
+                                <td>{{ citizen.email }}</td>
+                                <td>{{ citizen.phone|default:"—" }}</td>
+                                <td>{{ citizen.complaint_count }}</td>
+                                <td>{{ citizen.created_at|date:"d M Y" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="admin-table-empty">
+                                    No registered citizens found.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+ 
+</div>
+            <!-- /view-dashboard -->
+ 
+ 
+            <!-- =================================================
+                 COMPLAINTS VIEW
+                 ================================================= -->
+ 
+            <div class="admin-view" id="view-complaints" style="display:none;">
+ 
+                <section class="page-heading">
+                    <div>
+                        <h1>Complaints</h1>
+                        <p>All complaints reported by citizens across departments.</p>
+                    </div>
+                    <div class="page-date">{{ all_complaints|length }} total</div>
+                </section>
+ 
+                <section class="dashboard-card">
+ 
+                    <div class="card-header">
+                        <div>
+                            <h2>All Complaints</h2>
+                            <p>Use the search box above or filter by status.</p>
+                        </div>
+ 
+                        <select id="complaintStatusFilter" class="status-filter">
+                            <option value="all">All statuses</option>
+                        </select>
+                    </div>
+ 
+                    <div class="table-scroll">
+                        <table class="request-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Complaint</th>
+                                    <th>Category</th>
+                                    <th>Citizen</th>
+                                    <th>Officer</th>
+                                    <th>Status</th>
+                                    <th>Reported</th>
+                                </tr>
+                            </thead>
+ 
+                            <tbody>
+                                {% for complaint in all_complaints %}
+                                <tr
+                                    class="searchable-row complaint-row"
+                                    data-status="{{ complaint.status }}"
+                                    data-status-label="{{ complaint.get_status_display }}"
+                                >
+                                    <td>#{{ complaint.complaint_id }}</td>
+ 
+                                    <td>
+                                        <strong class="cell-title">{{ complaint.title }}</strong>
+                                        <span class="cell-sub">{{ complaint.address }}</span>
+                                    </td>
+ 
+                                    <td>
+                                        <span class="department-tag">{{ complaint.get_category_display }}</span>
+                                    </td>
+ 
+                                    <td>{{ complaint.citizen.full_name }}</td>
+ 
+                                    <td>
+                                        {% if complaint.assigned_officer %}
+                                            {{ complaint.assigned_officer.full_name }}
+                                        {% else %}
+                                            <span class="status-pill status-unassigned">Unassigned</span>
+                                        {% endif %}
+                                    </td>
+ 
+                                    <td>
+                                        <span class="status-pill status-{{ complaint.status }}">
+                                            {{ complaint.get_status_display }}
+                                        </span>
+                                    </td>
+ 
+                                    <td>{{ complaint.created_at|date:"d M Y" }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="7" class="empty-row">No complaints found.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+ 
+                </section>
+ 
+            </div>
+ 
+ 
+            <!-- =================================================
+                 CITIZENS VIEW
+                 ================================================= -->
+ 
+            <div class="admin-view" id="view-citizens" style="display:none;">
+ 
+                <section class="page-heading">
+                    <div>
+                        <h1>Citizens</h1>
+                        <p>Registered citizens using FixMyCity.</p>
+                    </div>
+                    <div class="page-date">{{ citizens|length }} total</div>
+                </section>
+ 
+                <section class="dashboard-card">
+ 
+                    <div class="card-header">
+                        <div>
+                            <h2>All Citizens</h2>
+                            <p>Use the search box above to find a citizen.</p>
+                        </div>
+ 
+                        <span class="count-badge">{{ citizens|length }} Citizens</span>
+                    </div>
+ 
+                    <div class="table-scroll">
+                        <table class="request-table">
+                            <thead>
+                                <tr>
+                                    <th>Citizen</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Complaints</th>
+                                    <th>Joined</th>
+                                </tr>
+                            </thead>
+ 
+                            <tbody>
+                                {% for citizen in citizens %}
+                                <tr class="searchable-row">
+                                    <td>
+                                        <div class="officer-cell">
+                                            <div class="table-avatar">
+                                                {{ citizen.full_name|slice:":1"|upper }}
+                                            </div>
+                                            <div>
+                                                <strong>{{ citizen.full_name }}</strong>
+                                                <span>Citizen</span>
+                                            </div>
+                                        </div>
+                                    </td>
+ 
+                                    <td>{{ citizen.user.email|default:"-" }}</td>
+                                    <td>{{ citizen.phone|default:"-" }}</td>
+                                    <td>{{ citizen.complaints_count|default:0 }}</td>
+                                    <td>{{ citizen.created_at|date:"d M Y"|default:"-" }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="empty-row">No citizens registered yet.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+ 
+                </section>
+ 
+            </div>
+ 
         </main>
-
-
-
+ 
+ 
+ 
         <!-- FOOTER -->
-
+ 
         <footer class="admin-footer">
-
+ 
             <div>
-
+ 
                 <strong>
                     FixMyCity
                 </strong>
-
+ 
                 — Making cities better, one complaint at a time.
-
+ 
             </div>
-
+ 
             <div>
                 Admin Control Center
             </div>
-
+ 
         </footer>
-
+ 
     </div>
-
+ 
 </div>
-
-
-
+ 
+ 
+ 
 <!-- =====================================================
      OFFICER CATEGORY MODAL
      ===================================================== -->
-
+ 
 <div
     class="officer-modal"
     id="officerCategoryModal"
 >
-
+ 
     <div class="officer-modal-box">
-
-
+ 
+ 
         <div class="officer-modal-header">
-
+ 
             <div>
-
+ 
                 <h2 id="modalCategoryName">
                     Officers
                 </h2>
-
+ 
                 <p>
                     Approved officers available for this category
                 </p>
-
+ 
             </div>
-
-
+ 
+ 
             <button
                 type="button"
                 class="close-modal"
@@ -2316,27 +2757,27 @@ dashboard-page
             >
                 ×
             </button>
-
+ 
         </div>
-
-
+ 
+ 
         <div
             class="officer-modal-body"
             id="categoryOfficerList"
         >
-
+ 
         </div>
-
+ 
     </div>
-
+ 
 </div>
-
-
-
+ 
+ 
+ 
 {% endblock %}
-
-
-
+ 
+ 
+ 
 {% block extra_js %}
 {{ assignment_complaints_data|json_script:"assignment-complaints-data" }}
 <script>
@@ -2354,9 +2795,9 @@ function getCookie(name) {
     }
     return cookieValue;
 }
-
+ 
 const csrftoken = getCookie("csrftoken");
-
+ 
 const categoryDepartmentMap = {
     pothole: "road",
     garbage: "sanitation",
@@ -2365,7 +2806,7 @@ const categoryDepartmentMap = {
     property: "property",
     other: "other"
 };
-
+ 
 const approvedOfficers = [
     {% for officer in approved_officers %}
     {
@@ -2379,14 +2820,14 @@ const approvedOfficers = [
     }{% if not forloop.last %},{% endif %}
     {% endfor %}
 ];
-
+ 
 const assignmentComplaints = JSON.parse(
     document.getElementById("assignment-complaints-data").textContent
 );
-
+ 
 let selectedOfficerId = null;
 let selectedOfficerName = "";
-
+ 
 function escapeHtml(value) {
     if (value === null || value === undefined) return "";
     return String(value)
@@ -2396,7 +2837,7 @@ function escapeHtml(value) {
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
 }
-
+ 
 function approveOfficer(officerId) {
     fetch("/admin/approve-officer/" + officerId + "/", {
         method: "POST",
@@ -2415,12 +2856,12 @@ function approveOfficer(officerId) {
     })
     .catch(() => alert("Unable to reach server."));
 }
-
+ 
 function rejectOfficer(officerId) {
     if (!confirm("Reject this officer's registration? This cannot be undone.")) {
         return;
     }
-
+ 
     fetch("/admin/reject-officer/" + officerId + "/", {
         method: "POST",
         headers: {
@@ -2438,22 +2879,22 @@ function rejectOfficer(officerId) {
     })
     .catch(() => alert("Unable to reach server."));
 }
-
+ 
 function showCategoryOfficers(departmentCode, departmentName) {
     const modal = document.getElementById("officerCategoryModal");
     const modalTitle = document.getElementById("modalCategoryName");
     const officerList = document.getElementById("categoryOfficerList");
-
+ 
     if (!modal || !modalTitle || !officerList) return;
-
+ 
     modalTitle.textContent = departmentName;
-
+ 
     const officers = approvedOfficers.filter(
         officer => officer.department === departmentCode
     );
-
+ 
     officerList.innerHTML = "";
-
+ 
     if (officers.length === 0) {
         officerList.innerHTML = `
             <div class="no-officer">
@@ -2464,7 +2905,7 @@ function showCategoryOfficers(departmentCode, departmentName) {
     } else {
         officers.forEach(function(officer) {
             const firstLetter = officer.name.charAt(0).toUpperCase();
-
+ 
             officerList.innerHTML += `
                 <div class="category-officer">
                     <div class="category-officer-left">
@@ -2484,7 +2925,7 @@ function showCategoryOfficers(departmentCode, departmentName) {
                             </div>
                         </div>
                     </div>
-
+ 
                     <button
                         type="button"
                         class="assign-btn"
@@ -2496,37 +2937,37 @@ function showCategoryOfficers(departmentCode, departmentName) {
             `;
         });
     }
-
+ 
     modal.classList.add("show");
 }
-
+ 
 function closeOfficerModal() {
     const modal = document.getElementById("officerCategoryModal");
     if (modal) modal.classList.remove("show");
 }
-
+ 
 function selectOfficerForAssignment(officerId) {
     const officer = approvedOfficers.find(
         item => String(item.id) === String(officerId)
     );
-
+ 
     if (!officer) {
         alert("Officer information not found.");
         return;
     }
-
+ 
     selectedOfficerId = officer.id;
     selectedOfficerName = officer.name;
-
+ 
     closeOfficerModal();
-
+ 
     const section = document.getElementById("complaintAssignmentSection");
     const selectedText = document.getElementById("selectedOfficerText");
-
+ 
     if (selectedText) {
         selectedText.textContent = "Selected Officer: " + officer.name;
     }
-
+ 
     if (section) {
         section.style.display = "block";
         section.scrollIntoView({
@@ -2534,21 +2975,21 @@ function selectOfficerForAssignment(officerId) {
             block: "start"
         });
     }
-
+ 
     loadComplaintsForOfficer(officer);
 }
-
+ 
 function loadComplaintsForOfficer(officer) {
     const list = document.getElementById("complaintAssignmentList");
-
+ 
     if (!list) return;
-
+ 
     const matchingComplaints = assignmentComplaints.filter(
         complaint => categoryDepartmentMap[complaint.category] === officer.department
     );
-
+ 
     list.innerHTML = "";
-
+ 
     if (matchingComplaints.length === 0) {
         list.innerHTML = `
             <div class="assignment-empty">
@@ -2561,7 +3002,7 @@ function loadComplaintsForOfficer(officer) {
         `;
         return;
     }
-
+ 
     matchingComplaints.forEach(function(complaint) {
         list.innerHTML += `
             <div class="complaint-assignment-item">
@@ -2574,25 +3015,25 @@ function loadComplaintsForOfficer(officer) {
                             ${escapeHtml(complaint.category_name)}
                         </span>
                     </div>
-
+ 
                     <h3>${escapeHtml(complaint.title)}</h3>
-
+ 
                     <p>
                         <strong>Citizen:</strong>
                         ${escapeHtml(complaint.citizen_name)}
                     </p>
-
+ 
                     <p>
                         <strong>Location:</strong>
                         ${escapeHtml(complaint.address)}
                     </p>
-
+ 
                     <p>
                         <strong>Reported:</strong>
                         ${escapeHtml(complaint.created_at)}
                     </p>
                 </div>
-
+ 
                 <button
                     type="button"
                     class="assignment-action-btn"
@@ -2604,31 +3045,31 @@ function loadComplaintsForOfficer(officer) {
         `;
     });
 }
-
+ 
 function assignComplaintToOfficer(complaintId, officerId) {
     const officer = approvedOfficers.find(
         item => String(item.id) === String(officerId)
     );
-
+ 
     const complaint = assignmentComplaints.find(
         item => String(item.id) === String(complaintId)
     );
-
+ 
     if (!officer || !complaint) {
         alert("Complaint or officer information not found.");
         return;
     }
-
+ 
     const expectedDepartment = categoryDepartmentMap[complaint.category];
-
+ 
     if (officer.department !== expectedDepartment) {
         alert("This officer does not belong to the required department.");
         return;
     }
-
+ 
     const formData = new URLSearchParams();
     formData.append("officer_id", String(officerId));
-
+ 
     fetch("/admin/assign-complaint/" + complaintId + "/", {
         method: "POST",
         headers: {
@@ -2640,17 +3081,17 @@ function assignComplaintToOfficer(complaintId, officerId) {
     })
     .then(async response => {
         const contentType = response.headers.get("content-type") || "";
-
+ 
         if (!contentType.includes("application/json")) {
             throw new Error("Server returned an unexpected response. Check assign_complaint in views.py.");
         }
-
+ 
         const data = await response.json();
-
+ 
         if (!response.ok || !data.success) {
             throw new Error(data.message || "Unable to assign complaint.");
         }
-
+ 
         return data;
     })
     .then(data => {
@@ -2660,12 +3101,97 @@ function assignComplaintToOfficer(complaintId, officerId) {
             "\nCitizen: " + data.citizen_name +
             "\nStatus: " + data.status
         );
-
+ 
         window.location.reload();
     })
     .catch(error => {
         alert(error.message || "Unable to reach server.");
     });
 }
+ 
+/* =====================================================
+   SIDEBAR VIEWS (Dashboard / Complaints / Citizens)
+   ===================================================== */
+ 
+const VIEW_FOR_HASH = {
+    "dashboard": "dashboard",
+    "officer-requests": "dashboard",
+    "officers": "dashboard",
+    "complaints": "complaints",
+    "citizens": "citizens"
+};
+ 
+function applyTableFilters() {
+    const searchInput = document.getElementById("dashboardSearch");
+    const statusSelect = document.getElementById("complaintStatusFilter");
+ 
+    const query = searchInput ? searchInput.value.toLowerCase().trim() : "";
+    const status = statusSelect ? statusSelect.value : "all";
+ 
+    document.querySelectorAll(".searchable-row").forEach(function(row) {
+        const matchesText = !query || row.textContent.toLowerCase().includes(query);
+        const matchesStatus = status === "all" || !row.classList.contains("complaint-row") || row.dataset.status === status;
+        row.style.display = (matchesText && matchesStatus) ? "" : "none";
+    });
+}
+ 
+function activateViewFromHash() {
+    const key = (window.location.hash || "#dashboard").replace("#", "");
+    const view = VIEW_FOR_HASH[key] || "dashboard";
+    const navKey = VIEW_FOR_HASH[key] ? key : "dashboard";
+ 
+    document.querySelectorAll(".admin-view").forEach(function(el) {
+        el.style.display = (el.id === "view-" + view) ? "block" : "none";
+    });
+ 
+    document.querySelectorAll(".sidebar-nav a").forEach(function(link) {
+        link.classList.toggle("active", link.dataset.nav === navKey);
+    });
+ 
+    if (key === "officer-requests" || key === "officers") {
+        const target = document.getElementById(key);
+        if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+        window.scrollTo({ top: 0 });
+    }
+}
+ 
+function setupAdminViews() {
+    const statusSelect = document.getElementById("complaintStatusFilter");
+ 
+    if (statusSelect) {
+        const seen = {};
+        document.querySelectorAll(".complaint-row").forEach(function(row) {
+            const value = row.dataset.status;
+            if (value && !seen[value]) {
+                seen[value] = true;
+                const option = document.createElement("option");
+                option.value = value;
+                option.textContent = row.dataset.statusLabel || value;
+                statusSelect.appendChild(option);
+            }
+        });
+        statusSelect.addEventListener("change", applyTableFilters);
+    }
+ 
+    const searchInput = document.getElementById("dashboardSearch");
+    if (searchInput) searchInput.addEventListener("input", applyTableFilters);
+ 
+    document.querySelectorAll(".sidebar-nav a").forEach(function(link) {
+        link.addEventListener("click", function() {
+            setTimeout(activateViewFromHash, 0);
+        });
+    });
+ 
+    window.addEventListener("hashchange", activateViewFromHash);
+    activateViewFromHash();
+}
+ 
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", setupAdminViews);
+} else {
+    setupAdminViews();
+}
 </script>
 {% endblock %}
+ 
